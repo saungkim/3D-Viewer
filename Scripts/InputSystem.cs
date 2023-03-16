@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputSystem : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class InputSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+      
+
         if (PinCh())
         {
             onClickStart = false;
@@ -45,6 +48,11 @@ public class InputSystem : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+
            dragTime = 0;
 
            holdTime = 0;
@@ -92,7 +100,7 @@ public class InputSystem : MonoBehaviour
                             o.transform.position = ImgsFD.transform.position;
                             o.transform.rotation = ImgsFD.transform.rotation;
 
-                            dot.GetComponent<DefectDot>().CreateToServer(o.transform.position);
+                           // dot.GetComponent<DefectDot>().CreateToServer(o.transform.position , o.transform.eulerAngles);
                         }
                         
                     }
@@ -120,6 +128,11 @@ public class InputSystem : MonoBehaviour
         }
         else if(Input.GetMouseButtonUp(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+
             if (isDragging)
             {
                 cursor.SetVisible();

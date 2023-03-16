@@ -1,13 +1,14 @@
 
+
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class PlayerMovement : MonoBehaviour
 {
 
     [SerializeField] private Transform construction;
-    private Vector3[] movePoints;
+    [SerializeField] private Vector3[] movePoints;
 
     [SerializeField] private Cursor cursor;
 
@@ -15,13 +16,15 @@ public class PlayerMovement : MonoBehaviour
 
     private int stage = 0;
 
+    [SerializeField] private NetworkManager networkManager;
+
     struct poi {
         internal int index;
         internal Vector3 value;
     }
 
     // Start is called before the first frame update
-    void Start()
+    public void Init()
     {
         GetMovePoints();
     }
@@ -64,20 +67,60 @@ public class PlayerMovement : MonoBehaviour
         return p;
     }
 
+    poi FindNearPointFrom(Vector3 input)
+    {
+        float min = 1000;
+
+        Vector3 value = Vector3.zero;
+
+        int index = -1;
+
+        int i = 0;
+
+        foreach (Vector3 pos in movePoints)
+        {
+            float dis = Vector3.Distance(input, pos);
+
+            if (dis < min)
+            {
+                min = dis;
+                index = i;
+            }
+
+            ++i;
+        }
+
+        poi p = new poi();
+        p.index = index;
+        p.value = movePoints[index];
+
+        return p;
+    }
+
+
+
 
     private void GetMovePoints()
     {
 
         movePoints = new Vector3[construction.childCount - 1];
 
+
+
         int childCount = construction.childCount - 1;
 
         for(int i = 0; i < childCount; ++i)
         {
             movePoints[i] = construction.GetChild(i).position;
+            print(movePoints[i]);
         }
     }
-
+    public void InitStage(int panoramaID)
+    {
+        construction.GetChild(panoramaID).gameObject.SetActive(true);
+        transform.position = construction.GetChild(panoramaID).position;
+        stage = panoramaID;
+    }
     public IEnumerator MoveStage()
     {
        
@@ -86,16 +129,51 @@ public class PlayerMovement : MonoBehaviour
         if (stage != p.index  )
         {
             construction.GetChild(p.index).gameObject.SetActive(true);
-            AllChildOff(construction.GetChild(p.index).GetChild(0), false);
+            //AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 
             yield return StartCoroutine(camController.MoveCamInstant(p.value , GetChildMaterials(construction.GetChild(stage).GetChild(0))));
-           
             construction.GetChild(stage).gameObject.SetActive(false);
+            construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
+            
             //AllChildOff(construction.GetChild(p.index), true);
 
             stage = p.index;
         }
 
+    }
+
+    int countStageOnUI = 0;
+    public void MoveStageOnUI()
+    {
+        StartCoroutine(MoveStage(networkManager.camPositions[countStageOnUI] , networkManager.camRotations[countStageOnUI] , networkManager.camFovs[countStageOnUI]));
+        
+
+        ++countStageOnUI;
+
+        if(countStageOnUI == networkManager.camPositions.Length)
+        {
+            countStageOnUI = 0;
+        }
+    }
+
+    public IEnumerator MoveStage(Vector3 pos , Vector3 rot , float fov)
+    {
+        poi p = FindNearPointFrom(pos);
+
+        Camera.main.transform.eulerAngles = rot;
+        Camera.main.fieldOfView = fov;
+
+        if (stage != p.index)
+        {
+            construction.GetChild(p.index).gameObject.SetActive(true);
+            AllChildOff(construction.GetChild(p.index).GetChild(0), false);
+
+            yield return StartCoroutine(camController.MoveCamInstant(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0))));
+
+            construction.GetChild(stage).gameObject.SetActive(false);
+
+            stage = p.index;
+        }
     }
 
     private void AllChildOff(Transform tf,bool onOff)
