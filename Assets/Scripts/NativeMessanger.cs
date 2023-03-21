@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class NativeMessanger : MonoBehaviour
@@ -10,22 +11,21 @@ public class NativeMessanger : MonoBehaviour
 
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private InputSystem inputSystem;
+
+    enum LoadState { None, Loading, Done }
+    LoadState readEnvState = LoadState.None;
+    LoadState readDefectState = LoadState.None;
+
     // Start is called before the first frame update
     void Start()
     {
 #if UNITY_EDITOR
         ReadEnv("input");
         ReadDefect("input");
-        //ViewDefect("NeedToChange3");
-        ViewStage(0);
-        //EnableDotCreateMode();
+        ViewDefect("NeedToChange3");
+        //ViewStage("19");
 #endif
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+   
     }
 
     public void EnableDotCreateMode()
@@ -35,24 +35,54 @@ public class NativeMessanger : MonoBehaviour
 
     public void ReadEnv(string fileName)
     {
-        //string url = Application.streamingAssetsPath + "/" + fileName + ".env";
+        if (readEnvState == LoadState.Done)
+        {
+            ReadEnvCallBack("");
+            return;
+        }
+
+        readEnvState = LoadState.Loading;
 
 #if UNITY_EDITOR
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
 #endif
+      
+        constructor.FileOpen(fileName , ReadEnvCallBack);
+    }
 
-        constructor.FileOpen(fileName);
+    public void ReadEnvCallBack(string message)
+    {
+        if(message == "Success")
+        {
+            readEnvState = LoadState.Done;
+            return;
+        }
+        readEnvState = LoadState.None;         
     }
 
     public void ReadDefect(string filePath)
     {
-
 #if UNITY_EDITOR
         filePath = Application.dataPath + "/Sources/" + filePath;
         filePath += ".json";
 #endif
+        if (readDefectState == LoadState.Done)
+        {
+            ReadEnvCallBack("");
+            return;
+        }
+        readDefectState = LoadState.Loading;
+        StartCoroutine(defectConstructor.ReadAllDefect(filePath , ReadDefectCallBack));
+    }
 
-        defectConstructor.ReadAllDefect(filePath);
+    public void ReadDefectCallBack(string message)
+    {
+        if (message == "Succcess")
+        {
+            readEnvState = LoadState.Done;       
+            return;
+        }
+        readEnvState = LoadState.None;
     }
 
     public void ViewDefect(string defectId)
@@ -60,20 +90,20 @@ public class NativeMessanger : MonoBehaviour
         StartCoroutine(defectConstructor.MoveCamInstant(defectId));
     }
 
-    public void ViewStage(int stage)
+    public void ViewStage(string rStage)
     {
+        int stage = int.Parse(rStage);
         StartCoroutine(constructor.InitStage(stage));
     }
 
-    public void AndroidSendMessage(string message)
-    {
-        print("AndroidSendMessage :" + message);
+    public void NativeSendMessage(string message)
+    { 
 #if UNITY_ANDROID
         try
         {
             AndroidJavaClass jc = new AndroidJavaClass("com.parallel.viewer3d.RoomViewerActivity");
             AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-            overrideActivity.Call("UnityReceiveMessage", message);
+            overrideActivity.Call("RoomViewerReceiveMessage", message);
         }
         catch (Exception e)
         {
@@ -82,10 +112,9 @@ public class NativeMessanger : MonoBehaviour
         }
 #elif UNITY_IOS || UNITY_TVOS
         NativeAPI.showHostMainWindow(lastStringColor);
+#elif UNITY_EDITOR
+     
 #endif
+        print(message);
     }
-
-
-
-
 }

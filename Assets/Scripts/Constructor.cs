@@ -7,6 +7,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.AI;
 using Unity.VisualScripting;
+using System.IO;
 
 public class Constructor : MonoBehaviour
 {
@@ -36,44 +37,33 @@ public class Constructor : MonoBehaviour
 #endif
     }
     bool isLoaded = false;
-    public void FileOpen(string url)
+    public void FileOpen(string url , Action<string> callback)
     {
-        //if (isLoaded)
-        //{
-        //    int camGroupChildCount = camGroup.childCount;
-
-        //    for(int i = 0; i < camGroupChildCount; ++i)
-        //    {
-        //        if (camGroup.GetChild(i).gameObject.activeSelf)
-        //        {
-        //            camGroup.GetChild(i).GetComponent<LoadTextureFromStreamingAsset>().SetAllTexture();
-
-        //            print("isLoaded True:" + camGroup.GetChild(i).GetSiblingIndex());
-        //        }
-        //    }
-
-        //    return;
-        //}
-        //isLoaded = true;
-  
-
-        StartCoroutine(FileLoad(url));
+        StartCoroutine(FileLoad(url, callback));
     }
 
-    IEnumerator FileLoad(string url)
+    IEnumerator FileLoad(string url,Action<string> callback)
     {
-       
+        float loadTime = 0;
+
         byte[] envData = null;
        
         WWW reader = new WWW(url);
-        while (!reader.isDone)
+        while (!reader.isDone && loadTime <= 5)
         {
+            loadTime += Time.deltaTime;
             yield return null;
         }
 
-        envData = reader.bytes;
-
-        envToModel(envData);
+        if(loadTime > 5)
+        {
+            callback("The file does not exist.");
+        }
+        {
+            envData = reader.bytes;
+            envToModel(envData, callback);
+    
+        }
     }
 
     void Update()
@@ -109,7 +99,7 @@ public class Constructor : MonoBehaviour
         StartCoroutine(networkManager.GetResidentsDefectsPositions(get));
     }
     bool isLoadDone = false;
-    private void envToModel(byte[] content)
+    private void envToModel(byte[] content , Action<string> callback)
     {  
         int index = 4;
         int[] verticeLengths = new int[content[2]];
@@ -240,11 +230,11 @@ public class Constructor : MonoBehaviour
 
         }
         playerMovement.Init();
-        playerMovement.InitStage(0);
+        //playerMovement.InitStage(0);
         inputSystem.enabled = true;
         isLoadDone = true;
 
-
+        callback("Success");
     }
 
     public void LateCall()

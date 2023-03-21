@@ -51,7 +51,7 @@ public class DefectConstructor : MonoBehaviour
         
         defectList.Add(defect);
         if(sendMessage)
-        nativeMessanger.AndroidSendMessage("CreateDot," + JsonUtility.ToJson(defect));
+        nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
     }
 
     public void WriteAllDefect(string filePath)
@@ -63,17 +63,23 @@ public class DefectConstructor : MonoBehaviour
         File.WriteAllText(filePath, jsonOutput);
     }
 
-    public void ReadAllDefect(string filePath)
+    public IEnumerator ReadAllDefect(string filePath,Action<string> CallBack)
     {
-
-        print(filePath);
+        float loadTime = 0;
 
         WWW reader = new WWW(filePath);
-        while (!reader.isDone)
+        while (!reader.isDone && loadTime <= 5)
         {
+            loadTime += Time.deltaTime;
+            yield return null;
         }
-        string json = reader.text;
 
+        if (loadTime > 5)
+        {
+            CallBack("The file does not exist.");
+        }
+
+        string json = reader.text;
 
         DefectArray defectArrayFromJson = JsonUtility.FromJson<DefectArray>(json);
 
@@ -83,6 +89,8 @@ public class DefectConstructor : MonoBehaviour
         {
             CreateDot(defect.position,defect.rotation,false);
         }
+
+        CallBack("Success");
     }
 
     public IEnumerator MoveCamInstant(string defectId)
@@ -103,7 +111,7 @@ public class DefectConstructor : MonoBehaviour
 
     public void SendMessageSelectDefect(int id)
     {
-        nativeMessanger.AndroidSendMessage("SelectDefect." + JsonUtility.ToJson(defectArray[id]));
+        nativeMessanger.NativeSendMessage("SelectDefect." + JsonUtility.ToJson(defectArray[id]));
     }
 
     [Serializable]
