@@ -11,6 +11,8 @@ public class NativeMessanger : MonoBehaviour
 
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private InputSystem inputSystem;
+    [SerializeField] private OverallSetting overallSetting;
+    
 
     enum LoadState { None, Loading, Done }
     LoadState readEnvState = LoadState.None;
@@ -20,12 +22,17 @@ public class NativeMessanger : MonoBehaviour
     void Start()
     {
 #if UNITY_EDITOR
-        ReadEnv("input");
-        ReadDefect("input");
-        ViewDefect("NeedToChange3");
+        //ReadEnv("input");
+        //ReadDefect("input");
         //ViewStage("19");
+        //ViewDefect("NeedToChange3");
 #endif
-   
+        ReadEnv(Application.streamingAssetsPath + "/input.env");
+        ReadDefect(Application.streamingAssetsPath + "/input.json");
+        ViewStage("19");
+        EnableDotCreateMode();
+        //SetCursor("false");
+        //SetZoomInitWhenMove("true");
     }
 
     public void EnableDotCreateMode()
@@ -43,43 +50,43 @@ public class NativeMessanger : MonoBehaviour
 
         readEnvState = LoadState.Loading;
 
-#if UNITY_EDITOR
-        fileName = Application.dataPath + "/Sources/" + fileName + ".env";
-#endif
-      
-        constructor.FileOpen(fileName , ReadEnvCallBack);
+//#if UNITY_EDITOR
+//        fileName = Application.dataPath + "/Sources/" + fileName + ".env";
+//#endif
+
+        constructor.FileOpen(fileName, ReadEnvCallBack);
     }
 
     public void ReadEnvCallBack(string message)
     {
-        if(message == "Success")
+        if (message == "Success")
         {
             readEnvState = LoadState.Done;
             return;
         }
-        readEnvState = LoadState.None;         
+        readEnvState = LoadState.None;
     }
 
     public void ReadDefect(string filePath)
     {
-#if UNITY_EDITOR
-        filePath = Application.dataPath + "/Sources/" + filePath;
-        filePath += ".json";
-#endif
+//#if UNITY_EDITOR
+//        filePath = Application.dataPath + "/Sources/" + filePath;
+//        filePath += ".json";
+//#endif
         if (readDefectState == LoadState.Done)
         {
             ReadEnvCallBack("");
             return;
         }
         readDefectState = LoadState.Loading;
-        StartCoroutine(defectConstructor.ReadAllDefect(filePath , ReadDefectCallBack));
+        StartCoroutine(defectConstructor.ReadAllDefect(filePath, ReadDefectCallBack));
     }
 
     public void ReadDefectCallBack(string message)
     {
         if (message == "Succcess")
         {
-            readEnvState = LoadState.Done;       
+            readEnvState = LoadState.Done;
             return;
         }
         readEnvState = LoadState.None;
@@ -97,7 +104,7 @@ public class NativeMessanger : MonoBehaviour
     }
 
     public void NativeSendMessage(string message)
-    { 
+    {
 #if UNITY_ANDROID
         try
         {
@@ -117,4 +124,16 @@ public class NativeMessanger : MonoBehaviour
 #endif
         print(message);
     }
+
+    public void SetZoomInitWhenMove(string value)
+    {
+        overallSetting.SetZoomInitWhenMove(value);
+    }
+
+    public void SetCursor(string value)
+    {
+        overallSetting.SetCursor(value);
+    }
+
+    
 }

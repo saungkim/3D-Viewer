@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine.AI;
 using Unity.VisualScripting;
 using System.IO;
+using System.Linq;
 
 public class Constructor : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class Constructor : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private InputSystem inputSystem;
+
+    [SerializeField] private Camera minimapCamera;
 
     List<byte[]> textures;
     // Start is called before the first frame update
@@ -55,10 +58,7 @@ public class Constructor : MonoBehaviour
             yield return null;
         }
 
-        if(loadTime > 5)
-        {
-            callback("The file does not exist.");
-        }
+        //  callback("The file does not exist.");
         {
             envData = reader.bytes;
             envToModel(envData, callback);
@@ -252,11 +252,108 @@ public class Constructor : MonoBehaviour
     {
         yield return new WaitUntil(()=>isLoadDone);
         playerMovement.InitStage(stage);
+
+        SetMiniMap();
+        //print("MaxDistance:" + GetMeshVerticesMaxDistance());
     }
 
     public bool GetIsLoadDone()
     {
         return isLoadDone;
+
     }
- 
+
+    //16.95838
+    private float GetMeshVerticesMaxDistance()
+    {
+        int modelFrameChildCounnt = modelFrame.childCount;
+
+        List<Vector3> vertice = new List<Vector3>();
+
+        for (int k = 1; k < modelFrameChildCounnt; ++k)
+        {
+            vertice.AddRange(modelFrame.GetChild(k).GetComponent<MeshFilter>().mesh.vertices.ToList());     
+        }
+
+        Vector3[] vertices = vertice.ToArray();
+
+        float maxDistance = 0f;
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            for (int j = i + 1; j < vertices.Length; j++)
+            {
+                float distance = Vector3.Distance(vertices[i], vertices[j]);
+
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                }
+            }
+        }
+
+        return maxDistance;
+    }
+
+    private Vector3 GetMeshVerticesCenterpos()
+    {
+        int modelFrameChildCounnt = modelFrame.childCount;
+
+        List<Vector3[]> vertice = new List<Vector3[]>();
+
+        for (int k = 1; k < modelFrameChildCounnt; ++k)
+        {
+            vertice.Add(modelFrame.GetChild(k).GetComponent<MeshFilter>().mesh.vertices);
+        }
+
+        int arrayLength = 0;
+
+        foreach (Vector3[] v in vertice)
+        {
+            arrayLength += v.Length;
+        }
+
+        Vector3[] vertices = new Vector3[arrayLength];
+
+        int count = 0; 
+
+        foreach (Vector3[] v in vertice)
+        {
+            v.CopyTo(vertices, count);
+            count += v.Length;
+        }
+
+        Vector3 sum = Vector3.zero;
+
+        foreach (Vector3 vertex in vertices)
+        {
+            sum += vertex;
+        }
+
+        sum /= arrayLength;
+
+        return sum;
+    }
+
+    [SerializeField] private Material minimapMaterial;
+    private void SetMiniMap()
+    {
+        int modelFrameChildCounnt = modelFrame.childCount;
+
+        List<Vector3[]> vertice = new List<Vector3[]>();
+
+        for (int k = 1; k < modelFrameChildCounnt; ++k)
+        {
+            Transform child = modelFrame.GetChild(k);
+            Transform o = Instantiate(child, child.position, child.rotation);
+            o.GetComponent<MeshRenderer>().sharedMaterial = minimapMaterial;
+            o.localScale = Vector3.one * -1;
+            o.gameObject.layer = LayerMask.NameToLayer("MiniMapMesh");
+            //o.localScale = 
+        }
+
+       
+    }
+
+    
 }

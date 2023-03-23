@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,13 +22,14 @@ public class InputSystem : MonoBehaviour
     [SerializeField] private GameObject dot;
     [SerializeField] private DefectConstructor defectConstructor;
 
+    [SerializeField] private OverallSetting overallSetting;
+
     float dragTime;
     float holdTime;
 
     private Vector3 firstMousePos;
     float currentPinchDistance;
     // Start is called before the first frame update
-
 
 
     void Start()
@@ -38,15 +40,16 @@ public class InputSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
 
-        if (PinCh())
+
+        if (Pinch())
         {
             onClickStart = false;
             return;
         }
 
-        zoomInOutWithWheel();
+         zoomInOutWithWheel();
+
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -75,7 +78,9 @@ public class InputSystem : MonoBehaviour
             //print("Dragging");
             if (isDragging)
             {
-                if(Vector3.Distance(firstMousePos,Input.mousePosition) < 10 && enableDot)
+                //cursor.SetVisible();
+
+                if (Vector3.Distance(firstMousePos,Input.mousePosition) < 10 && enableDot)
                 {
                     holdTime += Time.deltaTime;
                     
@@ -138,20 +143,24 @@ public class InputSystem : MonoBehaviour
 
             if (isDragging)
             {
-                cursor.SetVisible();
+                //cursor.SetInvisible();
+                Action delayCall = () => cursor.SetVisible();
+                StartCoroutine(DelayCall(delayCall));
             }
 
-            if(Vector3.Distance(firstMousePos,Input.mousePosition) < 10 && dragTime < 0.5f)
+            if (Vector3.Distance(firstMousePos,Input.mousePosition) < 10 && dragTime < 0.5f)
             {
                 if (!camController.GetCameraOnMove())
                 {
-           
+                    
                     StartCoroutine(playerMovement.MoveStage());
                 }
             }
 
             isDragging = false;
             hold = false;
+
+        
         }
 
         
@@ -185,10 +194,11 @@ public class InputSystem : MonoBehaviour
         return false;
     }
 
-    private bool PinCh()
+    private bool Pinch()
     {
         if (Input.touchCount == 2)
         {
+            cursor.SetInvisible();
 
             Touch touchZero = Input.GetTouch(0);
             Touch touchOne = Input.GetTouch(1);
@@ -211,9 +221,9 @@ public class InputSystem : MonoBehaviour
            
             Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
 
-           currentPinchDistance = distance;
+            currentPinchDistance = distance;
 
-           return true;
+            return true;
         }
 
         return false;
@@ -222,5 +232,12 @@ public class InputSystem : MonoBehaviour
     public void SetEnableDot()
     {
         enableDot = true;
+    }
+    
+
+    public IEnumerator DelayCall(Action func)
+    {
+        yield return new WaitForEndOfFrame();
+        func.Invoke();
     }
 }

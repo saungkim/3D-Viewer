@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private int stage = 0;
 
     [SerializeField] private NetworkManager networkManager;
+    [SerializeField] private OverallSetting overallSetting;
 
     struct poi {
         internal int index;
@@ -122,9 +123,18 @@ public class PlayerMovement : MonoBehaviour
     {
        
         poi p = FindNearPointFromMouse();
-   
-        if (stage != p.index  )
+
+        print(construction.GetChild(p.index).position.y + ":" + p.value.y);
+
+        if (stage != p.index && cursor.GetCursorPoint().y < p.value.y )
         {
+   
+
+            if (overallSetting.GetZoomInit())
+            {
+                Camera.main.fieldOfView = 60;
+            }
+
             construction.GetChild(p.index).gameObject.SetActive(true);
             //AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 
@@ -164,6 +174,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (stage != p.index)
         {
+        
+
             construction.GetChild(p.index).gameObject.SetActive(true);
             AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 

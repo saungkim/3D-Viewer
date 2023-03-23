@@ -33,7 +33,6 @@ public class CameraController : MonoBehaviour
 
     public void UpdateRotation()
     {
-
         // Update the rotation of the camera based on the mouse delta
         Vector3 mouseDelta = Input.mousePosition - dragStartMousePosition;
 
@@ -90,17 +89,17 @@ public class CameraController : MonoBehaviour
         return cameraOnMove;
     }
 
-    float moveTime = 0.5f;    // 이동 시간
+    float moveTime = 1.5f;    // 이동 시간
     float initmoveTime = 0.5f;
-    float moveTime1 = 0.1f;
+    float moveTime1 = 1f;
 
     IEnumerator MoveCamera(Vector3 targetPosition)
-    {
+    {   
         float elapsedTime = 0.0f;
         Vector3 startPosition = transform.position;
         float distance = Vector3.Distance(startPosition, targetPosition);
 
-        float multMoveTime = moveTime1 * distance;
+        float multMoveTime = moveTime1 ;
 
         while (elapsedTime < multMoveTime)
         {

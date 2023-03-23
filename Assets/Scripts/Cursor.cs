@@ -12,11 +12,14 @@ public class Cursor : MonoBehaviour
 
     private Vector3 originScale;
 
+    [SerializeField] private GameObject cursorChild;
+
     void Start()
     {
        originScale = cursor.transform.localScale;
        UnityEngine.Cursor.visible = false;
-        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+       UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+       
     }
 
     void Update()
@@ -36,7 +39,7 @@ public class Cursor : MonoBehaviour
             cursor.position = hit.point + hit.normal * 0.001f;
             cursor.LookAt(hit.point + hit.normal);
 
-            gauge.position = hit.point + hit.normal * 0.001f;
+            gauge.position = hit.point + hit.normal * 0.0001f;
             gauge.LookAt(hit.point + hit.normal);
         }
     }
@@ -69,6 +72,11 @@ public class Cursor : MonoBehaviour
     public void SetScaleFov()
     {
         cursor.transform.localScale = originScale   * Camera.main.fieldOfView / 60  ;
+    }
+
+    public void SetActivate(bool onOff)
+    {
+        cursorChild.SetActive(onOff);
     }
   
 }
