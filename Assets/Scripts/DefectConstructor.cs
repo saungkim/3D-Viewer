@@ -114,6 +114,45 @@ public class DefectConstructor : MonoBehaviour
         nativeMessanger.NativeSendMessage("SelectDefect." + JsonUtility.ToJson(defectArray[id]));
     }
 
+    public void SetColor(int id,Color color)
+    {
+        
+    }
+
+    public void DestroyDefect(string id , Action<string> callback)
+    {
+   
+
+        bool destroied = false;
+   
+        int defectListCount = defectList.Count;
+
+        if (defectListCount == 0)
+        {
+            callback("Destroy Defect Error :" + "There are no Defects.");
+        }
+
+        for (int i = 0; i < defectListCount; ++i)
+        {
+            if ( defectList[i].id == id)
+            {
+                defectList.RemoveAt(i);
+                Destroy(defectDot.GetChild(i + 1));
+
+                destroied = true;
+
+                break;
+            }
+        }
+
+        if (!destroied)
+        {
+            callback("Destroy Defect Error :" + id + " " + "Id doesn't exist.");
+        }
+
+
+    }
+
     [Serializable]
     public class Defect
     {

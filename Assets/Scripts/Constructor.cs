@@ -9,6 +9,7 @@ using UnityEngine.AI;
 using Unity.VisualScripting;
 using System.IO;
 using System.Linq;
+using static UnityEngine.UI.Image;
 
 public class Constructor : MonoBehaviour
 {
@@ -25,12 +26,13 @@ public class Constructor : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private InputSystem inputSystem;
 
-    [SerializeField] private Camera minimapCamera;
-
+    [SerializeField] private MiniMapConstructor miniMapConstructor;
+    [SerializeField] private GameObject movePoint;
+    
     List<byte[]> textures;
     // Start is called before the first frame update
 
-
+    private bool waitForFixedUpdated = false;
    
     void Start()
     {
@@ -253,8 +255,12 @@ public class Constructor : MonoBehaviour
         yield return new WaitUntil(()=>isLoadDone);
         playerMovement.InitStage(stage);
 
-        SetMiniMap();
-        //print("MaxDistance:" + GetMeshVerticesMaxDistance());
+        //SetMiniMap();
+        yield return new WaitForFixedUpdate();
+
+        waitForFixedUpdated = true;
+
+        //SetMovePointsVisible();
     }
 
     public bool GetIsLoadDone()
@@ -338,6 +344,8 @@ public class Constructor : MonoBehaviour
     [SerializeField] private Material minimapMaterial;
     private void SetMiniMap()
     {
+        miniMapConstructor.ActiveMiniMap();
+
         int modelFrameChildCounnt = modelFrame.childCount;
 
         List<Vector3[]> vertice = new List<Vector3[]>();
@@ -349,10 +357,25 @@ public class Constructor : MonoBehaviour
             o.GetComponent<MeshRenderer>().sharedMaterial = minimapMaterial;
             o.localScale = Vector3.one * -1;
             o.gameObject.layer = LayerMask.NameToLayer("MiniMapMesh");
-            //o.localScale = 
-        }
+        }      
+    }
 
-       
+    public IEnumerator SetMovePointsVisible(bool visible)
+    {
+        yield return new WaitUntil(()=>waitForFixedUpdated);
+
+        int camGroupChild = camGroup.childCount;
+        
+        for(int i = 0; i < camGroupChild; ++i)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(camGroup.GetChild(i).position, Vector3.down , out hit))
+            {
+               GameObject o = Instantiate(movePoint);
+               o.SetActive(visible);
+               o.transform.position = hit.point + hit.normal * 0.001f;
+            }
+        }
     }
 
     

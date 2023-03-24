@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private GameObject miniMap;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,4 +22,10 @@ public class UIManager : MonoBehaviour
     {
         Application.Unload();
     }
+
+    public void ActivateMiniMap(bool onOff) 
+    {
+        miniMap.SetActive(onOff);
+    }
+
 }

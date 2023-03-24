@@ -12,8 +12,9 @@ public class NativeMessanger : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private OverallSetting overallSetting;
+    [SerializeField] private CameraController camController;
+    //[SerializeField] private 
     
-
     enum LoadState { None, Loading, Done }
     LoadState readEnvState = LoadState.None;
     LoadState readDefectState = LoadState.None;
@@ -21,7 +22,11 @@ public class NativeMessanger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value);};
+
 #if UNITY_EDITOR
+        string fileName = "input";
+        fileName = Application.dataPath + "/Sources/" + fileName + ".env";
         //ReadEnv("input");
         //ReadDefect("input");
         //ViewStage("19");
@@ -31,7 +36,8 @@ public class NativeMessanger : MonoBehaviour
         ReadDefect(Application.streamingAssetsPath + "/input.json");
         ViewStage("19");
         EnableDotCreateMode();
-        //SetCursor("false");
+        SetCursor("false");
+        SetMovePointsVisible("true");
         //SetZoomInitWhenMove("true");
     }
 
@@ -50,9 +56,6 @@ public class NativeMessanger : MonoBehaviour
 
         readEnvState = LoadState.Loading;
 
-//#if UNITY_EDITOR
-//        fileName = Application.dataPath + "/Sources/" + fileName + ".env";
-//#endif
 
         constructor.FileOpen(fileName, ReadEnvCallBack);
     }
@@ -97,6 +100,81 @@ public class NativeMessanger : MonoBehaviour
         StartCoroutine(defectConstructor.MoveCamInstant(defectId));
     }
 
+    public void DestoryDefect(string value)
+    {
+
+        defectConstructor.DestroyDefect(value , nativeSendErrorMessage);
+    }
+
+    public void SetColorDefect(string value)
+    {
+        string[] values = value.Split(',');
+        string htmlColor = values[1]; // "#FF0000"; Red
+        string id = values[0];
+
+        Color color;
+
+        if (ColorUtility.TryParseHtmlString(htmlColor, out color))
+        {
+            // Color 값을 사용합니다. 
+        }
+        else
+        {
+            nativeSendErrorMessage("SetColorDefect Error :" + htmlColor + " "+ "ParseHtmlString Failed");
+        }
+    }
+
+    public void CreateTag(string id)
+    {
+
+    }
+
+    public void SetMoveTime()
+    {
+
+    }
+
+    public void SetCameraSensitivity(string value)
+    {
+        string[] values = value.Split(',');
+
+        float dragSpeed;
+        float lerpSpeed;
+
+        if (float.TryParse(values[0],out dragSpeed))
+        {
+            camController.dragSpeed = dragSpeed;
+        }
+        else
+        {
+            nativeSendErrorMessage("SetCameraSensitivity :" + values[0] + " " + "Parse Failed");
+        }
+
+        if (float.TryParse(values[1],out lerpSpeed))
+        {
+            camController.lerpSpeed = lerpSpeed;
+        }
+        else
+        {
+           nativeSendErrorMessage("SetCameraSensitivity :" + values[1] +" " + "Parse Failed");
+        }
+    }
+
+    public void SetCameraFov(string value)
+    {
+        float fov;
+
+        if(float.TryParse(value,out fov))
+        {
+            Camera.main.fieldOfView = fov;
+        }
+        else
+        {
+            nativeSendErrorMessage("SetCameraFov Error :" + value + " " + "Parse Failed");
+        }
+    }
+
+
     public void ViewStage(string rStage)
     {
         int stage = int.Parse(rStage);
@@ -125,6 +203,11 @@ public class NativeMessanger : MonoBehaviour
         print(message);
     }
 
+    public void nativeSendErrorMessage(string message)
+    {
+
+    }
+
     public void SetZoomInitWhenMove(string value)
     {
         overallSetting.SetZoomInitWhenMove(value);
@@ -135,5 +218,10 @@ public class NativeMessanger : MonoBehaviour
         overallSetting.SetCursor(value);
     }
 
-    
+    public void SetMovePointsVisible(string value)
+    {
+        bool visible = bool.Parse(value);
+        StartCoroutine(constructor.SetMovePointsVisible(visible));
+    }
+
 }

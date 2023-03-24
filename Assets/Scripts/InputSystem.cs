@@ -31,6 +31,7 @@ public class InputSystem : MonoBehaviour
     float currentPinchDistance;
     // Start is called before the first frame update
 
+    private bool measureMode = false;
 
     void Start()
     {
@@ -239,5 +240,18 @@ public class InputSystem : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         func.Invoke();
+    }
+
+    public void SetMeasureMode(bool onOff)
+    {
+        measureMode = onOff;
+    }
+
+    private void Hold()
+    {
+        if (measureMode)
+        {
+
+        }
     }
 }

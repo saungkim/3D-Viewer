@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TagConstructor : MonoBehaviour
+public class UIConstructor : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -13,11 +13,6 @@ public class TagConstructor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    public void CreateDot(Color color , Vector3 pos , Quaternion quaternion)
-    {
-
+        
     }
 }
