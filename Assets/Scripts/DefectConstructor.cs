@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
+
 public class DefectConstructor : MonoBehaviour
 {
     [SerializeField] private Transform defectDot;
@@ -15,6 +17,8 @@ public class DefectConstructor : MonoBehaviour
     Defect[] defectArray;
 
     [SerializeField] private NativeMessanger nativeMessanger;
+
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -121,8 +125,6 @@ public class DefectConstructor : MonoBehaviour
 
     public void DestroyDefect(string id , Action<string> callback)
     {
-   
-
         bool destroied = false;
    
         int defectListCount = defectList.Count;
@@ -137,7 +139,7 @@ public class DefectConstructor : MonoBehaviour
             if ( defectList[i].id == id)
             {
                 defectList.RemoveAt(i);
-                Destroy(defectDot.GetChild(i + 1));
+                Destroy(defectDot.GetChild(i + 1).gameObject);
 
                 destroied = true;
 
@@ -150,8 +152,39 @@ public class DefectConstructor : MonoBehaviour
             callback("Destroy Defect Error :" + id + " " + "Id doesn't exist.");
         }
 
-
     }
+
+    public void SetDefectColor(string id, Color color, Action<string> callback)
+    {
+        bool changed = false;
+
+        int defectListCount = defectList.Count;
+
+        if (defectListCount == 0)
+        {
+            callback("SetDefectColor Error :" + "There are no Defects.");
+        }
+
+        for (int i = 0; i < defectListCount; ++i)
+        {
+            if (defectList[i].id == id)
+            {
+
+                defectDot.GetChild(i + 1).GetChild(0).GetComponent<Image>().color = color;
+
+                print(defectDot.GetChild(i).name);
+
+                changed = true;
+
+                break;
+            }
+        }
+
+        if (!changed)
+        {
+            callback("SetDefectColor Error :" + id + " " + "Id doesn't exist.");
+        }
+    } 
 
     [Serializable]
     public class Defect

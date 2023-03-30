@@ -17,6 +17,9 @@ public class CameraController : MonoBehaviour
     private Vector3 dragStartMousePosition;
     private Quaternion dragStartRotation;
 
+    private float directionX = -1;
+    private float directionY = -1;
+
 
     private void Start()
     {
@@ -34,9 +37,11 @@ public class CameraController : MonoBehaviour
     public void UpdateRotation()
     {
         // Update the rotation of the camera based on the mouse delta
-        Vector3 mouseDelta = Input.mousePosition - dragStartMousePosition;
+        Vector3 mouseDelta =  Input.mousePosition - dragStartMousePosition;
 
-        if (mouseDelta.magnitude < 10 && !onDragging)
+        mouseDelta = new Vector3(mouseDelta.x * directionX, mouseDelta.y * directionY, mouseDelta.z);
+
+        if (mouseDelta.magnitude < 20 && !onDragging)
             return;
 
         onDragging = true;
@@ -62,8 +67,6 @@ public class CameraController : MonoBehaviour
     private bool cameraOnMove = false;
     public IEnumerator MoveCam(Vector3 input , Material[] materials)
     {
-  
-    
         //transform.position = input;
         if (moveObject == null && moveCamera == null)
         {
@@ -74,7 +77,6 @@ public class CameraController : MonoBehaviour
             yield return StartCoroutine(moveObject);
             cameraOnMove = false;
         }
-
     }
 
     public void MoveCamInstant(Vector3 pos , Vector3 rot, float fov)
@@ -89,21 +91,29 @@ public class CameraController : MonoBehaviour
         return cameraOnMove;
     }
 
-    float moveTime = 1.5f;    // 이동 시간
-    float initmoveTime = 0.5f;
-    float moveTime1 = 1f;
+    float moveTime = 1f;    // 이동 시간
+    float imageTransTime = 1f;
+
+    public void SetMoveTime(float time)
+    {
+        moveTime = time;
+    }
+
+
+    public void SetImageTransTime(float time)
+    {
+        imageTransTime = time;
+    }
 
     IEnumerator MoveCamera(Vector3 targetPosition)
     {   
         float elapsedTime = 0.0f;
         Vector3 startPosition = transform.position;
-        float distance = Vector3.Distance(startPosition, targetPosition);
-
-        float multMoveTime = moveTime1 ;
+  
+        float multMoveTime = moveTime ;
 
         while (elapsedTime < multMoveTime)
         {
-            // Lerp 함수를 사용하여 부드러운 이동 계산
             transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime / multMoveTime));
 
             elapsedTime += Time.deltaTime;
@@ -121,44 +131,24 @@ public class CameraController : MonoBehaviour
         Vector3 startPosition = transform.position;
         float distance = Vector3.Distance(startPosition,targetPosition);
 
-        float multMoveTime = moveTime1*distance;
-
-
-        //transform.position = targetPosition;
-
-        while (elapsedTime < moveTime)
+        while (elapsedTime < imageTransTime)
         {
-            // Lerp 함수를 사용하여 부드러운 이동 계산
-            //transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime / multMoveTime) );
-
-            
-
             foreach (Material m in materials)
             {
                 UnityEngine.Color color = UnityEngine.Color.white;
-                color.a = 1 - elapsedTime / moveTime;
+                color.a = 1 - elapsedTime / imageTransTime;
                 m.SetColor("_Color" , color);
-             
-
-                // Set the ZWrite property to true
-               // m.SetInt("_ZWrite", 0);
-            }
-          
+            }       
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-       
-
         foreach (Material m in materials)
         {
             m.SetColor("_Color", UnityEngine.Color.white);
-            // m.SetInt("_ZWrite", 1);
         }
         moveCamera = null;
         moveObject = null;
     }
-
-
 }

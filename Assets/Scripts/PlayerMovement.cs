@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform construction;
     [SerializeField] private Vector3[] movePoints;
 
-    [SerializeField] private Cursor cursor;
+    [SerializeField] private ViewerCursor cursor;
 
     [SerializeField] private CameraController camController;
 
@@ -19,7 +19,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private OverallSetting overallSetting;
 
-    struct poi {
+    struct poi
+    {
         internal int index;
         internal Vector3 value;
     }
@@ -33,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     poi FindNearPointFromMouse()
@@ -41,17 +42,17 @@ public class PlayerMovement : MonoBehaviour
         float min = 1000;
 
         Vector3 cursorPoint = cursor.GetCursorPoint();
-        Vector3 value =  Vector3.zero;
+        Vector3 value = Vector3.zero;
 
         int index = -1;
 
         int i = 0;
 
-        foreach(Vector3 pos in movePoints)
+        foreach (Vector3 pos in movePoints)
         {
-            float dis =  Vector3.Distance(cursorPoint, pos);
+            float dis = Vector3.Distance(cursorPoint, pos);
 
-            if(dis < min)
+            if (dis < min)
             {
                 min = dis;
                 index = i;
@@ -63,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
         poi p = new poi();
         p.index = index;
         p.value = movePoints[index];
-        
+
 
         return p;
     }
@@ -107,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
 
         int childCount = construction.childCount - 1;
 
-        for(int i = 0; i < childCount; ++i)
+        for (int i = 0; i < childCount; ++i)
         {
             movePoints[i] = construction.GetChild(i).position;
         }
@@ -121,14 +122,14 @@ public class PlayerMovement : MonoBehaviour
     }
     public IEnumerator MoveStage()
     {
-       
+
         poi p = FindNearPointFromMouse();
 
-        print(construction.GetChild(p.index).position.y + ":" + p.value.y);
+        //print(construction.GetChild(p.index).position.y + ":" + p.value.y);
 
-        if (stage != p.index && cursor.GetCursorPoint().y < p.value.y )
+        if (stage != p.index && cursor.GetCursorPoint().y < p.value.y - 0.5f)
         {
-   
+
 
             if (overallSetting.GetZoomInit())
             {
@@ -138,10 +139,10 @@ public class PlayerMovement : MonoBehaviour
             construction.GetChild(p.index).gameObject.SetActive(true);
             //AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 
-            yield return StartCoroutine(camController.MoveCam(p.value , GetChildMaterials(construction.GetChild(stage).GetChild(0))));
+            yield return StartCoroutine(camController.MoveCam(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0))));
             construction.GetChild(stage).gameObject.SetActive(false);
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
-            
+
             //AllChildOff(construction.GetChild(p.index), true);
 
             stage = p.index;
@@ -154,18 +155,18 @@ public class PlayerMovement : MonoBehaviour
     int countStageOnUI = 0;
     public void MoveStageOnUI()
     {
-        StartCoroutine(MoveStage(networkManager.camPositions[countStageOnUI] , networkManager.camRotations[countStageOnUI] , networkManager.camFovs[countStageOnUI]));
-        
+        StartCoroutine(MoveStage(networkManager.camPositions[countStageOnUI], networkManager.camRotations[countStageOnUI], networkManager.camFovs[countStageOnUI]));
+
 
         ++countStageOnUI;
 
-        if(countStageOnUI == networkManager.camPositions.Length)
+        if (countStageOnUI == networkManager.camPositions.Length)
         {
             countStageOnUI = 0;
         }
     }
 
-    public IEnumerator MoveStage(Vector3 pos , Vector3 rot , float fov)
+    public IEnumerator MoveStage(Vector3 pos, Vector3 rot, float fov)
     {
         poi p = FindNearPointFrom(pos);
 
@@ -174,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (stage != p.index)
         {
-        
+
 
             construction.GetChild(p.index).gameObject.SetActive(true);
             AllChildOff(construction.GetChild(p.index).GetChild(0), false);
@@ -187,18 +188,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void MoveStageInstant(Vector3 pos,Vector3 rot,float fov)
+    public void MoveStageInstant(Vector3 pos, Vector3 rot, float fov)
     {
         poi p = FindNearPointFrom(pos);
         construction.GetChild(p.index).gameObject.SetActive(true);
         stage = p.index;
-        camController.MoveCamInstant(pos,rot,fov);
+        camController.MoveCamInstant(pos, rot, fov);
     }
 
-    private void AllChildOff(Transform tf,bool onOff)
+    private void AllChildOff(Transform tf, bool onOff)
     {
         int childCount = tf.childCount;
-        for(int i = 0; i < childCount; ++i)
+        for (int i = 0; i < childCount; ++i)
         {
             tf.GetChild(i).gameObject.SetActive(onOff);
         }
@@ -209,15 +210,15 @@ public class PlayerMovement : MonoBehaviour
         int childCount = tf.childCount;
         Material[] materials = new Material[childCount];
 
-        for(int i = 0; i < childCount; ++i)
+        for (int i = 0; i < childCount; ++i)
         {
-            materials[i] = tf.GetChild(i).GetComponent<MeshRenderer>().material ;
+            materials[i] = tf.GetChild(i).GetComponent<MeshRenderer>().material;
         }
 
         return materials;
     }
 
-    public void SetPositionAndLook(int panoramaPosition )
+    public void SetPositionAndLook(int panoramaPosition)
     {
 
     }
@@ -227,6 +228,7 @@ public class PlayerMovement : MonoBehaviour
         return stage;
     }
 
+  
 
 }
 

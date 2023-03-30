@@ -10,7 +10,7 @@ public class NavvisCamera : MonoBehaviour
 
     private Vector3[] movePoints;
 
-    [SerializeField] private Cursor cursor;
+    [SerializeField] private ViewerCursor cursor;
 
     [SerializeField] private CameraController camController;
 

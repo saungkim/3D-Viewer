@@ -28,6 +28,7 @@ public class Constructor : MonoBehaviour
 
     [SerializeField] private MiniMapConstructor miniMapConstructor;
     [SerializeField] private GameObject movePoint;
+    [SerializeField] private Transform movePointGroup;
     
     List<byte[]> textures;
     // Start is called before the first frame update
@@ -99,6 +100,8 @@ public class Constructor : MonoBehaviour
             }
         };
         StartCoroutine(networkManager.GetResidentsDefectsPositions(get));
+
+        
     }
     bool isLoadDone = false;
     private void envToModel(byte[] content , Action<string> callback)
@@ -255,9 +258,9 @@ public class Constructor : MonoBehaviour
         yield return new WaitUntil(()=>isLoadDone);
         playerMovement.InitStage(stage);
 
-        //SetMiniMap();
+      
         yield return new WaitForFixedUpdate();
-
+        //SetMiniMap();
         waitForFixedUpdated = true;
 
         //SetMovePointsVisible();
@@ -342,9 +345,11 @@ public class Constructor : MonoBehaviour
     }
 
     [SerializeField] private Material minimapMaterial;
-    private void SetMiniMap()
+    public IEnumerator SetMiniMap()
     {
-        miniMapConstructor.ActiveMiniMap();
+        yield return new WaitUntil(() => waitForFixedUpdated);
+
+        miniMapConstructor.ActiveMiniMap(true);
 
         int modelFrameChildCounnt = modelFrame.childCount;
 
@@ -373,6 +378,7 @@ public class Constructor : MonoBehaviour
             {
                GameObject o = Instantiate(movePoint);
                o.SetActive(visible);
+               o.transform.parent = movePointGroup;
                o.transform.position = hit.point + hit.normal * 0.001f;
             }
         }

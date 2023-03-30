@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class InputSystem : MonoBehaviour
 {
@@ -14,15 +16,17 @@ public class InputSystem : MonoBehaviour
     private bool enableDot = false;
 
     [Header("Container")]
-    [SerializeField] private Cursor cursor;
+    [SerializeField] private ViewerCursor cursor;
     [SerializeField] private CameraController camController;
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private ImgsFillDynamic ImgsFD;
 
     [SerializeField] private GameObject dot;
     [SerializeField] private DefectConstructor defectConstructor;
-
+    [SerializeField] private Measurement measurement;
     [SerializeField] private OverallSetting overallSetting;
+
+    [SerializeField] private Transform gauage;
 
     float dragTime;
     float holdTime;
@@ -32,6 +36,10 @@ public class InputSystem : MonoBehaviour
     // Start is called before the first frame update
 
     private bool measureMode = false;
+    private float enableDotDistance = 50;
+
+    public enum ControlState { None, Defect, Measure , AutoTour , Tag , MeasureDoing }
+    private ControlState controlState = ControlState.None;
 
     void Start()
     {
@@ -51,117 +59,30 @@ public class InputSystem : MonoBehaviour
 
          zoomInOutWithWheel();
 
+        int pointerID;
+
+#if UNITY_EDITOR
+        pointerID = -1; //PC나 유니티 상에서는 -1
+#elif UNITY_IOS || UNITY_IPHONE || UNITY_ANDROID
+        pointerID = 0;  // 휴대폰이나 이외에서 터치 상에서는 0 
+#endif
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.IsPointerOverGameObject(pointerID))
             {
                 return;
             }
 
-           dragTime = 0;
-
-           holdTime = 0;
-
-           firstMousePos = Input.mousePosition;
-
-           onClickStart = true;
-
-           imgsFDDone = false;
+            MouseButtonDown();
         }
         else if (Input.GetMouseButton(0))
         {
-            if (!onClickStart)
-                return;
-
-            dragTime += Time.deltaTime;
-
-            //print("Dragging");
-            if (isDragging)
-            {
-                //cursor.SetVisible();
-
-                if (Vector3.Distance(firstMousePos,Input.mousePosition) < 10 && enableDot)
-                {
-                    holdTime += Time.deltaTime;
-                    
-                    if(holdTime > 0.7f)
-                    {
-                        hold = true;
-                    }
-
-                    if (hold)
-                    {
-                        //ImgsFD.AllChildActivate(true);
-                        //ImgsFD.SetValue( (holdTime - 0.7f) / 1f, true);
-                    }
-
-                    if (holdTime - 0.7f >= 1f)
-                    {
-                        if (!imgsFDDone)
-                        {
-
-                            imgsFDDone = true;
-
-                            defectConstructor.CreateDot(ImgsFD.transform.position,ImgsFD.transform.eulerAngles,true);
-                           
-                         }        
-                    }
-                }
-                else
-                {
-                    holdTime = 0;
-                }
-
-                if(!hold)
-                {
-                    camController.UpdateRotation();
-
-                }
-
-            }
-            else
-            {
-                cursor.SetInvisible();
-                camController.StartDrag();
-                // Start dragging the camera
-                isDragging = true;
-              
-            }
+            MouseButtonHold();
         }
         else if(Input.GetMouseButtonUp(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                return;
-            }
-
-            if(holdTime < 0.5f && CheckDefectCollider())
-            {
-              
-                return;
-            }
-
-            if (isDragging)
-            {
-                //cursor.SetInvisible();
-                Action delayCall = () => cursor.SetVisible();
-                StartCoroutine(DelayCall(delayCall));
-            }
-
-            if (Vector3.Distance(firstMousePos,Input.mousePosition) < 10 && dragTime < 0.5f)
-            {
-                if (!camController.GetCameraOnMove())
-                {
-                    
-                    StartCoroutine(playerMovement.MoveStage());
-                }
-            }
-
-            isDragging = false;
-            hold = false;
-
-        
+            MouseButtonUp();
         }
 
         
@@ -176,6 +97,118 @@ public class InputSystem : MonoBehaviour
         float fov = Camera.main.fieldOfView;
         fov -= Input.mouseScrollDelta.y * zoomSpeed;
         Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
+    }
+
+    private void MouseButtonDown()
+    {
+        dragTime = 0;
+
+        holdTime = 0;
+
+        firstMousePos = Input.mousePosition;
+
+        onClickStart = true;
+
+        imgsFDDone = false;
+
+        camController.StartDrag();
+    }
+
+    private void MouseButtonHold()
+    {
+        if (!onClickStart)
+            return;
+
+        dragTime += Time.deltaTime;
+
+        if (isDragging)
+        {
+            if (Vector3.Distance(firstMousePos, Input.mousePosition) < enableDotDistance && controlState != ControlState.None)
+            {
+                holdTime += Time.deltaTime;
+
+                if (holdTime > 0.7f)
+                {
+                    hold = true;
+                }
+
+                if (hold)
+                {
+                    StartCoroutine(ImgsFD.DelaySetActive(true));
+                    ImgsFD.SetValue((holdTime - 0.7f) / 1f, true);
+                }
+
+                if (holdTime - 0.7f >= 1f)
+                {
+                    if (!imgsFDDone)
+                    {
+
+                        imgsFDDone = true;
+
+                        if(controlState == ControlState.Defect)
+                        {
+                            defectConstructor.CreateDot(cursor.cursor.position, cursor.cursor.eulerAngles, true);
+                        }
+                        else if (controlState == ControlState.MeasureDoing)
+                        {
+                            measurement.CreateMeasurementDot(cursor.cursor.position , cursor.cursor.eulerAngles);
+                        }
+                      
+
+                    }
+                }
+            }
+            else
+            {
+                holdTime = 0;
+            }
+
+            if (!hold)
+            {
+                if(controlState != ControlState.MeasureDoing)
+                {
+                    camController.UpdateRotation();
+                }
+            }
+
+        }
+        else
+        {
+            cursor.SetInvisible();
+
+            isDragging = true;
+            ImgsFD.SetActive(false);
+        }
+    }
+
+    private void MouseButtonUp()
+    {
+        if (!onClickStart)
+            return;
+
+        if (holdTime < 0.5f && CheckDefectCollider())
+        {
+            return;
+        }
+
+        if (isDragging)
+        {
+            Action delayCall = () => cursor.SetVisible();
+            StartCoroutine(DelayCall(delayCall));
+        }
+
+        if (Vector3.Distance(firstMousePos, Input.mousePosition) < 10 && dragTime < 0.5f)
+        {
+            if (!camController.GetCameraOnMove())
+            {
+                StartCoroutine(playerMovement.MoveStage());
+            }
+        }
+
+        isDragging = false;
+        hold = false;
+        ImgsFD.SetActive(false);
+        onClickStart = false;
     }
 
     private bool CheckDefectCollider()
@@ -230,9 +263,9 @@ public class InputSystem : MonoBehaviour
         return false;
     }
 
-    public void SetEnableDot()
+    public void SetEnableDot(bool onOff)
     {
-        enableDot = true;
+        enableDot = onOff;
     }
     
 
@@ -253,5 +286,15 @@ public class InputSystem : MonoBehaviour
         {
 
         }
+    }
+
+    public void SetControlState(ControlState state)
+    {
+        controlState = state;
+    }
+
+    public ControlState GetControlState()
+    {
+        return controlState;
     }
 }

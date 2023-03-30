@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+
 using UnityEngine;
 
 public class NativeMessanger : MonoBehaviour
@@ -27,23 +28,37 @@ public class NativeMessanger : MonoBehaviour
 #if UNITY_EDITOR
         string fileName = "input";
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
-        //ReadEnv("input");
-        //ReadDefect("input");
-        //ViewStage("19");
-        //ViewDefect("NeedToChange3");
 #endif
         ReadEnv(Application.streamingAssetsPath + "/input.env");
         ReadDefect(Application.streamingAssetsPath + "/input.json");
         ViewStage("19");
-        EnableDotCreateMode();
+        //EnableDotCreateMode();
         SetCursor("false");
         SetMovePointsVisible("true");
-        //SetZoomInitWhenMove("true");
     }
 
-    public void EnableDotCreateMode()
+    private void Update()
     {
-        inputSystem.SetEnableDot();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SetDefectColor("NeedToChange1,#FF0000");
+        }
+    }
+
+    public void EnableDotCreateMode(string value)
+    {
+        bool createMode;
+
+        if (bool.TryParse(value, out createMode))
+        {
+            inputSystem.SetEnableDot(createMode);
+        }
+        else
+        {
+            nativeSendErrorMessage("EnableDotCreateMode Error :" + value + " " + "Parse Failed");
+        }
+
+    
     }
 
     public void ReadEnv(string fileName)
@@ -106,7 +121,7 @@ public class NativeMessanger : MonoBehaviour
         defectConstructor.DestroyDefect(value , nativeSendErrorMessage);
     }
 
-    public void SetColorDefect(string value)
+    public void SetDefectColor(string value)
     {
         string[] values = value.Split(',');
         string htmlColor = values[1]; // "#FF0000"; Red
@@ -116,7 +131,7 @@ public class NativeMessanger : MonoBehaviour
 
         if (ColorUtility.TryParseHtmlString(htmlColor, out color))
         {
-            // Color 값을 사용합니다. 
+            defectConstructor.SetDefectColor(id,color,nativeSendErrorMessage);
         }
         else
         {
@@ -129,9 +144,17 @@ public class NativeMessanger : MonoBehaviour
 
     }
 
-    public void SetMoveTime()
+    public void SetMoveTime(string value)
     {
-
+        float moveTime;
+        if (float.TryParse(value, out moveTime))
+        {
+            camController.SetMoveTime(moveTime);
+        }
+        else
+        {
+            nativeSendErrorMessage("SetMoveTime Error :" + value +" "+ "Parse Failed");
+        }
     }
 
     public void SetCameraSensitivity(string value)
@@ -205,7 +228,7 @@ public class NativeMessanger : MonoBehaviour
 
     public void nativeSendErrorMessage(string message)
     {
-
+        print(message);
     }
 
     public void SetZoomInitWhenMove(string value)
@@ -224,4 +247,8 @@ public class NativeMessanger : MonoBehaviour
         StartCoroutine(constructor.SetMovePointsVisible(visible));
     }
 
+    public void SetActiveMinimap()
+    {
+        constructor.SetMiniMap();
+    }
 }

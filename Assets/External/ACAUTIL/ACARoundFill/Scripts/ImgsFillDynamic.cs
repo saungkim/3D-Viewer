@@ -25,6 +25,8 @@ public class ImgsFillDynamic : MonoBehaviour
     public float MultifyText = 100F;
     public string TailText = "%";
 
+    [SerializeField] private GameObject ori;
+
     /// <summary>
     /// USAGE:Set SetFillAmount
     /// </summary>
@@ -117,6 +119,17 @@ public class ImgsFillDynamic : MonoBehaviour
         {
             transform.GetChild(i).gameObject.SetActive(act);
         }
+    }
+
+    public void SetActive(bool onOff)
+    {
+            ori.SetActive(onOff);
+    }
+
+    public IEnumerator DelaySetActive(bool onOff)
+    {
+        yield return new WaitForEndOfFrame();
+        ori.SetActive(onOff);
     }
 
     public void CreateInstance()

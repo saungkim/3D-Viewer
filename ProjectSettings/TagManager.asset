@@ -12,8 +12,8 @@ TagManager:
   - MiniMapMesh
   - Water
   - UI
-  - 
-  - 
+  - UIOnTop
+  - Cubemap
   - 
   - 
   - 
