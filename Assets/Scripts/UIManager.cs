@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Measurement measureMent;
     [SerializeField] private GameObject measrueMentButton;
 
+    [SerializeField] private PlayerMovement playerMovement;
+
     Action<Image> controlAction;
     Image selectedImage;
    
@@ -134,7 +136,7 @@ public class UIManager : MonoBehaviour
 
         bool onOff;
 
-        if(inputSystem.GetControlState() != InputSystem.ControlState.Measure)
+        if(inputSystem.GetControlState() != InputSystem.ControlState.Measure && inputSystem.GetControlState() != InputSystem.ControlState.MeasureDoing)
         {
             onOff = true;
             measrueMentButton.SetActive(onOff);
@@ -147,7 +149,6 @@ public class UIManager : MonoBehaviour
             inputSystem.SetControlState(InputSystem.ControlState.None);
             measureMent.ActivateMeasurement(onOff);
         }
-
         SetColorSelected(onOff, img);
     }
 
@@ -165,6 +166,7 @@ public class UIManager : MonoBehaviour
        
     }
 
+    IEnumerator autoTour;
     public void InverseAutoTour(Image img)
     {
         if (controlAction == null)
@@ -193,11 +195,15 @@ public class UIManager : MonoBehaviour
         {
             onOff = true;
             inputSystem.SetControlState(InputSystem.ControlState.AutoTour);
+
+            autoTour = playerMovement.AutoTour(0, 0);
+            StartCoroutine(autoTour);
         }
         else
         {
             onOff = false;
             inputSystem.SetControlState(InputSystem.ControlState.None);
+            StopCoroutine(autoTour);
         }
 
         SetColorSelected(onOff, img);

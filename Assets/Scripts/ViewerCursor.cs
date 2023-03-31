@@ -96,15 +96,20 @@ public class ViewerCursor : MonoBehaviour
   
     public void SetMeasureCursorMode()
     {
-        SetVisible();
-        cursor.gameObject.layer = LayerMask.NameToLayer("CubeMap");
-        cursor.localPosition = new Vector3(0.4f,0.005f,0.4f);
+        print("SetMeasureCursorMode");
+   
+        cursorChild.SetActive(true);
+        cursorChild.layer = LayerMask.NameToLayer("Cubemap");
+        cursorChild.transform.localScale = new Vector3(0.04f,0.005f,0.04f);
     }
 
-    public void SetNormalcursorMode()
+    public void SetNormalCursorMode()
     {
+        print("SetMeasureCursorMode");
+        //OverallSeting
+        cursorChild.SetActive(false);
         cursor.gameObject.layer = LayerMask.NameToLayer("Default");
-        cursor.localPosition = new Vector3(0.14f, 0.005f, 0.14f);
+        cursor.localScale = new Vector3(0.14f, 0.005f, 0.14f);
     }
   
 }

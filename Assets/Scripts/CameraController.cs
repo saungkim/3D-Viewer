@@ -20,6 +20,9 @@ public class CameraController : MonoBehaviour
     private float directionX = -1;
     private float directionY = -1;
 
+    [SerializeField] private Camera uiCamera;
+    [SerializeField] private Camera measureCamera;
+    [SerializeField] private InputSystem inputSystem;
 
     private void Start()
     {
@@ -36,6 +39,9 @@ public class CameraController : MonoBehaviour
 
     public void UpdateRotation()
     {
+        if (inputSystem.GetControlState() == InputSystem.ControlState.AutoTour)
+            return;
+
         // Update the rotation of the camera based on the mouse delta
         Vector3 mouseDelta =  Input.mousePosition - dragStartMousePosition;
 
@@ -83,7 +89,8 @@ public class CameraController : MonoBehaviour
     {
         transform.position = pos;
         transform.eulerAngles = rot;
-        Camera.main.fieldOfView = fov;
+        //Camera.main.fieldOfView = fov;
+        SetFovTogether(fov);
     }
 
     public bool GetCameraOnMove()
@@ -150,5 +157,31 @@ public class CameraController : MonoBehaviour
         }
         moveCamera = null;
         moveObject = null;
+    }
+
+    public void SetFovTogether(float fov)
+    {
+        uiCamera.fieldOfView = fov;
+        Camera.main.fieldOfView = fov;
+        //measureCamera.fieldOfView = fov;
+    }
+
+    public IEnumerator LinearLookAt(Vector3 pos , float iterTime)
+    {
+        float time = 0;
+
+        Vector3 direction = pos - transform.position;
+        direction.y = 0;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        while (iterTime > time)
+        {
+            time += Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation,targetRotation, 1);
+          
+            yield return null;
+        }
+
+        //transform.LookAt(pos);
     }
 }

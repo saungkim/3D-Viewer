@@ -96,7 +96,10 @@ public class InputSystem : MonoBehaviour
 
         float fov = Camera.main.fieldOfView;
         fov -= Input.mouseScrollDelta.y * zoomSpeed;
-        Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
+        //Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
+        camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
+
+        
     }
 
     private void MouseButtonDown()
@@ -174,7 +177,7 @@ public class InputSystem : MonoBehaviour
         }
         else
         {
-            cursor.SetInvisible();
+            //cursor.SetInvisible();
 
             isDragging = true;
             ImgsFD.SetActive(false);
@@ -253,7 +256,9 @@ public class InputSystem : MonoBehaviour
             float fov = Camera.main.fieldOfView;
             fov -= deltaDistance * zoomSpeed;
            
-            Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
+         
+
+            camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
 
             currentPinchDistance = distance;
 

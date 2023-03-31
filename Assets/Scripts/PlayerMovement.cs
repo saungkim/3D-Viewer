@@ -13,8 +13,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private ViewerCursor cursor;
 
     [SerializeField] private CameraController camController;
+    
 
-    private int stage = 0;
+    private int stage = -1;
 
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private OverallSetting overallSetting;
@@ -34,7 +35,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCoroutine(AutoTour(0,19));
+        }
     }
 
     poi FindNearPointFromMouse()
@@ -99,6 +103,38 @@ public class PlayerMovement : MonoBehaviour
         return p;
     }
 
+    poi FindNextNearPointFrom(Vector3 input)
+    {
+        float min = 1000;
+
+        Vector3 value = Vector3.zero;
+
+        int index = -1;
+        int index2 = -1;
+
+        int i = 0;
+
+        foreach (Vector3 pos in movePoints)
+        {
+            float dis = Vector3.Distance(input, pos);
+
+            if (dis < min)
+            {
+                min = dis;
+                index2 = index;
+                index = i;
+            }
+
+            ++i;
+        }
+
+        poi p = new poi();
+        p.index = index2;
+        p.value = movePoints[index2];
+
+        return p;
+    }
+
 
 
 
@@ -115,6 +151,8 @@ public class PlayerMovement : MonoBehaviour
     }
     public void InitStage(int panoramaID)
     {
+        if (stage == -1)
+            stage = 0;
         construction.GetChild(stage).gameObject.SetActive(false);
         construction.GetChild(panoramaID).gameObject.SetActive(true);
         transform.position = construction.GetChild(panoramaID).position;
@@ -188,8 +226,33 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public IEnumerator MoveStage(int index, float fov)
+    {
+        Camera.main.fieldOfView = fov;
+
+        if (stage != index)
+        {
+            print("MoveStageIndex:" + index);
+
+            construction.GetChild(index).gameObject.SetActive(true);
+            AllChildOff(construction.GetChild(index).GetChild(0), true);
+
+            yield return StartCoroutine(camController.MoveCam(movePoints[index], GetChildMaterials(construction.GetChild(stage).GetChild(0))));
+
+            construction.GetChild(stage).gameObject.SetActive(false);
+
+            stage = index;
+        }
+    }
+
+
     public void MoveStageInstant(Vector3 pos, Vector3 rot, float fov)
     {
+        if(stage != -1)
+        {
+            construction.GetChild(stage).gameObject.SetActive(false);
+        }
+
         poi p = FindNearPointFrom(pos);
         construction.GetChild(p.index).gameObject.SetActive(true);
         stage = p.index;
@@ -226,6 +289,51 @@ public class PlayerMovement : MonoBehaviour
     public int GetStage()
     {
         return stage;
+    }
+
+    public IEnumerator AutoTour(int startIndex , int endIndex)
+    {
+        MoveStageInstant(movePoints[startIndex],transform.eulerAngles,60);
+        int[] list = new int[8] { 0, 15, 2, 19, 25, 4, 29, 1 };
+        //
+        int tourIndex = 0;
+        int nexttourIndex = 0;
+        int routeIndex = list.Length - 1;
+        bool turn = true;
+        while (true)
+        {
+            if (turn)
+            {
+                ++tourIndex;
+            }
+            else
+            {
+                --tourIndex;
+            }
+        
+            if(tourIndex == routeIndex || tourIndex == 0)
+            {
+                turn = !turn;
+            }
+
+            if (turn)
+            {
+                nexttourIndex = tourIndex + 1;
+            }
+            else
+            {
+                nexttourIndex = tourIndex - 1;
+            }
+
+            StartCoroutine(camController.LinearLookAt(movePoints[list[nexttourIndex]],2f));
+         
+
+            yield return new WaitForSeconds(2.5f);
+
+            StartCoroutine(MoveStage(list[tourIndex], 60));
+        }
+
+     
     }
 
   

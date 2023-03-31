@@ -211,6 +211,9 @@ public class Constructor : MonoBehaviour
         {
             GameObject o = new GameObject();
             Mesh mesh = new Mesh();
+
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
             mesh.vertices = verticies[i];
             mesh.triangles = indicies[i];
 
@@ -229,6 +232,7 @@ public class Constructor : MonoBehaviour
             o.transform.parent = camGroup;
             o.transform.position = panoramaPosition[i];
             o.transform.localEulerAngles = panoramaRotation[i];
+            o.transform.name = i.ToString();
 
             o.GetComponent<CubeMap>().SetMaterial(Instantiate(cubeMapMaterial));
 
