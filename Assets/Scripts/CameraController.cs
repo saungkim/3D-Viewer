@@ -71,13 +71,14 @@ public class CameraController : MonoBehaviour
     IEnumerator moveObject = null;
     IEnumerator moveCamera = null;
     private bool cameraOnMove = false;
-    public IEnumerator MoveCam(Vector3 input , Material[] materials)
+    public IEnumerator MoveCam(Vector3 input , Material[] materials , Material[] materials1)
     {
         //transform.position = input;
         if (moveObject == null && moveCamera == null)
         {
             cameraOnMove = true;
-            moveObject = MoveObject(input , materials);
+            moveObject = MoveObject(input , materials , 1);
+            moveObject = MoveObject(input, materials1, -1);
             moveCamera = MoveCamera(input);
             StartCoroutine(moveCamera);
             yield return StartCoroutine(moveObject);
@@ -132,7 +133,7 @@ public class CameraController : MonoBehaviour
         moveObject = null;
 
     }
-    IEnumerator MoveObject(Vector3 targetPosition , Material[] materials )
+    IEnumerator MoveObject(Vector3 targetPosition , Material[] materials , int direction )
     {
         float elapsedTime = 0.0f;
         Vector3 startPosition = transform.position;
@@ -143,7 +144,7 @@ public class CameraController : MonoBehaviour
             foreach (Material m in materials)
             {
                 UnityEngine.Color color = UnityEngine.Color.white;
-                color.a = 1 - elapsedTime / imageTransTime;
+                color.a = (1 + direction)/2  - elapsedTime / imageTransTime * direction ;
                 m.SetColor("_Color" , color);
             }       
 

@@ -169,7 +169,7 @@ public class PlayerMovement : MonoBehaviour
             construction.GetChild(p.index).gameObject.SetActive(true);
             //AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 
-            yield return StartCoroutine(camController.MoveCam(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0))));
+            yield return StartCoroutine(camController.MoveCam(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0)) , GetChildMaterials(construction.GetChild(p.index).GetChild(0))));
             construction.GetChild(stage).gameObject.SetActive(false);
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
 
@@ -210,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
             construction.GetChild(p.index).gameObject.SetActive(true);
             AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 
-            yield return StartCoroutine(camController.MoveCam(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0))));
+            yield return StartCoroutine(camController.MoveCam(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0)), GetChildMaterials(construction.GetChild(p.index).GetChild(0))));
 
             construction.GetChild(stage).gameObject.SetActive(false);
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
@@ -230,7 +230,8 @@ public class PlayerMovement : MonoBehaviour
             construction.GetChild(index).gameObject.SetActive(true);
             AllChildOff(construction.GetChild(index).GetChild(0), true);
 
-            yield return StartCoroutine(camController.MoveCam(movePoints[index], GetChildMaterials(construction.GetChild(stage).GetChild(0))));
+           
+            yield return StartCoroutine(camController.MoveCam(movePoints[index], GetChildMaterials(construction.GetChild(stage).GetChild(0)), GetChildMaterials(construction.GetChild(index).GetChild(0))));
 
         
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
