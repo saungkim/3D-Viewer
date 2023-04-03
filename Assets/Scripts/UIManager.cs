@@ -107,7 +107,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            screenGauage.SetActive(true);
+            //screenGauage.SetActive(true);
             inputSystem.SetControlState(InputSystem.ControlState.Defect);
         }
     }

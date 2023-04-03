@@ -9,7 +9,7 @@ public class MiniMapConstructor : MonoBehaviour
     [SerializeField] private GameObject miniMapPosition;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private GameObject miniMapCamera;
-    [SerializeField] private GameObject miniMap;
+    public Transform miniMap;
 
     public bool init = false;
     // Start is called before the first frame update

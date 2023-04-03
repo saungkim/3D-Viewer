@@ -41,6 +41,7 @@ public class InputSystem : MonoBehaviour
     public enum ControlState { None, Defect, Measure , AutoTour , Tag , MeasureDoing }
     private ControlState controlState = ControlState.None;
 
+    private bool cursorOnUI = false;
     void Start()
     {
         
@@ -67,12 +68,20 @@ public class InputSystem : MonoBehaviour
         pointerID = 0;  // 휴대폰이나 이외에서 터치 상에서는 0 
 #endif
 
+       
+        if (EventSystem.current.IsPointerOverGameObject(pointerID))
+        {
+            cursorOnUI = true;
+        }
+        else
+        {
+            cursorOnUI = false;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject(pointerID))
-            {
+            if (cursorOnUI == true)
                 return;
-            }
 
             MouseButtonDown();
         }
@@ -100,6 +109,11 @@ public class InputSystem : MonoBehaviour
         camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
 
         
+    }
+
+    public bool GetCursorOnUI()
+    {
+        return cursorOnUI;
     }
 
     private void MouseButtonDown()
@@ -135,7 +149,7 @@ public class InputSystem : MonoBehaviour
                     hold = true;
                 }
 
-                if (hold)
+                if (controlState == ControlState.Defect || controlState == ControlState.MeasureDoing)
                 {
                     StartCoroutine(ImgsFD.DelaySetActive(true));
                     ImgsFD.SetValue((holdTime - 0.7f) / 1f, true);
@@ -200,7 +214,7 @@ public class InputSystem : MonoBehaviour
             StartCoroutine(DelayCall(delayCall));
         }
 
-        if (Vector3.Distance(firstMousePos, Input.mousePosition) < 10 && dragTime < 0.5f)
+        if (Vector3.Distance(firstMousePos, Input.mousePosition) < 10 && dragTime < 0.5f && controlState != ControlState.MeasureDoing)
         {
             if (!camController.GetCameraOnMove())
             {

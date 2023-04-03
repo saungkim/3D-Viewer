@@ -13,6 +13,8 @@ public class Measurement : MonoBehaviour
     [SerializeField] private RectTransform measureRenderUI;
     [SerializeField] private LineRenderer line;
     [SerializeField] private Transform measurement;
+    [SerializeField] private InputSystem inputSystem;
+
 
     private Vector3 measurePlusPos = new Vector3(0,330,0);
     private MeasurementDot selectedMeasurementDot;
@@ -22,8 +24,8 @@ public class Measurement : MonoBehaviour
 
     bool startMeasureMent = false;
 
-    enum MeasurementState {Start,Connect,End}
-    MeasurementState measureMentState = MeasurementState.Start;
+    enum MeasurementState {None,Start,Connect,End}
+    MeasurementState measureMentState = MeasurementState.None;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,19 @@ public class Measurement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (measureMentState == MeasurementState.None)
+            return;
+
+        if (inputSystem.GetCursorOnUI())
+        {
+            measureRenderUI.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            measureRenderUI.gameObject.SetActive(true);
+        }
+
         measureCamera.LookAt(cursorTransform);
         Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
         measureRenderUI.position = pos;
@@ -46,17 +61,20 @@ public class Measurement : MonoBehaviour
 
     public void InverseActivateMeasurement()
     {
-        bool onOff = !measureRenderUI.gameObject.activeSelf;
+        bool onOff = !measureCamera.gameObject.activeSelf;
 
         measureRenderUI.gameObject.SetActive(onOff);
         measureCamera.gameObject.SetActive(onOff);
 
         if (onOff)
         {
+            measureMentState = MeasurementState.Start;
             cursor.SetMeasureCursorMode();
         }
         else
         {
+            measureMentState = MeasurementState.None;
+            DestroySelectedObjects();
             cursor.SetNormalCursorMode();
         }
 
@@ -66,6 +84,15 @@ public class Measurement : MonoBehaviour
     {
         measureRenderUI.gameObject.SetActive(onOff);
         measureCamera.gameObject.SetActive(onOff);
+
+        if (!onOff)
+        {
+            DestroySelectedObjects();
+            measureMentState = MeasurementState.None;
+            selectedLine = null;
+        } 
+
+           
     }
 
     public void CreateMeasurementDot(Vector3 pos , Vector3 rot)
@@ -89,9 +116,14 @@ public class Measurement : MonoBehaviour
         {
             measureMentState = MeasurementState.Connect;
             selectedLine = Instantiate(line);
+            selectedLine.transform.parent = measurement;
             selectedLine.gameObject.SetActive(true);
+            selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
         }else if (measureMentState == MeasurementState.Connect)
         {
+            selectedMeasurementDot.SelectDot(false);
+            print("Done");
+            //selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
             measureMentState = MeasurementState.Start;
             selectedLine = null;
         }
@@ -104,6 +136,15 @@ public class Measurement : MonoBehaviour
     {
         startMeasureMent = true;
         //CreateMeasurementDot();
+    }
+
+    private void DestroySelectedObjects()
+    {
+        if (selectedLine == null)
+            return;
+        Destroy(selectedLine);
+        Destroy(selectedMeasurementDot.gameObject);
+        Destroy(selectedText);
     }
 
 }

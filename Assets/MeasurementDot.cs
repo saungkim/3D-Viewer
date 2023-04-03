@@ -8,7 +8,7 @@ public class MeasurementDot : MonoBehaviour
     [SerializeField] private Image image;
     private void Start()
     {
-        SelectDot(true);
+       
     }
 
     public void SelectDot(bool onOff)
@@ -21,7 +21,7 @@ public class MeasurementDot : MonoBehaviour
         }
         else
         {
-            image.color = Color.black;
+            image.color = Color.yellow;
         }
     }
 

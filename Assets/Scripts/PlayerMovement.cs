@@ -135,9 +135,6 @@ public class PlayerMovement : MonoBehaviour
         return p;
     }
 
-
-
-
     private void GetMovePoints()
     {
         movePoints = new Vector3[construction.childCount - 1];
@@ -160,15 +157,10 @@ public class PlayerMovement : MonoBehaviour
     }
     public IEnumerator MoveStage()
     {
-
         poi p = FindNearPointFromMouse();
-
-        //print(construction.GetChild(p.index).position.y + ":" + p.value.y);
 
         if (stage != p.index && cursor.GetCursorPoint().y < p.value.y - 0.5f)
         {
-
-
             if (overallSetting.GetZoomInit())
             {
                 Camera.main.fieldOfView = 60;
@@ -221,6 +213,7 @@ public class PlayerMovement : MonoBehaviour
             yield return StartCoroutine(camController.MoveCam(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0))));
 
             construction.GetChild(stage).gameObject.SetActive(false);
+            construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
 
             stage = p.index;
         }
@@ -239,12 +232,12 @@ public class PlayerMovement : MonoBehaviour
 
             yield return StartCoroutine(camController.MoveCam(movePoints[index], GetChildMaterials(construction.GetChild(stage).GetChild(0))));
 
+        
+            construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
             construction.GetChild(stage).gameObject.SetActive(false);
-
             stage = index;
         }
     }
-
 
     public void MoveStageInstant(Vector3 pos, Vector3 rot, float fov)
     {
@@ -332,12 +325,7 @@ public class PlayerMovement : MonoBehaviour
 
             StartCoroutine(MoveStage(list[tourIndex], 60));
         }
-
-     
     }
-
-  
-
 }
 
 

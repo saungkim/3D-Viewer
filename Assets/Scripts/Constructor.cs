@@ -358,11 +358,12 @@ public class Constructor : MonoBehaviour
         int modelFrameChildCounnt = modelFrame.childCount;
 
         List<Vector3[]> vertice = new List<Vector3[]>();
-
+        Transform minimapParent = miniMapConstructor.miniMap;
         for (int k = 1; k < modelFrameChildCounnt; ++k)
         {
             Transform child = modelFrame.GetChild(k);
             Transform o = Instantiate(child, child.position, child.rotation);
+            o.parent = minimapParent;
             o.GetComponent<MeshRenderer>().sharedMaterial = minimapMaterial;
             o.localScale = Vector3.one * -1;
             o.gameObject.layer = LayerMask.NameToLayer("MiniMapMesh");
