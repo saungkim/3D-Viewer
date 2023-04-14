@@ -8,8 +8,6 @@ public class OverallSetting : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] float moveTime;
-    [SerializeField] float imageTransTime;
-  
 
     [Header("Cotainer")]
     [SerializeField] ViewerCursor cursor;
@@ -72,8 +70,34 @@ public class OverallSetting : MonoBehaviour
 
     public void ApplyValues()
     {
-        camController.SetImageTransTime(imageTransTime);
+        //camController.SetImageTransTime(imageTransTime);
         camController.SetMoveTime(moveTime);
+    }
+
+    public void SetMoveTime(float time)
+    {
+        moveTime = time;
+    }
+
+
+    public void SetstartImageTransTime(float value)
+    {
+        camController.SetstartImageTransTime(value);
+    }
+
+    public void SetendImageTransTime(float value)
+    {
+        camController.SetendImageTransTime(value);
+    }
+
+    public void SetmoveStartAlpha(float value)
+    {
+        camController.SetmoveStartAlpha(value);
+    }
+
+    public void SetafterMoveEndAlpha(float value)
+    {
+        camController.SetafterMoveEndAlpha(value);
     }
 
     public void ActivateMinimap(bool onOff)

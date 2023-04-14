@@ -93,22 +93,15 @@ public class InputSystem : MonoBehaviour
         {
             MouseButtonUp();
         }
-
-        
     }
 
     const float zoomSpeed = 2.5f;
     private void zoomInOutWithWheel()
     {
-       //float distance = Input.mouseScrollDelta.y;
-       
-
         float fov = Camera.main.fieldOfView;
         fov -= Input.mouseScrollDelta.y * zoomSpeed;
         //Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
         camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
-
-        
     }
 
     public bool GetCursorOnUI()

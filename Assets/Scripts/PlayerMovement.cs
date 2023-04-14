@@ -1,6 +1,7 @@
 
 
 using System.Collections;
+using System.Net;
 using UnityEngine;
 
 
@@ -50,25 +51,33 @@ public class PlayerMovement : MonoBehaviour
 
         int index = -1;
 
-        int i = 0;
+        int i = -1;
 
         foreach (Vector3 pos in movePoints)
         {
+            ++i;
+
             float dis = Vector3.Distance(cursorPoint, pos);
+
+            Vector3 direction = ( pos - cursorPoint).normalized ;
+
+            Ray ray = new Ray(cursorPoint ,direction * dis );
+        
+            if (Physics.Raycast(ray, out RaycastHit hit , dis))
+            {
+                continue;
+            }
 
             if (dis < min)
             {
                 min = dis;
-                index = i;
-            }
-
-            ++i;
+                index = i;         
+            } 
         }
 
         poi p = new poi();
         p.index = index;
         p.value = movePoints[index];
-
 
         return p;
     }
@@ -167,20 +176,14 @@ public class PlayerMovement : MonoBehaviour
             }
 
             construction.GetChild(p.index).gameObject.SetActive(true);
-            //AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 
             yield return StartCoroutine(camController.MoveCam(p.value, GetChildMaterials(construction.GetChild(stage).GetChild(0)) , GetChildMaterials(construction.GetChild(p.index).GetChild(0))));
             construction.GetChild(stage).gameObject.SetActive(false);
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
 
-            //AllChildOff(construction.GetChild(p.index), true);
-
             stage = p.index;
         }
-
     }
-
-
 
     int countStageOnUI = 0;
     public void MoveStageOnUI()
@@ -205,8 +208,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (stage != p.index)
         {
-
-
             construction.GetChild(p.index).gameObject.SetActive(true);
             AllChildOff(construction.GetChild(p.index).GetChild(0), false);
 
@@ -225,15 +226,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (stage != index)
         {
-            print("MoveStageIndex:" + index);
-
             construction.GetChild(index).gameObject.SetActive(true);
             AllChildOff(construction.GetChild(index).GetChild(0), true);
-
-           
+         
             yield return StartCoroutine(camController.MoveCam(movePoints[index], GetChildMaterials(construction.GetChild(stage).GetChild(0)), GetChildMaterials(construction.GetChild(index).GetChild(0))));
 
-        
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
             construction.GetChild(stage).gameObject.SetActive(false);
             stage = index;

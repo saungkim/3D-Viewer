@@ -35,6 +35,11 @@ public class NativeMessanger : MonoBehaviour
         //EnableDotCreateMode();
         SetCursor("false");
         SetMovePointsVisible("true");
+        SetMoveTime("1");
+        SetEndMoveAlpha("0");
+        SetEndImageTransTime("1");
+        SetStartMoveAlpha("1");
+        SetStartImageTransTime("1");
     }
 
     private void Update()
@@ -250,5 +255,64 @@ public class NativeMessanger : MonoBehaviour
     public void SetActiveMinimap()
     {
         constructor.SetMiniMap();
+    }
+
+    public void SetStartImageTransTime(string value)
+    {
+        float time;
+
+        if (float.TryParse(value, out time))
+        {
+            overallSetting.SetstartImageTransTime(time);
+        }
+        else
+        {
+            nativeSendErrorMessage("SetStartImageTransTime Error :" + value + " " + "Parse Failed");
+        } 
+    
+    }
+
+    public void SetEndImageTransTime(string value)
+    {
+        float time;
+      
+
+        if (float.TryParse(value, out time))
+        {
+            overallSetting.SetendImageTransTime(time);
+        }
+        else
+        {
+            nativeSendErrorMessage("SetEndImageTransTime Error :" + value + " " + "Parse Failed");
+        }
+    }
+
+    public void SetStartMoveAlpha(string value)
+    {
+        float alpha;
+
+        if (float.TryParse(value, out alpha))
+        {
+            overallSetting.SetmoveStartAlpha(alpha);
+        }
+        else
+        {
+            nativeSendErrorMessage("SetStartMoveAlpha Error :" + value + " " + "Parse Failed");
+        }
+    }
+
+    public void SetEndMoveAlpha(string value)
+    {
+        float alpha;
+
+        if (float.TryParse(value, out alpha))
+        {
+            overallSetting.SetafterMoveEndAlpha(alpha);
+        }
+        else
+        {
+            nativeSendErrorMessage("SetEndMoveAlpha Error :" + value + " " + "Parse Failed");
+        }
+        
     }
 }

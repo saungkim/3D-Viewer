@@ -39,7 +39,6 @@ public class LoadTextureFromStreamingAsset : MonoBehaviour
     }
     public void DestroyTex()
     {
-        print("DestroyTex");
         foreach(Texture2D tex in textures)
         {
             DestroyImmediate(tex);

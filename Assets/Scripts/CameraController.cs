@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ public class CameraController : MonoBehaviour
 
     private float directionX = -1;
     private float directionY = -1;
+
+
 
     [SerializeField] private Camera uiCamera;
     [SerializeField] private Camera measureCamera;
@@ -69,6 +72,7 @@ public class CameraController : MonoBehaviour
     }
 
     IEnumerator moveObject = null;
+    IEnumerator moveObject1 = null;
     IEnumerator moveCamera = null;
     private bool cameraOnMove = false;
     public IEnumerator MoveCam(Vector3 input , Material[] materials , Material[] materials1)
@@ -78,9 +82,10 @@ public class CameraController : MonoBehaviour
         {
             cameraOnMove = true;
             moveObject = MoveObject(input , materials , 1);
-            moveObject = MoveObject(input, materials1, -1);
+            moveObject1 = MoveObject(input, materials1, -1);
             moveCamera = MoveCamera(input);
             StartCoroutine(moveCamera);
+            StartCoroutine(moveObject1);
             yield return StartCoroutine(moveObject);
             cameraOnMove = false;
         }
@@ -101,6 +106,10 @@ public class CameraController : MonoBehaviour
 
     float moveTime = 1f;    // 이동 시간
     float imageTransTime = 1f;
+    [SerializeField] float startImageTransTime = 1f;
+    [SerializeField]float endImageTransTime = 0.15f;
+    [SerializeField] private float moveStartAlpha = 1;
+    [SerializeField] private float afterMoveEndAlpha = 0;
 
     public void SetMoveTime(float time)
     {
@@ -108,9 +117,24 @@ public class CameraController : MonoBehaviour
     }
 
 
-    public void SetImageTransTime(float time)
+    public void SetstartImageTransTime(float value)
     {
-        imageTransTime = time;
+        startImageTransTime = value;
+    }
+
+    public void SetendImageTransTime(float value)
+    {
+        endImageTransTime = value;
+    }
+
+    public void SetmoveStartAlpha(float value)
+    {
+        moveStartAlpha = value;
+    }
+
+    public void SetafterMoveEndAlpha(float value)
+    {
+        afterMoveEndAlpha = value;
     }
 
     IEnumerator MoveCamera(Vector3 targetPosition)
@@ -118,7 +142,7 @@ public class CameraController : MonoBehaviour
         float elapsedTime = 0.0f;
         Vector3 startPosition = transform.position;
   
-        float multMoveTime = moveTime ;
+        float multMoveTime = moveTime;
 
         while (elapsedTime < multMoveTime)
         {
@@ -138,13 +162,26 @@ public class CameraController : MonoBehaviour
         float elapsedTime = 0.0f;
         Vector3 startPosition = transform.position;
         float distance = Vector3.Distance(startPosition,targetPosition);
+        float alpha = 0;
+
+        if (direction == 1)
+        {
+            alpha = moveStartAlpha;
+            imageTransTime = startImageTransTime;
+        }
+        else
+        {
+            alpha = afterMoveEndAlpha;
+            imageTransTime = endImageTransTime;
+        }
 
         while (elapsedTime < imageTransTime)
         {
             foreach (Material m in materials)
             {
                 UnityEngine.Color color = UnityEngine.Color.white;
-                color.a = (1 + direction)/2  - elapsedTime / imageTransTime * direction ;
+
+                color.a = alpha - elapsedTime / imageTransTime * direction ;
                 m.SetColor("_Color" , color);
             }       
 
@@ -164,7 +201,6 @@ public class CameraController : MonoBehaviour
     {
         uiCamera.fieldOfView = fov;
         Camera.main.fieldOfView = fov;
-        //measureCamera.fieldOfView = fov;
     }
 
     public IEnumerator LinearLookAt(Vector3 pos , float iterTime)
@@ -182,7 +218,5 @@ public class CameraController : MonoBehaviour
           
             yield return null;
         }
-
-        //transform.LookAt(pos);
     }
 }
