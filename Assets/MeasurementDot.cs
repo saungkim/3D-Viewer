@@ -18,12 +18,13 @@ public class MeasurementDot : MonoBehaviour
         if (onOff)
         {
             image.color = Color.yellow;
+            print("selected Yellow");
         }
         else
         {
-            image.color = Color.yellow;
+            image.color = Color.black;
+            print("Select Black");
         }
     }
-
 
 }

@@ -23,10 +23,11 @@ public class Measurement : MonoBehaviour
     [SerializeField] private MeasurementDot measurementDot;
 
     bool startMeasureMent = false;
+   
 
-    enum MeasurementState {None,Start,Connect,End}
-    MeasurementState measureMentState = MeasurementState.None;
-    // Start is called before the first frame update
+    public enum MeasurementState {None,Start,Connect,ConnectMove,End}
+    public MeasurementState measureMentState = MeasurementState.None;
+    // Start is called before the first frame updates
     void Start()
     {
         
@@ -38,12 +39,13 @@ public class Measurement : MonoBehaviour
         if (measureMentState == MeasurementState.None)
             return;
 
-        if (inputSystem.GetCursorOnUI())
+        if (inputSystem.GetCursorOnUI() )
         {
             measureRenderUI.gameObject.SetActive(false);
+            
             return;
         }
-        else
+        else if (measureMentState != MeasurementState.ConnectMove)
         {
             measureRenderUI.gameObject.SetActive(true);
         }
@@ -52,7 +54,7 @@ public class Measurement : MonoBehaviour
         Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
         measureRenderUI.position = pos;
 
-        if(measureMentState == MeasurementState.Connect)
+        if(measureMentState == MeasurementState.Connect || measureMentState == MeasurementState.ConnectMove)
         {
             selectedLine.SetPosition(0, selectedMeasurementDot.transform.position);
             selectedLine.SetPosition(1, cursor.transform.position);
@@ -66,18 +68,22 @@ public class Measurement : MonoBehaviour
         measureRenderUI.gameObject.SetActive(onOff);
         measureCamera.gameObject.SetActive(onOff);
 
-        if (onOff)
+        print("OnOffCamera" + measureCamera.gameObject.activeSelf + ":" + measureRenderUI.gameObject.activeSelf);
+
+        if (measureMentState == MeasurementState.Connect )
+        {
+            measureMentState = MeasurementState.ConnectMove;
+            return;
+        }else if(measureMentState == MeasurementState.ConnectMove)
+        {
+            measureMentState = MeasurementState.Connect;
+            return;
+        }
+        else
         {
             measureMentState = MeasurementState.Start;
             cursor.SetMeasureCursorMode();
         }
-        else
-        {
-            measureMentState = MeasurementState.None;
-            DestroySelectedObjects();
-            cursor.SetNormalCursorMode();
-        }
-
     }
 
     public void ActivateMeasurement(bool onOff)
@@ -90,6 +96,8 @@ public class Measurement : MonoBehaviour
             DestroySelectedObjects();
             measureMentState = MeasurementState.None;
             selectedLine = null;
+          
+
         } 
 
            
@@ -109,11 +117,12 @@ public class Measurement : MonoBehaviour
         }
 
         selectedMeasurementDot = o.GetComponent<MeasurementDot>();
-
+        selectedMeasurementDot.SelectDot(true);
         //print(selectedMeasurementDot.transform.name);
 
-        if(measureMentState == MeasurementState.Start)
+        if (measureMentState == MeasurementState.Start)
         {
+          
             measureMentState = MeasurementState.Connect;
             selectedLine = Instantiate(line);
             selectedLine.transform.parent = measurement;
@@ -121,7 +130,7 @@ public class Measurement : MonoBehaviour
             selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
         }else if (measureMentState == MeasurementState.Connect)
         {
-            selectedMeasurementDot.SelectDot(false);
+           
             print("Done");
             //selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
             measureMentState = MeasurementState.Start;
@@ -141,10 +150,19 @@ public class Measurement : MonoBehaviour
     private void DestroySelectedObjects()
     {
         if (selectedLine == null)
+        {
+            if(selectedMeasurementDot != null)
+            {
+                selectedMeasurementDot.SelectDot(false);
+            }
             return;
-        Destroy(selectedLine);
+        }
+        
+      
+
+        Destroy(selectedLine.gameObject);
         Destroy(selectedMeasurementDot.gameObject);
-        Destroy(selectedText);
+      
     }
 
 }

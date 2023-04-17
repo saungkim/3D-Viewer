@@ -196,9 +196,14 @@ public class InputSystem : MonoBehaviour
         if (!onClickStart)
             return;
 
-        if (holdTime < 0.5f && CheckDefectCollider())
+        if (holdTime < 0.5f)
         {
-            return;
+            if (controlState == ControlState.None && CheckDefectCollider())
+                return;
+
+            if (controlState == ControlState.Measure && CheckMeasurementDotCollider())
+                return;
+            
         }
 
         if (isDragging)
@@ -231,6 +236,23 @@ public class InputSystem : MonoBehaviour
             {
                 print("Collision Defect");
                 defectConstructor.SendMessageSelectDefect(hit.transform.GetSiblingIndex());
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool CheckMeasurementDotCollider()
+    {
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.transform.tag == "MeasurementDot")
+            {
+               
                 return true;
             }
         }

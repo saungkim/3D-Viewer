@@ -18,7 +18,7 @@ public class DefectConstructor : MonoBehaviour
 
     [SerializeField] private NativeMessanger nativeMessanger;
 
-   
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,24 +38,26 @@ public class DefectConstructor : MonoBehaviour
 
     }
 
-    public void CreateDot(Vector3 pos,Vector3 rot,bool sendMessage)
+    public void CreateDot(Vector3 pos, Vector3 rot, bool sendMessage)
     {
         GameObject o = Instantiate(dot, pos, Quaternion.Euler(rot), defectDot);
         o.SetActive(true);
+
+
         //defectList.Add();
         Defect defect = new Defect();
-        defect.id = "NeedToChange" + o.transform.GetSiblingIndex();
-        defect.type = "°øÁ¤";
+        defect.id =  o.transform.GetSiblingIndex().ToString();
+        defect.type = "defect";
         defect.position = pos;
         defect.rotation = rot;
         defect.view = new View();
         defect.view.position = Camera.main.transform.position;
         defect.view.rotation = Camera.main.transform.eulerAngles;
         defect.view.fov = Camera.main.fieldOfView;
-        
+
         defectList.Add(defect);
-        if(sendMessage)
-        nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
+        if (sendMessage)
+            nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
     }
 
     public void WriteAllDefect(string filePath)
@@ -67,7 +69,7 @@ public class DefectConstructor : MonoBehaviour
         File.WriteAllText(filePath, jsonOutput);
     }
 
-    public IEnumerator ReadAllDefect(string filePath,Action<string> CallBack)
+    public IEnumerator ReadAllDefect(string filePath, Action<string> CallBack)
     {
         float loadTime = 0;
 
@@ -91,7 +93,7 @@ public class DefectConstructor : MonoBehaviour
 
         foreach (Defect defect in defectArray)
         {
-            CreateDot(defect.position,defect.rotation,false);
+            CreateDot(defect.position, defect.rotation, false);
         }
 
         CallBack("Success");
@@ -110,7 +112,7 @@ public class DefectConstructor : MonoBehaviour
                     playerMovement.MoveStageInstant(defect.view.position, defect.view.rotation, defect.view.fov);
                 }
             }
-        }   
+        }
     }
 
     public void SendMessageSelectDefect(int id)
@@ -118,15 +120,15 @@ public class DefectConstructor : MonoBehaviour
         nativeMessanger.NativeSendMessage("SelectDefect." + JsonUtility.ToJson(defectArray[id]));
     }
 
-    public void SetColor(int id,Color color)
+    public void SetColor(int id, Color color)
     {
-        
+
     }
 
-    public void DestroyDefect(string id , Action<string> callback)
+    public void DestroyDefect(string id, Action<string> callback)
     {
         bool destroied = false;
-   
+
         int defectListCount = defectList.Count;
 
         if (defectListCount == 0)
@@ -136,7 +138,7 @@ public class DefectConstructor : MonoBehaviour
 
         for (int i = 0; i < defectListCount; ++i)
         {
-            if ( defectList[i].id == id)
+            if (defectList[i].id == id)
             {
                 defectList.RemoveAt(i);
                 Destroy(defectDot.GetChild(i + 1).gameObject);
@@ -184,13 +186,21 @@ public class DefectConstructor : MonoBehaviour
         {
             callback("SetDefectColor Error :" + id + " " + "Id doesn't exist.");
         }
-    } 
+    }
 
     [Serializable]
     public class Defect
     {
         public string id;
         public string type;
+        public Vector3 position;
+        public Vector3 rotation;
+        public View view;
+    }
+
+    [Serializable]
+    public class DefectDefault{
+        public string id;
         public Vector3 position;
         public Vector3 rotation;
         public View view;
