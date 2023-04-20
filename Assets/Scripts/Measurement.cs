@@ -438,4 +438,38 @@ public class Measurement : MonoBehaviour
       
     }
 
+    public void DestroySelectedMeasureUnit()
+    {
+        if (preMeasureUnit == null)
+            return;
+
+        Destroy(preMeasureUnit.gameObject);
+
+        preMeasureUnit = null;
+
+        measureMentState = MeasurementState.None;
+    }
+
+   // public void 
+
+    public void CompleteSelectedMeasureUnit()
+    {
+        if(measureMentState == MeasurementState.None)
+        {
+            if (preMeasureUnit == null)
+            {
+                return;
+            }
+            
+            preMeasureUnit.Select(false);
+
+            preMeasureUnit = null;
+        }
+
+
+
+
+        
+    }
+
 }

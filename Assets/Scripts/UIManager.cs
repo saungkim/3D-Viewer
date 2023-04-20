@@ -257,5 +257,15 @@ public class UIManager : MonoBehaviour
     {
         measureMent.Remove();
     }
+
+    public void MeasurementDestroySelectedMeasureUnit()
+    {
+        measureMent.DestroySelectedMeasureUnit();
+    }
+
+    public void MeasurementCompleteSelectedMeasureUnit()
+    {
+        measureMent.CompleteSelectedMeasureUnit();
+    }
     
 }
