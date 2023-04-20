@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MeasurementUnit : MonoBehaviour
@@ -14,12 +15,22 @@ public class MeasurementUnit : MonoBehaviour
     static List<GameObject> poolDots = new List<GameObject>();
     static List<GameObject> poolLines = new List<GameObject>();
     [SerializeField] private Transform pool;
-  
+
+    private GameObject prevDot;
+    private MeasurementLine prevLine;
+
+    private bool selected = false;
     // Start is called before the first frame update 
+
+
     void Start()
     {
-        AddDot(new Vector3(0, 0, 0));
+        //AddDot(new Vector3(0, 0, 0));
+        //AddDot(new Vector3(0, 1, 0));
 
+        //InsertDot(1, new Vector3(0.5f, 0.5f, 0));
+
+        //FixDot(1, new Vector3(0, 1, 0));
     }
 
     // Update is called once per frame
@@ -68,7 +79,9 @@ public class MeasurementUnit : MonoBehaviour
 
     }
 
-    private void AddDot(Vector3 position)
+   
+
+    public void AddDot(Vector3 position,Vector3 rot)
     {
         GameObject o = null;
 
@@ -76,21 +89,28 @@ public class MeasurementUnit : MonoBehaviour
         {
             o = poolDots[poolDots.Count];
             poolDots.RemoveAt(poolDots.Count);
-
         }
         else
         {
             o = Instantiate(dot) as GameObject;
-            o.transform.parent = transform;
+            o.transform.SetParent(transform);
         }
 
         dots.Add(o);
         o.transform.position = position;
+        o.transform.eulerAngles = rot;
 
-        AddLine(position);
+        if(prevLine != null)
+        {
+            prevLine.SetLineEndPosition(position);
+        }
+      
+        AddLine(position, position);
+        
+
     }
 
-    private void InsertDot(int index , Vector3 position)
+    public void InsertDot(int index , Vector3 position)
     {
         GameObject o = null;
 
@@ -102,7 +122,7 @@ public class MeasurementUnit : MonoBehaviour
         else
         {
             o = Instantiate(dot) as GameObject;
-            o.transform.parent = transform;
+            o.transform.SetParent(transform);
         }
 
         dots.Insert(index, o);
@@ -114,7 +134,7 @@ public class MeasurementUnit : MonoBehaviour
        // AddLine();
     }
 
-    private void AddLine(Vector3 position )
+    public void AddLine(Vector3 startPos, Vector3 endPos )
     {
         GameObject o = null;
 
@@ -130,11 +150,12 @@ public class MeasurementUnit : MonoBehaviour
         }
 
         lines.Add(o);
-        o.GetComponent<MeasurementLine>().SetLinePositions(position,position);
+        o.GetComponent<MeasurementLine>().SetLinePositions(startPos,endPos);
 
+        prevLine = o.GetComponent<MeasurementLine>();
     }
 
-    private void InsertLine(Vector3 position , int index)
+    public void InsertLine(Vector3 position , int index)
     {
         GameObject o = null;
 
@@ -149,9 +170,50 @@ public class MeasurementUnit : MonoBehaviour
             o.transform.parent = transform;
         }
 
-        lines.Add(o);
+        lines[index - 1].GetComponent<MeasurementLine>().SetLineEndPosition(position);
         o.GetComponent<MeasurementLine>().SetLinePositions(position, dots[index + 1].transform.position);
+        lines.Insert(index,o);
+       
+    }
 
+    public void FixDot(int index , Vector3 position)
+    {
+        dots[index].transform.position = position;
+
+        if (index == 0)
+        {
+            lines[index].GetComponent<MeasurementLine>().SetLineStartPosition(position);
+        }
+        else
+        {
+            lines[index-1].GetComponent<MeasurementLine>().SetLineEndPosition(position);
+            lines[index].GetComponent<MeasurementLine>().SetLineStartPosition(position);
+        }
+
+      
+       
+    }
+
+    public MeasurementLine GetPrevLine()
+    {
+        return prevLine;
+    }
+
+    public void Select(bool inputSelected)
+    {
+        selected = inputSelected;
+
+        int childCount = transform.childCount;
+
+        for(int i = 0; i < childCount; ++i)
+        {
+            transform.GetChild(i).GetComponent<MeasurementObject>().Select(selected);
+        }
+    }
+
+    public bool GetSelect()
+    {
+        return selected;
     }
 
 

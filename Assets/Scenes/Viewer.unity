@@ -1751,7 +1751,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &283666757
 Transform:
   m_ObjectHideFlags: 0
@@ -2187,11 +2187,12 @@ MonoBehaviour:
   line: {fileID: 1123900560}
   measurement: {fileID: 249474803}
   inputSystem: {fileID: 338664070}
-  measureUnit: {fileID: 0}
+  measureUnit: {fileID: 1849367048}
   measurementDot: {fileID: 1273987437}
   measureMentState: 0
   addUI: {fileID: 0}
   removeUI: {fileID: 0}
+  measurementUnit: {fileID: 0}
 --- !u!1 &360493312
 GameObject:
   m_ObjectHideFlags: 0
@@ -6348,7 +6349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1273987432
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6387,7 +6388,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 7, y: 7, z: 7}
   m_Center: {x: 0, y: 0, z: 0}
@@ -6589,7 +6590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1300303520
 Transform:
   m_ObjectHideFlags: 0
@@ -8533,7 +8534,7 @@ MonoBehaviour:
   movePoint: {fileID: 94391803}
   screenGauage: {fileID: 1604048024}
   inputSystem: {fileID: 338664070}
-  measureMent: {fileID: 338664071}
+  measureMent: {fileID: 0}
   measrueMentButton: {fileID: 1994073300}
   playerMovement: {fileID: 477369673}
 --- !u!95 &1662721206

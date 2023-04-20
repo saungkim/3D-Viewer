@@ -63,7 +63,7 @@ using UnityEngine;
                 gameObject = Instantiate(dot);
             }
           
-            gameObject.transform.parent = transform;
+            gameObject.transform.SetParent(transform);
 
             return gameObject;
         }
@@ -81,8 +81,8 @@ using UnityEngine;
             {
                 for (int i = iter; i < dots.Count; ++i)
                 {
-                    dots[i].SetActive(false);
-                    dots[i].transform.parent = pool;
+          
+                    dots[i].transform.SetParent(pool);
                     poolDots.Add(dots[i]);
                     dots.RemoveAt(i);
                 }

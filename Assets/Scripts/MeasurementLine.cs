@@ -27,7 +27,9 @@ public class MeasurementLine : MeasurementObject
     // Start is called before the first frame update
     void Start()
     {
-     //   lineRenderer = GetComponent<LineRenderer>();
+        Select(transform.parent.GetComponent<MeasurementUnit>().GetSelect());
+
+        //   lineRenderer = GetComponent<LineRenderer>();
     }
     
     // Update is called once per frame
@@ -38,6 +40,7 @@ public class MeasurementLine : MeasurementObject
 
         if (dottedLineOnOff != dottedLine.gameObject.activeSelf || dottedLineOnOff != !lineRenderer.gameObject.activeSelf)
         {
+            print("If Go : " + dottedLineOnOff);
             if (dottedLineOnOff)
             {
                 dottedLine.gameObject.SetActive(true);
@@ -45,6 +48,7 @@ public class MeasurementLine : MeasurementObject
             }
             else
             {
+                print("LineRendereTrue");
                 dottedLine.gameObject.SetActive(false);
                 lineRenderer.gameObject.SetActive(true);
             }
@@ -58,6 +62,18 @@ public class MeasurementLine : MeasurementObject
         {
             lineRenderer.SetPosition(0, startPos);
             lineRenderer.SetPosition(1, endPos);
+        }
+
+        if(startPos == endPos)
+        {
+            textObj.SetActive(false);
+
+            return;
+        }
+
+        if (!textObj.activeSelf)
+        {
+            textObj.SetActive(true);
         }
 
         float distance = Vector3.Distance(startPos, endPos);
@@ -106,6 +122,21 @@ public class MeasurementLine : MeasurementObject
     {
         startPos = inputStartPos;
         endPos = inputEndPos;
+    }
+
+    public void SetLineStartPosition(Vector3 inputStartPos)
+    {
+        startPos= inputStartPos;   
+    }
+
+    public void SetLineEndPosition(Vector3 inputEndPos)
+    {
+        endPos = inputEndPos;   
+    }
+
+    public void SetBoolDottedLineOnOff(bool onOff)
+    {
+        dottedLineOnOff = onOff;
     }
 
 }

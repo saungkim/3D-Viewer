@@ -26,155 +26,183 @@ public class Measurement : MonoBehaviour
     bool startMeasureMent = false;
     private bool ondrag = false;
 
-    public enum MeasurementState {None,Start,Connect,ConnectMove,Select,End}
+    public enum MeasurementState {None,DotCreating,DotCreateEnd,LineCreating}
     public MeasurementState measureMentState = MeasurementState.None;
 
     [SerializeField] private GameObject addUI;
     [SerializeField] private GameObject removeUI;
 
     private Transform dragDot;
+
+    [SerializeField] private MeasurementUnit measurementUnit;
+    private MeasurementUnit preMeasureUnit;
+
     // Start is called before the first frame updates
     void Start()
     {
-        
+      
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (measureMentState == MeasurementState.None)
-            return;
+       
 
-        if (inputSystem.GetCursorOnUI() )
+        if (measureMentState == MeasurementState.DotCreating)
         {
-            measureRenderUI.gameObject.SetActive(false);
-            
-            return;
+            measureCamera.LookAt(cursorTransform);
+            Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
+            measureRenderUI.position = pos;
         }
-        else if (measureMentState == MeasurementState.Connect ||
-            measureMentState == MeasurementState.Start)
+        else if(measureMentState == MeasurementState.LineCreating)
         {
-            measureRenderUI.gameObject.SetActive(true);
+            //Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
+            preMeasureUnit.GetPrevLine().SetLineEndPosition(cursorTransform.position);
         }
 
-        measureCamera.LookAt(cursorTransform);
-        Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
-        measureRenderUI.position = pos;
+        //if (measureMentState == MeasurementState.None)
+        //    return;
 
-        if(measureMentState == MeasurementState.Connect || measureMentState == MeasurementState.ConnectMove )
-        {
-            if (selectedLine == null)
-                return;
+        //if (inputSystem.GetCursorOnUI() )
+        //{
+        //    measureRenderUI.gameObject.SetActive(false);
 
-            if (ondrag)
-            {
-                selectedLine.SetPosition(0, selectedLine.transform.parent.GetChild(0).position);
-                selectedLine.SetPosition(1, selectedLine.transform.parent.GetChild(2).position);
-               
-            }
-            else
-            {
-                selectedLine.SetPosition(0, selectedMeasurementDot.transform.position);
-                selectedLine.SetPosition(1, cursor.transform.position);
-            }
-   
-        }
+        //    return;
+        //}
+        //else if (measureMentState == MeasurementState.Connect ||
+        //    measureMentState == MeasurementState.Start)
+        //{
+        //    measureRenderUI.gameObject.SetActive(true);
+        //}
+
+        //measureCamera.LookAt(cursorTransform);
+        //Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
+        //measureRenderUI.position = pos;
+
+        //if(measureMentState == MeasurementState.Connect || measureMentState == MeasurementState.ConnectMove )
+        //{
+        //    if (selectedLine == null)
+        //        return;
+
+        //    if (ondrag)
+        //    {
+        //        selectedLine.SetPosition(0, selectedLine.transform.parent.GetChild(0).position);
+        //        selectedLine.SetPosition(1, selectedLine.transform.parent.GetChild(2).position);
+
+        //    }
+        //    else
+        //    {
+        //        selectedLine.SetPosition(0, selectedMeasurementDot.transform.position);
+        //        selectedLine.SetPosition(1, cursor.transform.position);
+        //    }
+
+        //}
     }
 
     public void InverseActivateMeasurement()
     {
-        bool onOff = !measureCamera.gameObject.activeSelf;
-
-        measureRenderUI.gameObject.SetActive(onOff);
-        measureCamera.gameObject.SetActive(onOff);
-
-        print("OnOffCamera" + measureCamera.gameObject.activeSelf + ":" + measureRenderUI.gameObject.activeSelf);
-
-        if (measureMentState == MeasurementState.Connect )
-        {
-            print("Inver Connect Move");
+        //if(measureMentState == MeasurementState.None)
+        //{
+        //    measureMentState = MeasurementState.Start;
+        //}
+        //else if(measureMentState == MeasurementState.Start)
+        //{
+        //    measureMentState = MeasurementState.None;
+        //}
 
 
-            measureMentState = MeasurementState.ConnectMove;
-            return;
-        }else if(measureMentState == MeasurementState.ConnectMove)
-        {
+        //bool onOff = !measureCamera.gameObject.activeSelf;
+
+        //measureRenderUI.gameObject.SetActive(onOff);
+        //measureCamera.gameObject.SetActive(onOff);
+
+        //print("OnOffCamera" + measureCamera.gameObject.activeSelf + ":" + measureRenderUI.gameObject.activeSelf);
+
+        //if (measureMentState == MeasurementState.Connect )
+        //{
+        //    print("Inver Connect Move");
+
+
+        //    measureMentState = MeasurementState.ConnectMove;
+        //    return;
+        //}else if(measureMentState == MeasurementState.ConnectMove)
+        //{
 
 
 
-            measureMentState = MeasurementState.Connect;
-            return;
-        }
-        else if(measureMentState == MeasurementState.Start)
-        {
-            InitSelect();
-            selectedMeasurementDot = null;
-            selectedMeasureUnit = null;
-            selectedLine = null;
+        //    measureMentState = MeasurementState.Connect;
+        //    return;
+        //}
+        //else if(measureMentState == MeasurementState.Start)
+        //{
+        //    InitSelect();
+        //    selectedMeasurementDot = null;
+        //    selectedMeasureUnit = null;
+        //    selectedLine = null;
 
-            measureMentState = MeasurementState.None;
-            cursor.SetNormalCursorMode();
-        }
-        else 
-        {
-            measureMentState = MeasurementState.Start;
-            cursor.SetMeasureCursorMode();
-        }
+        //    measureMentState = MeasurementState.None;
+        //    cursor.SetNormalCursorMode();
+        //}
+        //else 
+        //{
+        //    measureMentState = MeasurementState.Start;
+        //    cursor.SetMeasureCursorMode();
+        //}
         
     }
 
     public void ActivateMeasurement(bool onOff)
     {
-        measureRenderUI.gameObject.SetActive(onOff);
-        measureCamera.gameObject.SetActive(onOff);
+        //measureRenderUI.gameObject.SetActive(onOff);
+        //measureCamera.gameObject.SetActive(onOff);
 
-        if (!onOff)
-        {
-            DestroySelectedObjects();
-            measureMentState = MeasurementState.None;
-            selectedLine = null;
-        }           
+        //if (!onOff)
+        //{
+        //    DestroySelectedObjects();
+        //    measureMentState = MeasurementState.None;
+        //    selectedLine = null;
+        //}           
     }
 
     public void CreateMeasurementDot(Vector3 pos , Vector3 rot)
     {
-        GameObject o = Instantiate(measurementDot, pos, Quaternion.Euler(rot)).gameObject;
-        o.SetActive(true);
+        //GameObject o = Instantiate(measurementDot, pos, Quaternion.Euler(rot)).gameObject;
+        //o.SetActive(true);
 
-        o.transform.parent = measurement;
+        //o.transform.parent = measurement;
 
-        if (selectedMeasurementDot != null)
-        {
-            selectedMeasurementDot.SelectDot(false);
+        //if (selectedMeasurementDot != null)
+        //{
+        //    selectedMeasurementDot.SelectDot(false);
            
-        }
+        //}
 
-        InitSelect();
+        //InitSelect();
 
-        selectedMeasurementDot = o.GetComponent<MeasurementDot>();
-        selectedMeasurementDot.SelectDot(true);
+        //selectedMeasurementDot = o.GetComponent<MeasurementDot>();
+        //selectedMeasurementDot.SelectDot(true);
         
-        //print(selectedMeasurementDot.transform.name);
-        if (measureMentState == MeasurementState.Start)
-        {
-            measureUnit = new GameObject();
-            measureUnit.name = "MeasureUnit";
-            measureUnit.transform.parent = measurement;
-            o.transform.parent = measureUnit.transform;
-            measureMentState = MeasurementState.Connect;
-            selectedLine = Instantiate(line);
-            selectedLine.transform.parent = measureUnit.transform;
-            selectedLine.gameObject.SetActive(true);
-            selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
-        }else if (measureMentState == MeasurementState.Connect)
-        {
+        ////print(selectedMeasurementDot.transform.name);
+        //if (measureMentState == MeasurementState.Start)
+        //{
+        //    measureUnit = new GameObject();
+        //    measureUnit.name = "MeasureUnit";
+        //    measureUnit.transform.parent = measurement;
+        //    o.transform.parent = measureUnit.transform;
+        //    measureMentState = MeasurementState.Connect;
+        //    selectedLine = Instantiate(line);
+        //    selectedLine.transform.parent = measureUnit.transform;
+        //    selectedLine.gameObject.SetActive(true);
+        //    selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
+        //}else if (measureMentState == MeasurementState.Connect)
+        //{
             
-            o.transform.parent = measureUnit.transform;
-            selectedLine.GetComponent<MeasurementLine>().SetCollider();
-            //selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
-            measureMentState = MeasurementState.Start;
-            selectedLine = null;
-        }                                                                                                                      
+        //    o.transform.parent = measureUnit.transform;
+        //    selectedLine.GetComponent<MeasurementLine>().SetCollider();
+        //    //selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
+        //    measureMentState = MeasurementState.Start;
+        //    selectedLine = null;
+        //}                                                                                                                      
     }
 
     public void SelectMeasurementDone()
@@ -317,32 +345,97 @@ public class Measurement : MonoBehaviour
 
     public void Drag()
     {
-        if (selectedMeasurementDot==null || selectedMeasurementDot.transform != dragDot)
-            return;
+        //if (selectedMeasurementDot==null || selectedMeasurementDot.transform != dragDot)
+        //    return;
 
-        float distance = Vector3.Distance(cursor.GetCursorPoint(), selectedMeasurementDot.transform.position);
+        //float distance = Vector3.Distance(cursor.GetCursorPoint(), selectedMeasurementDot.transform.position);
 
-        print("Measurement Drag:" + distance);
+        //print("Measurement Drag:" + distance);
 
-        if(distance < 0.5f)
-        {
-            dragDot.position = cursor.GetCursorPoint();
-            measureMentState = MeasurementState.Connect;
+        //if(distance < 0.5f)
+        //{
+        //    dragDot.position = cursor.GetCursorPoint();
+        //    measureMentState = MeasurementState.Connect;
 
          
+        //}
+    }
+
+    public void DragUp()
+    {
+        SetActiveMeasureUI(false);
+
+        if (measureMentState == MeasurementState.DotCreating)
+        {
+            measureMentState = MeasurementState.DotCreateEnd;
+            
+
+
+            if(preMeasureUnit == null)
+            {
+                preMeasureUnit = Instantiate(measureUnit).GetComponent<MeasurementUnit>();
+                preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
+                preMeasureUnit.Select(true);
+            }
+        }
+        else if(measureMentState == MeasurementState.LineCreating)
+        {
+            measureMentState = MeasurementState.DotCreateEnd;
+            preMeasureUnit.GetPrevLine().SetBoolDottedLineOnOff(false);
+            preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
+         
+          
+            //print("LineCreating Done");
+            //print();
+        }
+
+        //if (ondrag)
+        //{
+        //    measureMentState = MeasurementState.Start;
+        //    selectedLine = null;
+
+        //}
+
+        //ondrag = false;
+    }
+
+  
+    public void DotCreateMode()
+    {
+        SetActiveMeasureUI(true);
+
+        if(measureMentState == MeasurementState.None)
+        {
+            measureMentState = MeasurementState.DotCreating;
+            SetActiveMeasureUI(true);
+        }
+        else if(measureMentState == MeasurementState.DotCreateEnd)
+        {
+
+            measureMentState = MeasurementState.LineCreating;
+            preMeasureUnit.GetPrevLine().SetBoolDottedLineOnOff(true);
+            //if (preMeasureUnit != null)
+            //{
+            //    preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
+            //}
         }
     }
 
-    public void DragEnd()
+    private void SetActiveMeasureUI(bool onOff)
     {
-        if (ondrag)
+        if (onOff)
         {
-            measureMentState = MeasurementState.Start;
-            selectedLine = null;
-      
+            measureRenderUI.gameObject.SetActive(true);
+            measureCamera.gameObject.SetActive(true);
+            cursor.SetMeasureCursorMode();
         }
-
-        ondrag = false;
+        else
+        {
+            measureRenderUI.gameObject.SetActive(false);
+            measureCamera.gameObject.SetActive(false);
+            cursor.SetNormalCursorMode();
+        }
+      
     }
 
 }

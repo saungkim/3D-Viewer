@@ -137,7 +137,7 @@ public class UIManager : MonoBehaviour
 
         bool onOff;
 
-        if(inputSystem.GetControlState() != InputSystem.ControlState.Measure && inputSystem.GetControlState() != InputSystem.ControlState.MeasureDoing)
+        if(inputSystem.GetControlState() != InputSystem.ControlState.Measure && inputSystem.GetControlState() != InputSystem.ControlState.MeasureDot)
         {
             onOff = true;
             measrueMentButton.SetActive(onOff);
@@ -158,9 +158,9 @@ public class UIManager : MonoBehaviour
         measureMent.InverseActivateMeasurement();
         if(inputSystem.GetControlState() == InputSystem.ControlState.Measure)
         {
-            inputSystem.SetControlState(InputSystem.ControlState.MeasureDoing);
+            inputSystem.SetControlState(InputSystem.ControlState.MeasureDot);
         }
-        else if(inputSystem.GetControlState() == InputSystem.ControlState.MeasureDoing)
+        else if(inputSystem.GetControlState() == InputSystem.ControlState.MeasureDot)
         {
             inputSystem.SetControlState(InputSystem.ControlState.Measure);
         }

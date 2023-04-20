@@ -9,7 +9,7 @@ public class MeasurementDot : MeasurementObject
 
     private void Start()
     {
-       
+        Select(transform.parent.GetComponent<MeasurementUnit>().GetSelect());
     }
 
     public void SelectDot(bool onOff)

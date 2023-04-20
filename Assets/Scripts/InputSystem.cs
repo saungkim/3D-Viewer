@@ -38,7 +38,7 @@ public class InputSystem : MonoBehaviour
     private bool measureMode = false;
     private float enableDotDistance = 50;
 
-    public enum ControlState { None, Defect, Measure , AutoTour , Tag , MeasureDoing }
+    public enum ControlState { None, Defect, Measure , AutoTour , Tag , MeasureDot }
     private ControlState controlState = ControlState.None;
 
     private bool cursorOnUI = false;
@@ -122,7 +122,7 @@ public class InputSystem : MonoBehaviour
         imgsFDDone = false;
 
         camController.StartDrag();
-        measurement.StartDrag();
+        //measurement.StartDrag();
     }
 
     private void MouseButtonHold()
@@ -135,7 +135,7 @@ public class InputSystem : MonoBehaviour
         if (isDragging)
         {
 
-            measurement.Drag();
+            //measurement.Drag();
 
             if (Vector3.Distance(firstMousePos, Input.mousePosition) < enableDotDistance && controlState != ControlState.None)
             {
@@ -146,7 +146,7 @@ public class InputSystem : MonoBehaviour
                     hold = true;
                 }
 
-                if (controlState == ControlState.Defect || controlState == ControlState.MeasureDoing)
+                if (controlState == ControlState.Defect || controlState == ControlState.Measure)
                 {
                     StartCoroutine(ImgsFD.DelaySetActive(true));
                     ImgsFD.SetValue((holdTime - 0.7f) / 1f, true);
@@ -163,9 +163,10 @@ public class InputSystem : MonoBehaviour
                         {
                             defectConstructor.CreateDot(cursor.cursor.position, cursor.cursor.eulerAngles, true);
                         }
-                        else if (controlState == ControlState.MeasureDoing)
+                        else if (controlState == ControlState.Measure)
                         {
-                            measurement.CreateMeasurementDot(cursor.cursor.position , cursor.cursor.eulerAngles);
+                            //measurement.CreateMeasurementDot(cursor.cursor.position , cursor.cursor.eulerAngles);
+                            measurement.DotCreateMode();
                         }
                     }
                 }
@@ -177,7 +178,9 @@ public class InputSystem : MonoBehaviour
 
             if (!hold)
             {
-                if(controlState != ControlState.MeasureDoing)
+                //camController.UpdateRotation();
+
+                if(controlState != ControlState.MeasureDot)
                 {
                     camController.UpdateRotation();
                 }
@@ -205,11 +208,11 @@ public class InputSystem : MonoBehaviour
             if (controlState == ControlState.None && CheckDefectCollider())
                 return;
 
-            if (controlState == ControlState.MeasureDoing && CheckMeasurementDotCollider())
-                return;
+            //if (controlState == ControlState.MeasureDoing && CheckMeasurementDotCollider())
+            //    return;
         }
 
-        measurement.DragEnd();
+        measurement.DragUp();
 
         if (isDragging)
         {
@@ -217,7 +220,7 @@ public class InputSystem : MonoBehaviour
             StartCoroutine(DelayCall(delayCall));
         }
 
-        if (Vector3.Distance(firstMousePos, Input.mousePosition) < 10 && dragTime < 0.5f && controlState != ControlState.MeasureDoing)
+        if (Vector3.Distance(firstMousePos, Input.mousePosition) < 10 && dragTime < 0.5f && controlState != ControlState.MeasureDot)
         {
             if (!camController.GetCameraOnMove())
             {
