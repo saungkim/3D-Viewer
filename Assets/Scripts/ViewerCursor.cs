@@ -20,13 +20,15 @@ public class ViewerCursor : MonoBehaviour
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private Transform measureRenderUI;
     //[SerializeField] private 
-
+    LayerMask layermask;
     void Start()
     {
        originScale = cursor.transform.localScale;
        UnityEngine.Cursor.visible = false;
        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
-       
+
+       layermask = ~( 1 << LayerMask.NameToLayer("Measurement"));
+
     }
 
     void Update()
@@ -38,8 +40,9 @@ public class ViewerCursor : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
+      
    
-        if (Physics.Raycast(ray, out hit,100))
+        if (Physics.Raycast(ray, out hit,100, layermask))
         {
             //Debug.Log("Hit:" + hit.transform.name);
             //transform.position = ray.GetPoint(100.0f);

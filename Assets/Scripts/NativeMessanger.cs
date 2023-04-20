@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-
 using UnityEngine;
 
 public class NativeMessanger : MonoBehaviour
@@ -50,7 +49,7 @@ public class NativeMessanger : MonoBehaviour
         }
     }
 
-    public void EnableDotCreateMode(string value)
+    public void ActivateDefectCreateMode(string value)
     {
         bool createMode;
 
@@ -120,10 +119,10 @@ public class NativeMessanger : MonoBehaviour
         StartCoroutine(defectConstructor.MoveCamInstant(defectId));
     }
 
-    public void DestoryDefect(string value)
+    public void DestoryDefect(string defectId)
     {
 
-        defectConstructor.DestroyDefect(value , nativeSendErrorMessage);
+        defectConstructor.DestroyDefect(defectId, nativeSendErrorMessage);
     }
 
     public void SetDefectColor(string value)
@@ -132,11 +131,11 @@ public class NativeMessanger : MonoBehaviour
         string htmlColor = values[1]; // "#FF0000"; Red
         string id = values[0];
 
-        Color color;
+        Color outColor;
 
-        if (ColorUtility.TryParseHtmlString(htmlColor, out color))
+        if (ColorUtility.TryParseHtmlString(htmlColor, out outColor))
         {
-            defectConstructor.SetDefectColor(id,color,nativeSendErrorMessage);
+            defectConstructor.SetDefectColor(id, outColor, nativeSendErrorMessage);
         }
         else
         {

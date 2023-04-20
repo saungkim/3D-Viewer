@@ -122,6 +122,7 @@ public class InputSystem : MonoBehaviour
         imgsFDDone = false;
 
         camController.StartDrag();
+        measurement.StartDrag();
     }
 
     private void MouseButtonHold()
@@ -133,6 +134,9 @@ public class InputSystem : MonoBehaviour
 
         if (isDragging)
         {
+
+            measurement.Drag();
+
             if (Vector3.Distance(firstMousePos, Input.mousePosition) < enableDotDistance && controlState != ControlState.None)
             {
                 holdTime += Time.deltaTime;
@@ -163,8 +167,6 @@ public class InputSystem : MonoBehaviour
                         {
                             measurement.CreateMeasurementDot(cursor.cursor.position , cursor.cursor.eulerAngles);
                         }
-                      
-
                     }
                 }
             }
@@ -198,13 +200,16 @@ public class InputSystem : MonoBehaviour
 
         if (holdTime < 0.5f)
         {
+            print("MouseButtonUP" + controlState);
+
             if (controlState == ControlState.None && CheckDefectCollider())
                 return;
 
-            if (controlState == ControlState.Measure && CheckMeasurementDotCollider())
+            if (controlState == ControlState.MeasureDoing && CheckMeasurementDotCollider())
                 return;
-            
         }
+
+        measurement.DragEnd();
 
         if (isDragging)
         {
@@ -246,13 +251,15 @@ public class InputSystem : MonoBehaviour
     private bool CheckMeasurementDotCollider()
     {
 
+        print("CheckMeasure");
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.transform.tag == "MeasurementDot")
             {
-               
+                measurement.Select(hit.transform.gameObject);
                 return true;
             }
         }
@@ -307,19 +314,6 @@ public class InputSystem : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         func.Invoke();
-    }
-
-    public void SetMeasureMode(bool onOff)
-    {
-        measureMode = onOff;
-    }
-
-    private void Hold()
-    {
-        if (measureMode)
-        {
-
-        }
     }
 
     public void SetControlState(ControlState state)

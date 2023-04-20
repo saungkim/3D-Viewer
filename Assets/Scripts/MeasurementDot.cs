@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class MeasurementDot : MonoBehaviour
+public class MeasurementDot : MeasurementObject
 {
     bool selected = false;
     [SerializeField] private Image image;
+
     private void Start()
     {
        
@@ -24,6 +25,18 @@ public class MeasurementDot : MonoBehaviour
         {
             image.color = Color.black;
             print("Select Black");
+        }
+    }
+
+    public override void Select(bool onOff)
+    {
+        if (onOff)
+        {
+            image.color = Color.yellow;
+        }
+        else
+        {
+            image.color = Color.black;
         }
     }
 
