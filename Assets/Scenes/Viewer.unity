@@ -559,6 +559,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 69946193}
   m_CullTransparentMesh: 0
+--- !u!1 &70444013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 70444015}
+  - component: {fileID: 70444014}
+  m_Layer: 8
+  m_Name: Collider
+  m_TagString: MeasurementDot
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &70444014
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70444013}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &70444015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70444013}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1273987432}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &78427114
 GameObject:
   m_ObjectHideFlags: 0
@@ -2179,7 +2232,8 @@ MonoBehaviour:
   defectConstructor: {fileID: 1239123036}
   measurement: {fileID: 338664071}
   overallSetting: {fileID: 631546192}
-  gauage: {fileID: 0}
+  gauage: {fileID: 1604048025}
+  controlState: 0
 --- !u!114 &338664071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2193,7 +2247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   measureCamera: {fileID: 128626020}
-  cursorTransform: {fileID: 2063158914}
+  cursorTransform: {fileID: 12518392}
   cursor: {fileID: 12518393}
   measureRenderUI: {fileID: 277964716}
   line: {fileID: 1123900560}
@@ -6050,7 +6104,6 @@ GameObject:
   - component: {fileID: 1239123036}
   - component: {fileID: 1239123037}
   - component: {fileID: 1239123038}
-  - component: {fileID: 1239123039}
   - component: {fileID: 1239123040}
   - component: {fileID: 1239123041}
   - component: {fileID: 1239123042}
@@ -6131,18 +6184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2746f89adbdf06438c8af56e1e6d611, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1239123039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1239123034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a787b0f0d6471e846a4ae262b6e50910, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1239123040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6199,7 +6240,6 @@ GameObject:
   - component: {fileID: 1273987436}
   - component: {fileID: 1273987435}
   - component: {fileID: 1273987434}
-  - component: {fileID: 1273987433}
   - component: {fileID: 1273987437}
   m_Layer: 8
   m_Name: Dot
@@ -6221,6 +6261,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 10889904}
+  - {fileID: 70444015}
   m_Father: {fileID: 283666757}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6229,27 +6270,6 @@ RectTransform:
   m_AnchoredPosition: {x: -716.45966, y: -623.75995}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!65 &1273987433
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273987431}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 7, y: 7, z: 7}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1273987434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6325,6 +6345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 10889905}
+  boxCollider: {fileID: 70444014}
 --- !u!1 &1279785401
 GameObject:
   m_ObjectHideFlags: 0
@@ -6640,7 +6661,7 @@ GameObject:
   - component: {fileID: 1388984519}
   m_Layer: 8
   m_Name: Collider
-  m_TagString: MeasurementDot
+  m_TagString: MeasurementLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6968,7 +6989,7 @@ GameObject:
   - component: {fileID: 1423189149}
   m_Layer: 8
   m_Name: Line
-  m_TagString: Untagged
+  m_TagString: MeasurementLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

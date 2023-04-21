@@ -40,24 +40,15 @@ public class ViewerCursor : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-      
-   
         if (Physics.Raycast(ray, out hit,100, layermask))
         {
             //Debug.Log("Hit:" + hit.transform.name);
             //transform.position = ray.GetPoint(100.0f);
             cursor.position = hit.point + hit.normal * 0.001f;
             cursor.LookAt(hit.point + hit.normal);
-            
-            if(inputSystem.GetControlState() == InputSystem.ControlState.Measure)
-            {
-                gauge.position = measureRenderUI.position;
-            }
-            else
-            {
-                gauge.position = Input.mousePosition + gaugePlusPosition;
-            }
-           
+
+            gauge.position = Input.mousePosition + gaugePlusPosition;
+
             //gauge.LookAt(hit.point + hit.normal);
         }
     }
@@ -77,15 +68,11 @@ public class ViewerCursor : MonoBehaviour
         cursor.gameObject.SetActive(true);
     }
 
-    public void SetGaugeVisible()
+    public void SetGaugeVisible(bool onOff)
     {
-        gauge.gameObject.SetActive(true);
+        gauge.gameObject.SetActive(onOff);
     }
 
-    public void SetGaugeInvisible()
-    {
-        gauge.gameObject.SetActive(false);
-    }
 
     public void SetScaleFov()
     {

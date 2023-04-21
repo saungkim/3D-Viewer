@@ -6,6 +6,7 @@ public class MeasurementDot : MeasurementObject
 {
     bool selected = false;
     [SerializeField] private Image image;
+    [SerializeField] private BoxCollider boxCollider;
 
     private void Start()
     {
@@ -38,6 +39,11 @@ public class MeasurementDot : MeasurementObject
         {
             image.color = Color.black;
         }
+    }
+
+    public override void SetCollider()
+    {
+        boxCollider.enabled = true;
     }
 
 }

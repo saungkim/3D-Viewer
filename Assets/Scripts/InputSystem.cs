@@ -39,7 +39,7 @@ public class InputSystem : MonoBehaviour
     private float enableDotDistance = 50;
 
     public enum ControlState { None, Defect, Measure , AutoTour , Tag , MeasureDot }
-    private ControlState controlState = ControlState.None;
+    public ControlState controlState = ControlState.None;
 
     private bool cursorOnUI = false;
     void Start()
@@ -122,7 +122,7 @@ public class InputSystem : MonoBehaviour
         imgsFDDone = false;
 
         camController.StartDrag();
-        //measurement.StartDrag();
+        measurement.StartDrag();
     }
 
     private void MouseButtonHold()
@@ -134,9 +134,6 @@ public class InputSystem : MonoBehaviour
 
         if (isDragging)
         {
-
-            //measurement.Drag();
-
             if (Vector3.Distance(firstMousePos, Input.mousePosition) < enableDotDistance && controlState != ControlState.None)
             {
                 holdTime += Time.deltaTime;
@@ -148,15 +145,21 @@ public class InputSystem : MonoBehaviour
 
                 if (controlState == ControlState.Defect || controlState == ControlState.Measure)
                 {
-                    StartCoroutine(ImgsFD.DelaySetActive(true));
-                    ImgsFD.SetValue((holdTime - 0.7f) / 1f, true);
+                    if ((holdTime - 0.7f) / 1f > 1)
+                    {
+                        StartCoroutine(ImgsFD.DelaySetActive(false));
+                    }
+                    else
+                    {
+                        StartCoroutine(ImgsFD.DelaySetActive(true));
+                        ImgsFD.SetValue((holdTime - 0.7f) / 1f, true);
+                    }
                 }
 
                 if (holdTime - 0.7f >= 1f)
                 {
                     if (!imgsFDDone)
                     {
-
                         imgsFDDone = true;
 
                         if(controlState == ControlState.Defect)
@@ -165,7 +168,6 @@ public class InputSystem : MonoBehaviour
                         }
                         else if (controlState == ControlState.Measure)
                         {
-                            //measurement.CreateMeasurementDot(cursor.cursor.position , cursor.cursor.eulerAngles);
                             measurement.DotCreateMode();
                         }
                     }
@@ -180,9 +182,15 @@ public class InputSystem : MonoBehaviour
             {
                 //camController.UpdateRotation();
 
+
+
                 if(controlState != ControlState.MeasureDot)
                 {
                     camController.UpdateRotation();
+                }
+                else
+                {
+                    measurement.Drag();
                 }
             }
 
@@ -208,8 +216,8 @@ public class InputSystem : MonoBehaviour
             if (controlState == ControlState.None && CheckDefectCollider())
                 return;
 
-            //if (controlState == ControlState.MeasureDoing && CheckMeasurementDotCollider())
-            //    return;
+            if (controlState == ControlState.Measure && CheckMeasurementCollider())
+                return;
         }
 
         measurement.DragUp();
@@ -251,7 +259,7 @@ public class InputSystem : MonoBehaviour
         return false;
     }
 
-    private bool CheckMeasurementDotCollider()
+    private bool CheckMeasurementCollider()
     {
 
         print("CheckMeasure");
@@ -262,7 +270,13 @@ public class InputSystem : MonoBehaviour
         {
             if (hit.transform.tag == "MeasurementDot")
             {
-                measurement.Select(hit.transform.gameObject);
+                //measurement.SelectDot(hit.transform);
+
+                return true;
+            }else if(hit.transform.tag == "MeasurementLine")
+            {
+               // measurement.Select(hit.transform.parent.parent.gameObject , true);
+
                 return true;
             }
         }

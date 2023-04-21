@@ -21,4 +21,9 @@ public class MeasurementObject : MonoBehaviour
     {
       
     }
+
+    public virtual void SetCollider()
+    {
+
+    }
 }

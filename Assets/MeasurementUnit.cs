@@ -176,9 +176,10 @@ public class MeasurementUnit : MonoBehaviour
        
     }
 
-    public void FixDot(int index , Vector3 position)
+    public void FixDot(int index , Vector3 position , Vector3 rot)
     {
         dots[index].transform.position = position;
+        dots[index].transform.eulerAngles = rot;
 
         if (index == 0)
         {
@@ -187,6 +188,8 @@ public class MeasurementUnit : MonoBehaviour
         else
         {
             lines[index-1].GetComponent<MeasurementLine>().SetLineEndPosition(position);
+
+            if(lines.Count > index)
             lines[index].GetComponent<MeasurementLine>().SetLineStartPosition(position);
         }
 
@@ -216,5 +219,48 @@ public class MeasurementUnit : MonoBehaviour
         return selected;
     }
 
+    //public void 
+
+    public void CompleteUnit()
+    {
+        int childCount = transform.childCount;
+
+        for(int i = 0; i < childCount; ++i)
+        {
+            //transform.GetChild(i)
+            transform.GetChild(i).GetComponent<MeasurementObject>().SetCollider();
+        }
+
+        //Remove Last Line
+        Destroy(lines[lines.Count - 1]);
+        lines.RemoveAt(lines.Count - 1);
+    }
+
+    public void SetCollider()
+    {
+        int childCount = transform.childCount;
+
+        for (int i = 0; i < childCount; ++i)
+        {
+            //transform.GetChild(i)
+            transform.GetChild(i).GetComponent<MeasurementObject>().SetCollider();
+        }
+    }
+
+    public int FindDotIndex(GameObject dot)
+    {
+        int index = 0;
+
+        foreach(GameObject obj in dots)
+        {
+            if(dot == obj)
+            {
+                break;
+            }
+            ++index;
+        }
+
+        return index;
+    }
 
 }

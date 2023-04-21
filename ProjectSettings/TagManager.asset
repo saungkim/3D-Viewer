@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Defect
   - MeasurementDot
+  - MeasurementLine
   layers:
   - Default
   - TransparentFX

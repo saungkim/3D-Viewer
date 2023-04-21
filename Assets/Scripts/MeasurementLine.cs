@@ -98,7 +98,7 @@ public class MeasurementLine : MeasurementObject
         endDot = tf;
     }
 
-    public void SetCollider()
+    public override void SetCollider()
     {
         //Collider
         boxCollider.size = new Vector3(0.03f, 0.03f, 0.9f * Vector3.Distance(lineRenderer.GetPosition(0), lineRenderer.GetPosition(1)));

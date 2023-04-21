@@ -13,22 +13,9 @@ using UnityEngine;
         [SerializeField] float size;
         [SerializeField] float delta;
 
-        //Static Property with backing field
-        private static DottedLine instance;
-
         [SerializeField] private Vector3 startPos;
         [SerializeField] private Vector3 endPos;
         [SerializeField] private Transform pool; 
-
-        public static DottedLine Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = FindObjectOfType<DottedLine>();
-                return instance;
-            }
-        }
 
         //Utility fields
         List<Vector2> positions = new List<Vector2>();
@@ -73,7 +60,9 @@ using UnityEngine;
 
             float distance = Vector3.Distance(start,end);
 
-            Vector3 direction = (end - start).normalized;       
+        Vector3 cameraPosition = Camera.main.transform.position;
+
+              Vector3 direction = (end - start).normalized;       
 
             int iter = (int)(distance / delta);
 
@@ -98,18 +87,9 @@ using UnityEngine;
             for(int i = 0; i < iter; ++i)
             {
                 dots[i].transform.position = start + (direction * delta) * i;
+                dots[i].transform.LookAt(cameraPosition);
             }
 
-            //Vector3 point = start;
-            //Vector3 direction = (end - start).normalized;
-
-            //while ((end - start).magnitude > (point - start).magnitude)
-            //{
-            //    positions.Add(point);
-            //    point += (direction * Delta);
-            //}
-
-            //Render();
         }
 
         private void Render()
