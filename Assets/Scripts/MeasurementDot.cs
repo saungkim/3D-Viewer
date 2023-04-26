@@ -10,7 +10,7 @@ public class MeasurementDot : MeasurementObject
 
     private void Start()
     {
-        Select(transform.parent.GetComponent<MeasurementUnit>().GetSelect());
+        //Select(transform.parent.GetComponent<MeasurementUnit>().GetSelect());
     }
 
     public void SelectDot(bool onOff)
@@ -27,6 +27,7 @@ public class MeasurementDot : MeasurementObject
             image.color = Color.black;
             print("Select Black");
         }
+        
     }
 
     public override void Select(bool onOff)

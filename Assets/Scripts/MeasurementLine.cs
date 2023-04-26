@@ -27,7 +27,7 @@ public class MeasurementLine : MeasurementObject
     // Start is called before the first frame update
     void Start()
     {
-        Select(transform.parent.GetComponent<MeasurementUnit>().GetSelect());
+        //Select(transform.parent.GetComponent<MeasurementUnit>().GetSelect());
 
         //   lineRenderer = GetComponent<LineRenderer>();
     }

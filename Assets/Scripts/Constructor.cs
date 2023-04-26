@@ -61,11 +61,9 @@ public class Constructor : MonoBehaviour
             yield return null;
         }
 
-        //  callback("The file does not exist.");
         {
             envData = reader.bytes;
             envToModel(envData, callback);
-    
         }
     }
 
@@ -105,18 +103,30 @@ public class Constructor : MonoBehaviour
     }
     bool isLoadDone = false;
     private void envToModel(byte[] content , Action<string> callback)
-    {  
-        int index = 4;
-        int[] verticeLengths = new int[content[2]];
-        int iterCount = content[2] * 4;
+    {
+        int[] info = new int[4];
+        int index = 16;
+
+        for (int i = 0; i < index; i = i + 4)
+        {
+
+            info[i / 4] = BitConverter.ToInt32(content, i);
+
+        }
+
+        int[] verticeLengths = new int[info[2]];
+        int iterCount = info[2] * 4;
+
+
+
         for (int i = 0; i < iterCount; i = i + 4)
         {
             verticeLengths[i / 4] = BitConverter.ToInt32(content, index + i);
         }
 
         index += iterCount;
-        int[] indiciesLengths = new int[content[2]];
-        iterCount = content[2] * 4;
+        int[] indiciesLengths = new int[info[2]];
+        iterCount = info[2] * 4;
 
         for (int i = 0; i < iterCount; i = i + 4)
         {
@@ -124,24 +134,24 @@ public class Constructor : MonoBehaviour
         }
 
         index += iterCount;
-        int[] textureLengths = new int[content[3]];
-        iterCount = content[3] * 4;
+        int[] textureLengths = new int[info[3]];
+        iterCount = info[3] * 4;
         for (int i = 0; i < iterCount; i = i + 4)
         {
             textureLengths[i / 4] = BitConverter.ToInt32(content, index + i);
         }
 
         index += iterCount;
-        Vector3[] panoramaPosition = new Vector3[content[1]];
-        Vector3[] panoramaRotation = new Vector3[content[1]];
-        iterCount = content[1] * 12;
+        Vector3[] panoramaPosition = new Vector3[info[1]];
+        Vector3[] panoramaRotation = new Vector3[info[1]];
+        iterCount = info[1] * 12;
         for (int i = 0; i < iterCount; i = i + 12)
         {
             panoramaPosition[i / 12] = new Vector3(BitConverter.ToSingle(content, index + i), BitConverter.ToSingle(content, index + i + 4), BitConverter.ToSingle(content, index + i + 8));
         }
 
         index += iterCount;
-        iterCount = content[1] * 12;
+        iterCount = info[1] * 12;
         for (int i = 0; i < iterCount; i = i + 12)
         {
             panoramaRotation[i / 12] = new Vector3(BitConverter.ToSingle(content, index + i), BitConverter.ToSingle(content, index + i + 4), BitConverter.ToSingle(content, index + i + 8));
@@ -207,7 +217,7 @@ public class Constructor : MonoBehaviour
             indicies.Add(localIndicies);
         }
        
-        for (int i = 0; i < content[2]; ++i)
+        for (int i = 0; i < info[2]; ++i)
         {
             GameObject o = new GameObject();
             Mesh mesh = new Mesh();
@@ -226,7 +236,7 @@ public class Constructor : MonoBehaviour
             o.transform.localScale = Vector3.one;
         }
        
-        for(int i = 0; i < content[1]; ++i)
+        for(int i = 0; i < info[1]; ++i)
         {
             GameObject o = Instantiate(cubeMap);
             o.transform.parent = camGroup;

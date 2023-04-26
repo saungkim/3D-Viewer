@@ -25,7 +25,7 @@ public class NativeMessanger : MonoBehaviour
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value);};
 
 #if UNITY_EDITOR
-        string fileName = "input";
+        string fileName = "inputNHMatterport";
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
 #endif
         ReadEnv(Application.streamingAssetsPath + "/input.env");

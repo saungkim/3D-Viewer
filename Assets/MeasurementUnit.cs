@@ -204,6 +204,8 @@ public class MeasurementUnit : MonoBehaviour
 
     public void Select(bool inputSelected)
     {
+        print("Select");
+
         selected = inputSelected;
 
         int childCount = transform.childCount;

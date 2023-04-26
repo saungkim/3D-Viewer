@@ -53,8 +53,6 @@ public class Measurement : MonoBehaviour
         if (measureMentState == MeasurementState.DotCreating)
         {
             MeasureUI();
-
-            //print("DotCreating:"+pos);
         }
         else if(measureMentState == MeasurementState.LineCreating)
         {
@@ -106,7 +104,42 @@ public class Measurement : MonoBehaviour
     {
         measureCamera.LookAt(cursorTransform);
         Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
+      
+
+        print("Pos X :" + pos.x + "Pos Y :" + pos.y);
+
+        if (pos.x < 200)
+        {
+            pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3 (measurePlusPos.y,0,0);
+        }
+        else if (pos.x > Screen.width - 200)
+        {
+            pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(- measurePlusPos.y, 0, 0);
+        }
+        
+        if (pos.y > Screen.height - 200)
+        {
+           
+           Vector3 heightPos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(0, - measurePlusPos.y, 0);
+            pos.y = heightPos.y; 
+        }
+        else if (pos.y < 200)
+        {
+            Vector3 heightPos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(0, + measurePlusPos.y, 0);
+            pos.y = heightPos.y;
+        }
+
         measureRenderUI.position = pos;
+
+        //if(pos.y > Screen.width)
+        //{
+
+        //}
+        //else if(pos.x < Screen.height)
+        //{
+
+        //}
+
     }
 
     public void InverseActivateMeasurement()
@@ -250,8 +283,6 @@ public class Measurement : MonoBehaviour
 
     public void SelectDot(Transform dotObj)
     {
-
-
         Select(dotObj.parent.parent.gameObject, false);
         dotObj.parent.GetComponent<MeasurementDot>().Select(true);
         preMeasureUnit = dotObj.parent.parent.GetComponent<MeasurementUnit>();
@@ -351,6 +382,8 @@ public class Measurement : MonoBehaviour
             else if (hit.transform.tag == "MeasurementLine")
             {
                 Select(hit.transform.parent.parent.gameObject , true);
+
+                
             }
         }
 
@@ -408,12 +441,13 @@ public class Measurement : MonoBehaviour
             {
                 preMeasureUnit = Instantiate(measureUnit).GetComponent<MeasurementUnit>();
                 preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
-                preMeasureUnit.Select(true);
+                //preMeasureUnit.Select(true);
             }
         }
         else if(measureMentState == MeasurementState.LineCreating)
         {
             measureMentState = MeasurementState.DotCreateEnd;
+            preMeasureUnit.Select(true);
             preMeasureUnit.GetPrevLine().SetBoolDottedLineOnOff(false);
             preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
         }
@@ -548,22 +582,16 @@ public class Measurement : MonoBehaviour
 
     //public bool CheckMeasurementDotCollider()
     //{
-
     //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
     //    if (Physics.Raycast(ray, out RaycastHit hit))
     //    {
     //        if (hit.transform.tag == "MeasurementDot")
-    //        {
-               
+    //        {        
     //        }
     //        else if (hit.transform.tag == "Measurement")
     //        {
-
     //        }
     //    }
-
-
     //}
 
 }
