@@ -24,9 +24,6 @@ public class Measurement : MonoBehaviour
     private TextMeshProUGUI selectedText;
     [SerializeField] private MeasurementDot measurementDot;
 
-    bool startMeasureMent = false;
-    private bool ondrag = false;
-
     public enum MeasurementState {None,DotCreating,DotCreateEnd,LineCreating,DotFixing}
     public MeasurementState measureMentState = MeasurementState.None;
 
@@ -49,7 +46,6 @@ public class Measurement : MonoBehaviour
     void Update()
     {
        
-
         if (measureMentState == MeasurementState.DotCreating)
         {
             MeasureUI();
@@ -59,6 +55,15 @@ public class Measurement : MonoBehaviour
             MeasureUI();
             //Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
             preMeasureUnit.GetPrevLine().SetLineEndPosition(cursorTransform.position);
+        }
+
+        if(preMeasureUnit != null)
+        {
+            removeUI.SetActive(true);
+        }
+        else
+        {
+            removeUI.SetActive(false);
         }
 
         //if (measureMentState == MeasurementState.None)
@@ -105,9 +110,6 @@ public class Measurement : MonoBehaviour
         measureCamera.LookAt(cursorTransform);
         Vector3 pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + measurePlusPos;
       
-
-        print("Pos X :" + pos.x + "Pos Y :" + pos.y);
-
         if (pos.x < 200)
         {
             pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3 (measurePlusPos.y,0,0);
@@ -255,31 +257,6 @@ public class Measurement : MonoBehaviour
         //}                                                                                                                      
     }
 
-    public void SelectMeasurementDone()
-    {
-        startMeasureMent = true;
-    }
-
-
-    public void ActivateAdd(bool onOff)
-    {
-        addUI.SetActive(onOff);
-    }
-
-    public void ActivateRemove(bool onOff)
-    {
-        removeUI.SetActive(onOff);
-    }
-
-    public void Add()
-    {
-
-    }
-
-    public void Remove()
-    {
-    
-    }
 
     public void SelectDot(Transform dotObj)
     {
@@ -376,7 +353,8 @@ public class Measurement : MonoBehaviour
                 measureMentState = MeasurementState.DotFixing;
 
                 SelectDot(hit.transform);
-       
+                
+
                 //return true;
             }
             else if (hit.transform.tag == "MeasurementLine")
@@ -443,6 +421,8 @@ public class Measurement : MonoBehaviour
                 preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
                 //preMeasureUnit.Select(true);
             }
+
+            removeUI.SetActive(true);
         }
         else if(measureMentState == MeasurementState.LineCreating)
         {
@@ -450,10 +430,11 @@ public class Measurement : MonoBehaviour
             preMeasureUnit.Select(true);
             preMeasureUnit.GetPrevLine().SetBoolDottedLineOnOff(false);
             preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
+
+            addUI.SetActive(true);
         }
         else if(measureMentState == MeasurementState.None)
         {
-      
             if (preMeasureUnit == null)
                 return;
 
@@ -514,7 +495,6 @@ public class Measurement : MonoBehaviour
             measureCamera.gameObject.SetActive(true);
             cursor.SetMeasureCursorMode();
             cursor.SetGaugeVisible(false);
-            print("GaugeVisible False");
         }
         else
         {
@@ -522,12 +502,14 @@ public class Measurement : MonoBehaviour
             measureCamera.gameObject.SetActive(false);
             cursor.SetNormalCursorMode();
             cursor.SetGaugeVisible(true);
-            print("GaugeVisible True");
         }
     }
 
     public void DestroySelectedMeasureUnit()
     {
+        addUI.SetActive(false);
+        removeUI.SetActive(false);
+
         if (preMeasureUnit == null)
             return;
 
@@ -540,6 +522,9 @@ public class Measurement : MonoBehaviour
 
     public void CompleteSelectedMeasureUnit()
     {
+        addUI.SetActive(false);
+        removeUI.SetActive(false);
+
         if(measureMentState == MeasurementState.DotCreateEnd)
         {
             measureMentState = MeasurementState.None;

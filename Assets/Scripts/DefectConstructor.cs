@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class DefectConstructor : MonoBehaviour
 {
@@ -73,7 +74,9 @@ public class DefectConstructor : MonoBehaviour
     {
         float loadTime = 0;
 
-        WWW reader = new WWW(filePath);
+        UnityWebRequest reader =  UnityWebRequest.Get(filePath);
+        reader.SendWebRequest();
+
         while (!reader.isDone && loadTime <= 5)
         {
             loadTime += Time.deltaTime;
@@ -85,7 +88,7 @@ public class DefectConstructor : MonoBehaviour
             CallBack("The file does not exist.");
         }
 
-        string json = reader.text;
+        string json = reader.downloadHandler.text;
 
         DefectArray defectArrayFromJson = JsonUtility.FromJson<DefectArray>(json);
 

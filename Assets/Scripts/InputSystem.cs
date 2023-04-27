@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,7 +11,6 @@ public class InputSystem : MonoBehaviour
 {
     private bool isDragging = false;
     private bool onClickStart = false;
-    private bool click = false;
     private bool hold = false;
     private bool imgsFDDone = false;
     private bool enableDot = false;
@@ -35,16 +35,21 @@ public class InputSystem : MonoBehaviour
     float currentPinchDistance;
     // Start is called before the first frame update
 
-    private bool measureMode = false;
     private float enableDotDistance = 50;
 
     public enum ControlState { None, Defect, Measure , AutoTour , Tag , MeasureDot }
     public ControlState controlState = ControlState.None;
 
     private bool cursorOnUI = false;
+
+    int pointerID;
     void Start()
     {
-        
+#if UNITY_EDITOR
+        pointerID = -1; //PC나 유니티 상에서는 -1
+#elif UNITY_IOS || UNITY_IPHONE || UNITY_ANDROID
+        pointerID = 0;  // 휴대폰이나 이외에서 터치 상에서는 0 
+#endif
     }
 
     // Update is called once per frame
@@ -60,13 +65,8 @@ public class InputSystem : MonoBehaviour
 
          zoomInOutWithWheel();
 
-        int pointerID;
 
-#if UNITY_EDITOR
-        pointerID = -1; //PC나 유니티 상에서는 -1
-#elif UNITY_IOS || UNITY_IPHONE || UNITY_ANDROID
-        pointerID = 0;  // 휴대폰이나 이외에서 터치 상에서는 0 
-#endif
+
 
        
         if (EventSystem.current.IsPointerOverGameObject(pointerID))
@@ -186,7 +186,14 @@ public class InputSystem : MonoBehaviour
 
                 if(controlState != ControlState.MeasureDot)
                 {
+
+                    if (EventSystem.current.IsPointerOverGameObject(pointerID))
+                    {
+                        return;
+                    }
+
                     camController.UpdateRotation();
+
                 }
                 else
                 {
@@ -211,8 +218,6 @@ public class InputSystem : MonoBehaviour
 
         if (holdTime < 0.5f)
         {
-            print("MouseButtonUP" + controlState);
-
             if (controlState == ControlState.None && CheckDefectCollider())
                 return;
 
@@ -261,22 +266,18 @@ public class InputSystem : MonoBehaviour
 
     private bool CheckMeasurementCollider()
     {
-
-        print("CheckMeasure");
-
+   
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.transform.tag == "MeasurementDot")
             {
-                //measurement.SelectDot(hit.transform);
-
+          
                 return true;
             }else if(hit.transform.tag == "MeasurementLine")
             {
-               // measurement.Select(hit.transform.parent.parent.gameObject , true);
-
+         
                 return true;
             }
         }

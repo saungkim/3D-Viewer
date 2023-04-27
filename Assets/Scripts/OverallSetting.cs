@@ -59,7 +59,6 @@ public class OverallSetting : MonoBehaviour
     public void SetCursor(string value)
     {
         bool onOff = bool.Parse(value);
-        print(onOff);
         cursor.SetActivate(onOff);
     }
 

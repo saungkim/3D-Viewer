@@ -29,7 +29,7 @@ public class NativeMessanger : MonoBehaviour
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
 #endif
         ReadEnv(Application.streamingAssetsPath + "/input.env");
-        ReadDefect(Application.streamingAssetsPath + "/input.json");
+        ReadDefectWithFilePath(Application.streamingAssetsPath + "/input.json");
         ViewStage("19");
         //EnableDotCreateMode();
         SetCursor("false");
@@ -89,7 +89,7 @@ public class NativeMessanger : MonoBehaviour
         readEnvState = LoadState.None;
     }
 
-    public void ReadDefect(string filePath)
+    public void ReadDefectWithFilePath(string filePath)
     {
 //#if UNITY_EDITOR
 //        filePath = Application.dataPath + "/Sources/" + filePath;
@@ -102,6 +102,21 @@ public class NativeMessanger : MonoBehaviour
         }
         readDefectState = LoadState.Loading;
         StartCoroutine(defectConstructor.ReadAllDefect(filePath, ReadDefectCallBack));
+    }
+
+    public void ReadDefects(string json)
+    {
+        
+    }
+
+    public void AddDefects(string json)
+    {
+
+    }
+
+    public void DestroyDefects(string json)
+    {
+
     }
 
     public void ReadDefectCallBack(string message)
@@ -219,6 +234,8 @@ public class NativeMessanger : MonoBehaviour
         }
         catch (Exception e)
         {
+
+            print(e);
             //appendToText("Exception during showHostMainWindow");
             //appendToText(e.Message);
         }

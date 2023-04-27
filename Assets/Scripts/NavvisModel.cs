@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class NavvisModel : MonoBehaviour
 {
-    Renderer renderer;
+    Renderer navvisRenderer;
     // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<Renderer>();
+        navvisRenderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class NavvisModel : MonoBehaviour
     {
         // gameObject.SetActive(!gameObject.activeSelf);
        // GetComponent<Renderer>().enabled =
-             renderer.enabled = !renderer.enabled;
+             navvisRenderer.enabled = !navvisRenderer.enabled;
     }
 
 }

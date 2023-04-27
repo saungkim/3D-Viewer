@@ -10,6 +10,7 @@ using Unity.VisualScripting;
 using System.IO;
 using System.Linq;
 using static UnityEngine.UI.Image;
+using UnityEngine.Networking;
 
 public class Constructor : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class Constructor : MonoBehaviour
         //StartCoroutine(FileLoad(url));
 #endif
     }
-    bool isLoaded = false;
+
     public void FileOpen(string url , Action<string> callback)
     {
         StartCoroutine(FileLoad(url, callback));
@@ -53,8 +54,9 @@ public class Constructor : MonoBehaviour
         float loadTime = 0;
 
         byte[] envData = null;
-       
-        WWW reader = new WWW(url);
+
+        UnityWebRequest reader = UnityWebRequest.Get(url);
+        reader.SendWebRequest();
         while (!reader.isDone && loadTime <= 5)
         {
             loadTime += Time.deltaTime;
@@ -62,7 +64,7 @@ public class Constructor : MonoBehaviour
         }
 
         {
-            envData = reader.bytes;
+            envData = reader.downloadHandler.data;
             envToModel(envData, callback);
         }
     }

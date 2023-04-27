@@ -248,16 +248,6 @@ public class UIManager : MonoBehaviour
         SetColorSelected(onOff, img);
     }
 
-    public void MeasuremetAddDot() 
-    {
-        measureMent.Add();
-    } 
-
-    public void MeasurementRemoveUI()
-    {
-        measureMent.Remove();
-    }
-
     public void MeasurementDestroySelectedMeasureUnit()
     {
         measureMent.DestroySelectedMeasureUnit();

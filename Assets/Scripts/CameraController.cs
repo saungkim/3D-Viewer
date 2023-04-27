@@ -12,7 +12,6 @@ public class CameraController : MonoBehaviour
     public float maxPitch = 85;
     public float lerpSpeed = 10;
 
-    private bool isDragging = false;
     private bool onDragging = false;
 
     private Vector3 dragStartMousePosition;
@@ -34,7 +33,6 @@ public class CameraController : MonoBehaviour
     public void StartDrag()
     {
         // Start dragging the camera
-        isDragging = true;
         onDragging = false;
         dragStartMousePosition = Input.mousePosition;
         dragStartRotation = transform.rotation;

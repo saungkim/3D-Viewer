@@ -86,7 +86,7 @@ public class ViewerCursor : MonoBehaviour
   
     public void SetMeasureCursorMode()
     {
-        print("SetMeasureCursorMode");
+
    
         cursorChild.SetActive(true);
         cursorChild.layer = LayerMask.NameToLayer("Cubemap");
@@ -95,7 +95,7 @@ public class ViewerCursor : MonoBehaviour
 
     public void SetNormalCursorMode()
     {
-        print("SetMeasureCursorMode");
+
         //OverallSeting
         cursorChild.SetActive(false);
         cursor.gameObject.layer = LayerMask.NameToLayer("Default");

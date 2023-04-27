@@ -66,13 +66,13 @@ public class LoadTextureFromStreamingAsset : MonoBehaviour
 
         textures[childIndex] = tex;
     
-        WWW reader = new WWW(url);
+        UnityWebRequest reader = new UnityWebRequest(url);
         while (!reader.isDone)
         {
             yield return null;
         }
 
-        imgData = reader.bytes;
+        imgData = reader.downloadHandler.data;
         tex.wrapMode = TextureWrapMode.Clamp;
         tex.LoadImage(imgData);
 
