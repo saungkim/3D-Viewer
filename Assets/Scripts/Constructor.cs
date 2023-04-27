@@ -108,18 +108,18 @@ public class Constructor : MonoBehaviour
     {
         int[] info = new int[4];
         int index = 16;
+        float version;
 
         for (int i = 0; i < index; i = i + 4)
         {
-
             info[i / 4] = BitConverter.ToInt32(content, i);
-
         }
+
+        version = BitConverter.ToSingle(content, index);
+        index += 4;
 
         int[] verticeLengths = new int[info[2]];
         int iterCount = info[2] * 4;
-
-
 
         for (int i = 0; i < iterCount; i = i + 4)
         {
@@ -163,6 +163,8 @@ public class Constructor : MonoBehaviour
         List<byte[]> indiciesList = new List<byte[]>();
         List<byte[]> verticiesList = new List<byte[]>();
 
+        float[] meshesTransform = new float[info[2] * 9];
+
         index += iterCount;
 
         foreach (int length in textureLengths)
@@ -192,8 +194,24 @@ public class Constructor : MonoBehaviour
             indiciesList.Add(bytes);
         }
 
+        for (int i = 0; i < info[2]; ++i)
+        {
+            for (int j = 0; j < 9; ++j)
+            {
+                byte[] bytes = new byte[4];
+                Array.Copy(content, index, bytes, 0, 4);
+                index += 4;
+
+                meshesTransform[i * 9 + j] = BitConverter.ToSingle(bytes);
+            }
+        }
+
         List<Vector3[]> verticies = new List<Vector3[]>();
         List<int[]> indicies = new List<int[]>();
+
+        Vector3[] meshesPositions = new Vector3[info[2]];
+        Vector3[] meshesRotations = new Vector3[info[2]];
+        Vector3[] meshesScales = new Vector3[info[2]];
 
         foreach (byte[] verticesBytes in verticiesList)
         {
@@ -218,7 +236,20 @@ public class Constructor : MonoBehaviour
             }
             indicies.Add(localIndicies);
         }
-       
+
+        for (int i = 0; i < info[2]; ++i)
+        {
+            int byteLenngth = i * 9;
+
+            meshesPositions[i] = new Vector3(meshesTransform[byteLenngth], meshesTransform[byteLenngth + 1], meshesTransform[byteLenngth + 2]);
+            meshesRotations[i] = new Vector3(meshesTransform[byteLenngth + 3], meshesTransform[byteLenngth + 4], meshesTransform[byteLenngth + 5]);
+            meshesScales[i] = new Vector3(meshesTransform[byteLenngth + 6], meshesTransform[byteLenngth + 7], meshesTransform[byteLenngth + 8]);
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////Above Same OutPutModelExporter
+
+
         for (int i = 0; i < info[2]; ++i)
         {
             GameObject o = new GameObject();

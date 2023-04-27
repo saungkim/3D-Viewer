@@ -9,7 +9,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Aa]ssets/[Ss]ources/[Mm]odels
+/[Aa]ssets/[Ss]ources/[Mm]odels/
+/[Aa]ssets/[Ss]treamingAssets/
 
 
 # MemoryCaptures can get excessive in size.
