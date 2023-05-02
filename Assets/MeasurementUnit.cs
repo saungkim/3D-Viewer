@@ -99,6 +99,7 @@ public class MeasurementUnit : MonoBehaviour
         dots.Add(o);
         o.transform.position = position;
         o.transform.eulerAngles = rot;
+ 
 
         if(prevLine != null)
         {

@@ -19,6 +19,7 @@ public class Measurement : MonoBehaviour
     [SerializeField] private GameObject addUI;
     [SerializeField] private GameObject removeUI;
     [SerializeField] private MeasurementUnit measurementUnit;
+    [SerializeField] private Transform measurementUnitGroup;
     public enum MeasurementState {None,DotCreating,DotCreateEnd,LineCreating,DotFixing}
     public MeasurementState measureMentState = MeasurementState.None;
 
@@ -98,6 +99,13 @@ public class Measurement : MonoBehaviour
     public void Init()
     {
         measureMentState = MeasurementState.None;
+
+        int measurementUnitGroupChildCount = measurement.childCount;
+
+        for(int i = measurementUnitGroupChildCount - 1; i >= 0; --i)
+        {
+            Destroy(measurement.GetChild(i).gameObject);
+        }
     }
 
     private void MeasureUI()
@@ -182,17 +190,12 @@ public class Measurement : MonoBehaviour
 
     public void ActivateMeasurement(bool onOff)
     {
-
-        print("ActivateMeasurement" + onOff);
-
         if (onOff)
         {
 
         }
         else
         {
-
-
             if(preMeasureUnit != null)
             {
                 
@@ -403,7 +406,8 @@ public class Measurement : MonoBehaviour
             if(preMeasureUnit == null)
             {
                 preMeasureUnit = Instantiate(measureUnit).GetComponent<MeasurementUnit>();
-                preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles);
+                preMeasureUnit.transform.SetParent(measurementUnitGroup);
+                preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles );
                 //preMeasureUnit.Select(true);
             }
 
