@@ -19,6 +19,11 @@ public class Materials : MonoBehaviour
     
     }
 
+    public void Init()
+    {
+
+    }
+
     public IEnumerator MaterialFade(float endTime)
     {
         float time = 0;

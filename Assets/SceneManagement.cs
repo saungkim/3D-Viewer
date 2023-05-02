@@ -6,6 +6,7 @@ public class SceneManagement : MonoBehaviour
 {
     private string messageFilePath;
     [SerializeField] private NativeMessanger nativeMessanger;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -28,6 +29,8 @@ public class SceneManagement : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
     }
+
+
 
     // Update is called once per frame
     void Update()

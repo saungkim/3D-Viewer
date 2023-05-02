@@ -52,6 +52,21 @@ public class InputSystem : MonoBehaviour
 #endif
     }
 
+    public void Init()
+    {
+        controlState = ControlState.None;
+        cursorOnUI = false;
+        this.enabled = false;
+        isDragging = false;
+        onClickStart = false;
+        hold = false;
+        imgsFDDone = false;
+        dragTime = 0;
+        holdTime = 0;
+        firstMousePos = Vector3.zero;
+        currentPinchDistance = 0;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -64,11 +79,7 @@ public class InputSystem : MonoBehaviour
         }
 
          zoomInOutWithWheel();
-
-
-
-
-       
+   
         if (EventSystem.current.IsPointerOverGameObject(pointerID))
         {
             cursorOnUI = true;
@@ -180,10 +191,6 @@ public class InputSystem : MonoBehaviour
 
             if (!hold)
             {
-                //camController.UpdateRotation();
-
-
-
                 if(controlState != ControlState.MeasureDot)
                 {
 
@@ -200,12 +207,9 @@ public class InputSystem : MonoBehaviour
                     measurement.Drag();
                 }
             }
-
         }
         else
         {
-            //cursor.SetInvisible();
-
             isDragging = true;
             ImgsFD.SetActive(false);
         }
@@ -266,18 +270,15 @@ public class InputSystem : MonoBehaviour
 
     private bool CheckMeasurementCollider()
     {
-   
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.transform.tag == "MeasurementDot")
-            {
-          
+            {    
                 return true;
             }else if(hit.transform.tag == "MeasurementLine")
             {
-         
                 return true;
             }
         }
@@ -310,15 +311,12 @@ public class InputSystem : MonoBehaviour
             float fov = Camera.main.fieldOfView;
             fov -= deltaDistance * zoomSpeed;
            
-         
-
             camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
 
             currentPinchDistance = distance;
 
             return true;
         }
-
         return false;
     }
 
@@ -327,7 +325,6 @@ public class InputSystem : MonoBehaviour
         enableDot = onOff;
     }
     
-
     public IEnumerator DelayCall(Action func)
     {
         yield return new WaitForEndOfFrame();

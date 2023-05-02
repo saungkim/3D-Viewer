@@ -18,6 +18,18 @@ public class MiniMapConstructor : MonoBehaviour
         
     }
 
+    public void Init()
+    {
+        int minimapChildCount = miniMap.childCount;
+
+        for(int i = minimapChildCount; i >= 0; --i)
+        {
+            Destroy(miniMap.GetChild(i).gameObject); 
+        }
+
+        ActiveMiniMap(false);
+    }
+
     public void ActiveMiniMap(bool onOff)
     {
         miniMapPosition.SetActive(onOff);

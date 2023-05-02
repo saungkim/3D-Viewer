@@ -9,17 +9,15 @@ using static DefectConstructor;
 
 public class DefectConstructor : MonoBehaviour
 {
+    [Header("Containner")]
     [SerializeField] private Transform defectDot;
     [SerializeField] private GameObject dot;
-
-    List<Defect> defectList = new List<Defect>();
-
     [SerializeField] private Constructor constructor;
     [SerializeField] private PlayerMovement playerMovement;
-    Defect[] defectArray;
-
     [SerializeField] private NativeMessanger nativeMessanger;
 
+    List<Defect> defectList = new List<Defect>();
+    Defect[] defectArray;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +36,20 @@ public class DefectConstructor : MonoBehaviour
         }
 #endif
 
+    }
+
+
+    public void Init()
+    {
+        defectArray = null;
+        defectList.Clear();
+
+        int defectDotChildCount = defectDot.childCount;
+
+        for(int i = defectDotChildCount - 1; i >= 0 ; --i)
+        {
+            Destroy(defectDot.GetChild(i).gameObject);
+        }
     }
 
     public void CreateDot(Vector3 pos, Vector3 rot, bool sendMessage) // TO DO SendMessage have to be devided
@@ -218,8 +230,6 @@ public class DefectConstructor : MonoBehaviour
 
     public void DestroyDefects(string json ,Action<string> callback)
     {
-        bool destroied = false;
-
         int defectListCount = defectList.Count;
 
         if (defectListCount == 0)
@@ -316,4 +326,6 @@ public class DefectConstructor : MonoBehaviour
         public Vector3 rotation;
         public float fov;
     }
+
+    
 }

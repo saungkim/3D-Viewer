@@ -14,11 +14,12 @@ public class NativeMessanger : MonoBehaviour
     [SerializeField] private OverallSetting overallSetting;
     [SerializeField] private CameraController camController;
     [SerializeField] private UIManager uiMaanger;
-    //[SerializeField] private 
-    
+
     public enum LoadState { None, Loading, Done }
    public LoadState readEnvState = LoadState.None;
     LoadState readDefectState = LoadState.None;
+
+    public SceneManagement sceneManagement;
 
     // Start is called before the first frame update
     void Start()
@@ -30,33 +31,27 @@ public class NativeMessanger : MonoBehaviour
 #if UNITY_EDITOR
         string fileName = "inputNHMatterport";
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
-
-
 #endif
 
-
-      
         //SetEndMoveAlpha("0");
         //SetEndImageTransTime("1");
         //SetStartMoveAlpha("1");
-        //SetStartImageTransTime("1");
+        //SetStartImageTransTime("1"); 
+        //sceneManagement
 
-
-
+        //sceneManagement = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManagement>();
+      
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space)){
-
             ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
             ViewStage("0");
         }
 
-
         if (Input.GetKeyDown(KeyCode.A))
         {
-
             ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
             ReadDefectsWithFilePath(Application.streamingAssetsPath + "/input.json");
             ViewStage("19");
@@ -65,6 +60,7 @@ public class NativeMessanger : MonoBehaviour
             SetMoveTime("1");
         }
     }
+
 
     public void ActivateDefectCreateMode(string value)
     {
@@ -82,18 +78,9 @@ public class NativeMessanger : MonoBehaviour
 
     public void ReadRoomViewerFile(string fileName)
     {
-        GameObject o = GameObject.FindGameObjectWithTag("SceneManager");
-
-        SceneManagement sceneManagement = o.GetComponent<SceneManagement>();
-
-        if (sceneManagement.GetMessageFilePath() != null)
-        {
-            fileName = sceneManagement.GetMessageFilePath();
-        }
-
         if (readEnvState == LoadState.Done)
         {
-            constructor.InitFileWithPath(fileName);
+            constructor.Init();
         }
 
         readEnvState = LoadState.Loading;

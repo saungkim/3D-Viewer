@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class Measurement : MonoBehaviour
 {
-
     [SerializeField] private Transform measureCamera;
     [SerializeField] private Transform cursorTransform;
     [SerializeField] private ViewerCursor cursor;
@@ -16,23 +15,14 @@ public class Measurement : MonoBehaviour
     [SerializeField] private Transform measurement;
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private GameObject measureUnit;
-
-    private Vector3 measurePlusPos = new Vector3(0,330,0);
-  //  private MeasurementDot selectedMeasurementDot;
-    private LineRenderer selectedLine;
-   
-    private TextMeshProUGUI selectedText;
     [SerializeField] private MeasurementDot measurementDot;
-
+    [SerializeField] private GameObject addUI;
+    [SerializeField] private GameObject removeUI;
+    [SerializeField] private MeasurementUnit measurementUnit;
     public enum MeasurementState {None,DotCreating,DotCreateEnd,LineCreating,DotFixing}
     public MeasurementState measureMentState = MeasurementState.None;
 
-    [SerializeField] private GameObject addUI;
-    [SerializeField] private GameObject removeUI;
-
-    private Transform dragDot;
-
-    [SerializeField] private MeasurementUnit measurementUnit;
+    private Vector3 measurePlusPos = new Vector3(0, 330, 0);
     private MeasurementUnit preMeasureUnit;
     private int selectedDotIndex;
 
@@ -105,6 +95,11 @@ public class Measurement : MonoBehaviour
         //}
     }
 
+    public void Init()
+    {
+        measureMentState = MeasurementState.None;
+    }
+
     private void MeasureUI()
     {
         measureCamera.LookAt(cursorTransform);
@@ -132,16 +127,6 @@ public class Measurement : MonoBehaviour
         }
 
         measureRenderUI.position = pos;
-
-        //if(pos.y > Screen.width)
-        //{
-
-        //}
-        //else if(pos.x < Screen.height)
-        //{
-
-        //}
-
     }
 
     public void InverseActivateMeasurement()

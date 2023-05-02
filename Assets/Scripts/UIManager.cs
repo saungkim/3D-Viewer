@@ -81,7 +81,6 @@ public class UIManager : MonoBehaviour
 
     public void InverseActivateDefectDot(Image img)
     {
- 
         if (controlAction == null)
         {
             controlAction = (img) => { InverseActivateDefectDot(img); };
@@ -265,5 +264,10 @@ public class UIManager : MonoBehaviour
     public void DevelopmentUISetActive(bool onOff)
     {
         developmentUI.SetActive(onOff);
+    }
+
+    public void Init()
+    {
+       
     }
 }

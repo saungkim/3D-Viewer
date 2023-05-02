@@ -32,7 +32,8 @@ public class Constructor : MonoBehaviour
     [SerializeField] private GameObject movePoint;
     [SerializeField] private Transform movePointGroup;
 
-    [SerializeField] private SceneManagement sceneManagement;
+    [SerializeField] private Measurement measurement;
+    [SerializeField] private DefectConstructor defectConstructor;
 
     List<byte[]> textures;
     // Start is called before the first frame update
@@ -438,28 +439,22 @@ public class Constructor : MonoBehaviour
 
     public void Init()
     {
-       
-        
+        isLoadDone = false;
+        int camGroupChildCount = camGroup.childCount - 1;
 
-     
+        for(int  i = camGroupChildCount; i >= 0; --i)
+        {  
+            Destroy(camGroup.GetChild(i).gameObject);
+        }
 
-        //isLoadDone = false;
-        //int camGroupChildCount = camGroup.childCount - 1;
+        Destroy(modelFrame.GetChild(1).gameObject);
 
-        //for(int  i = camGroupChildCount; i >= 0; --i)
-        //{  
-        //    Destroy(camGroup.GetChild(i).gameObject);
-        //}
+        defectConstructor.Init();
+        measurement.Init();
 
-        //Destroy(modelFrame.GetChild(1).gameObject);
-
-        //Resources.UnloadUnusedAssets();
+        Resources.UnloadUnusedAssets();
     }
 
-    public void InitFileWithPath(string filePath)
-    {
-        sceneManagement.SetMessageFilePath(filePath);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+    
 
 }
