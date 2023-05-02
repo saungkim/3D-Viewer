@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,10 +19,10 @@ public class OverallSetting : MonoBehaviour
     // Start is called before the first frame update
 
 
-  
+
     bool initMiniMap = false;
 
-     
+
     void Start()
     {
         Application.targetFrameRate = 60;
@@ -33,13 +34,14 @@ public class OverallSetting : MonoBehaviour
 
     }
 
-    public void SetZoomInitWhenMove(string value) {
+    public void SetZoomInitWhenMove(string value)
+    {
         zoomInit = bool.Parse(value);
     }
 
     public void SetCursorWhenZoom(string value)
     {
-        
+
     }
 
     public void SetDefectCreateHeightPosition()
@@ -52,7 +54,8 @@ public class OverallSetting : MonoBehaviour
         return zoomInit;
     }
 
-    public void SetMoveTime(string value){
+    public void SetMoveTime(string value)
+    {
         float time = int.Parse(value);
     }
 
@@ -72,12 +75,6 @@ public class OverallSetting : MonoBehaviour
         //camController.SetImageTransTime(imageTransTime);
         camController.SetMoveTime(moveTime);
     }
-
-    public void SetMoveTime(float time)
-    {
-        moveTime = time;
-    }
-
 
     public void SetstartImageTransTime(float value)
     {
@@ -110,8 +107,14 @@ public class OverallSetting : MonoBehaviour
             initMiniMap = true;
             StartCoroutine(constructor.SetMiniMap());
         }
+    }
+
+    //Read File
+    public void ReadRoomViewerFile(String filePath)
+    {
 
     }
-   
-    
+
+  
+
 }

@@ -7,6 +7,7 @@ TagManager:
   - Defect
   - MeasurementDot
   - MeasurementLine
+  - SceneManager
   layers:
   - Default
   - TransparentFX

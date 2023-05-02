@@ -23,6 +23,10 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private PlayerMovement playerMovement;
 
+    //[SerializeField] private GameObject ;
+    [SerializeField] private GameObject developmentUI;
+
+
     Action<Image> controlAction;
     Image selectedImage;
    
@@ -257,5 +261,9 @@ public class UIManager : MonoBehaviour
     {
         measureMent.CompleteSelectedMeasureUnit();
     }
-    
+
+    public void DevelopmentUISetActive(bool onOff)
+    {
+        developmentUI.SetActive(onOff);
+    }
 }

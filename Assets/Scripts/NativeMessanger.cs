@@ -13,39 +13,56 @@ public class NativeMessanger : MonoBehaviour
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private OverallSetting overallSetting;
     [SerializeField] private CameraController camController;
+    [SerializeField] private UIManager uiMaanger;
     //[SerializeField] private 
     
-    enum LoadState { None, Loading, Done }
-    LoadState readEnvState = LoadState.None;
+    public enum LoadState { None, Loading, Done }
+   public LoadState readEnvState = LoadState.None;
     LoadState readDefectState = LoadState.None;
 
     // Start is called before the first frame update
     void Start()
     {
+        print("Start Unity");
+
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value);};
 
 #if UNITY_EDITOR
         string fileName = "inputNHMatterport";
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
+
+
 #endif
-        ReadEnv(Application.streamingAssetsPath + "/input.env");
-        ReadDefectWithFilePath(Application.streamingAssetsPath + "/input.json");
-        ViewStage("19");
-        //EnableDotCreateMode();
-        SetCursor("false");
-        SetMovePointsVisible("true");
-        SetMoveTime("1");
-        SetEndMoveAlpha("0");
-        SetEndImageTransTime("1");
-        SetStartMoveAlpha("1");
-        SetStartImageTransTime("1");
+
+
+      
+        //SetEndMoveAlpha("0");
+        //SetEndImageTransTime("1");
+        //SetStartMoveAlpha("1");
+        //SetStartImageTransTime("1");
+
+
+
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space)){
+
+            ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+            ViewStage("0");
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            SetDefectColor("NeedToChange1,#FF0000");
+
+            ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+            ReadDefectsWithFilePath(Application.streamingAssetsPath + "/input.json");
+            ViewStage("19");
+            SetCursor("false");
+            SetMovePointsVisible("true");
+            SetMoveTime("1");
         }
     }
 
@@ -61,83 +78,90 @@ public class NativeMessanger : MonoBehaviour
         {
             nativeSendErrorMessage("EnableDotCreateMode Error :" + value + " " + "Parse Failed");
         }
-
-    
     }
 
-    public void ReadEnv(string fileName)
+    public void ReadRoomViewerFile(string fileName)
     {
+        GameObject o = GameObject.FindGameObjectWithTag("SceneManager");
+
+        SceneManagement sceneManagement = o.GetComponent<SceneManagement>();
+
+        if (sceneManagement.GetMessageFilePath() != null)
+        {
+            fileName = sceneManagement.GetMessageFilePath();
+        }
+
         if (readEnvState == LoadState.Done)
         {
-            ReadEnvCallBack("");
-            return;
+            constructor.InitFileWithPath(fileName);
         }
 
         readEnvState = LoadState.Loading;
-
-
         constructor.FileOpen(fileName, ReadEnvCallBack);
     }
 
     public void ReadEnvCallBack(string message)
     {
+        print("ReadEnvCallBack:" + message );
+
         if (message == "Success")
         {
+
             readEnvState = LoadState.Done;
+            print("ReadEnvState:" + readEnvState);
             return;
         }
+
         readEnvState = LoadState.None;
+
+        print("ReadEnvState:" + readEnvState);
     }
 
-    public void ReadDefectWithFilePath(string filePath)
+    public void ReadDefectsWithFilePath(string filePath)
     {
-//#if UNITY_EDITOR
-//        filePath = Application.dataPath + "/Sources/" + filePath;
-//        filePath += ".json";
-//#endif
         if (readDefectState == LoadState.Done)
         {
             ReadEnvCallBack("");
             return;
         }
+
         readDefectState = LoadState.Loading;
-        StartCoroutine(defectConstructor.ReadAllDefect(filePath, ReadDefectCallBack));
+        StartCoroutine(defectConstructor.ReadAllDefectWithFilePath(filePath, ReadDefectCallBack,false));
     }
 
-    public void ReadDefects(string json)
+    public void ChangeDefectsJson(string json)
     {
-        
+        defectConstructor.ReadAllDefect(json,MessageReceiverCallBack,true);
     }
 
-    public void AddDefects(string json)
-    {
-
-    }
-
-    public void DestroyDefects(string json)
+    public void AddDefectsFile(string filePath)
     {
 
     }
 
-    public void ReadDefectCallBack(string message)
+    public void AddDefectsJson(string json)
     {
-        if (message == "Succcess")
-        {
-            readEnvState = LoadState.Done;
-            return;
-        }
-        readEnvState = LoadState.None;
+        defectConstructor.ReadAllDefect(json, MessageReceiverCallBack,false);
     }
 
-    public void ViewDefect(string defectId)
+    public void DestroyDefect(int defectID)
     {
-        StartCoroutine(defectConstructor.MoveCamInstant(defectId));
+       
     }
 
-    public void DestoryDefect(string defectId)
+    public void DestroyDefectsJson(string json)
+    {
+        defectConstructor.ReadAllDefect(json, MessageReceiverCallBack,false);
+    }
+
+    public void DestroyAllDefects()
+    {
+        defectConstructor.DestroyAllDefects(MessageReceiverCallBack);
+    }
+
+    public void SetActiveDefectCreateMode()
     {
 
-        defectConstructor.DestroyDefect(defectId, nativeSendErrorMessage);
     }
 
     public void SetDefectColor(string value)
@@ -154,13 +178,73 @@ public class NativeMessanger : MonoBehaviour
         }
         else
         {
-            nativeSendErrorMessage("SetColorDefect Error :" + htmlColor + " "+ "ParseHtmlString Failed");
+            nativeSendErrorMessage("SetColorDefect Error :" + htmlColor + " " + "ParseHtmlString Failed");
         }
     }
 
-    public void CreateTag(string id)
+    public void SetDefectsColorJson(string json)
     {
 
+    }
+
+    public void GetAllDefects()
+    {
+
+    }
+
+    public void GetDefect(string value)
+    {
+
+    }
+
+    public void SetCameraSensitivity(string value)
+    {
+        string[] values = value.Split(',');
+
+        float dragSpeed;
+        float lerpSpeed;
+
+        if (float.TryParse(values[0], out dragSpeed))
+        {
+            camController.dragSpeed = dragSpeed;
+        }
+        else
+        {
+            nativeSendErrorMessage("SetCameraSensitivity :" + values[0] + " " + "Parse Failed");
+        }
+
+        if (float.TryParse(values[1], out lerpSpeed))
+        {
+            camController.lerpSpeed = lerpSpeed;
+        }
+        else
+        {
+            nativeSendErrorMessage("SetCameraSensitivity :" + values[1] + " " + "Parse Failed");
+        }
+    }
+
+    public void SetCameraReverseDirectionVertical()
+    {
+
+    }
+
+    public void SEtCameraReverseDirectionHorizontal()
+    {
+
+    }
+
+    public void SetCameraFov(string value)
+    {
+        float fov;
+
+        if (float.TryParse(value, out fov))
+        {
+            Camera.main.fieldOfView = fov;
+        }
+        else
+        {
+            nativeSendErrorMessage("SetCameraFov Error :" + value + " " + "Parse Failed");
+        }
     }
 
     public void SetMoveTime(string value)
@@ -172,49 +256,79 @@ public class NativeMessanger : MonoBehaviour
         }
         else
         {
-            nativeSendErrorMessage("SetMoveTime Error :" + value +" "+ "Parse Failed");
+            nativeSendErrorMessage("SetMoveTime Error :" + value + " " + "Parse Failed");
         }
     }
 
-    public void SetCameraSensitivity(string value)
+    public void ViewPanorama(string value)
     {
-        string[] values = value.Split(',');
 
-        float dragSpeed;
-        float lerpSpeed;
-
-        if (float.TryParse(values[0],out dragSpeed))
-        {
-            camController.dragSpeed = dragSpeed;
-        }
-        else
-        {
-            nativeSendErrorMessage("SetCameraSensitivity :" + values[0] + " " + "Parse Failed");
-        }
-
-        if (float.TryParse(values[1],out lerpSpeed))
-        {
-            camController.lerpSpeed = lerpSpeed;
-        }
-        else
-        {
-           nativeSendErrorMessage("SetCameraSensitivity :" + values[1] +" " + "Parse Failed");
-        }
     }
 
-    public void SetCameraFov(string value)
+    public void ViewDefect(string defectId)
     {
-        float fov;
-
-        if(float.TryParse(value,out fov))
-        {
-            Camera.main.fieldOfView = fov;
-        }
-        else
-        {
-            nativeSendErrorMessage("SetCameraFov Error :" + value + " " + "Parse Failed");
-        }
+        StartCoroutine(defectConstructor.MoveCamInstant(defectId));
     }
+
+    public void SetImageTransAlpha(string value)
+    {
+
+    }
+
+    public void SetImageTransAlphaTime(string value)
+    {
+
+    }
+
+    public void SetActiveZoomInitOnMove()
+    {
+
+    }
+
+    public void SetActiveCursor()
+    {
+
+    }
+
+    public void SetActiveMinimap(bool onOff)
+    {
+       
+    }
+
+    public void SetActiveDevelopmentUI()
+    {
+
+    }
+
+
+
+    public void MessageReceiverCallBack(string message)
+    {
+
+    }
+
+    public void ReadDefectCallBack(string message)
+    {
+        if (message == "Succcess")
+        {
+            readDefectState = LoadState.Done;
+            return;
+        }
+        readDefectState = LoadState.None;
+    }
+
+ 
+
+    public void DestoryDefect(string defectId)
+    {
+
+        defectConstructor.DestroyDefect(defectId, nativeSendErrorMessage);
+    }
+
+ 
+
+
+ 
 
 
     public void ViewStage(string rStage)
@@ -234,10 +348,7 @@ public class NativeMessanger : MonoBehaviour
         }
         catch (Exception e)
         {
-
             print(e);
-            //appendToText("Exception during showHostMainWindow");
-            //appendToText(e.Message);
         }
 #elif UNITY_IOS || UNITY_TVOS
         NativeAPI.showHostMainWindow(lastStringColor);
@@ -273,62 +384,9 @@ public class NativeMessanger : MonoBehaviour
         constructor.SetMiniMap();
     }
 
-    public void SetStartImageTransTime(string value)
-    {
-        float time;
 
-        if (float.TryParse(value, out time))
-        {
-            overallSetting.SetstartImageTransTime(time);
-        }
-        else
-        {
-            nativeSendErrorMessage("SetStartImageTransTime Error :" + value + " " + "Parse Failed");
-        } 
-    
-    }
 
-    public void SetEndImageTransTime(string value)
-    {
-        float time;
-      
 
-        if (float.TryParse(value, out time))
-        {
-            overallSetting.SetendImageTransTime(time);
-        }
-        else
-        {
-            nativeSendErrorMessage("SetEndImageTransTime Error :" + value + " " + "Parse Failed");
-        }
-    }
 
-    public void SetStartMoveAlpha(string value)
-    {
-        float alpha;
 
-        if (float.TryParse(value, out alpha))
-        {
-            overallSetting.SetmoveStartAlpha(alpha);
-        }
-        else
-        {
-            nativeSendErrorMessage("SetStartMoveAlpha Error :" + value + " " + "Parse Failed");
-        }
-    }
-
-    public void SetEndMoveAlpha(string value)
-    {
-        float alpha;
-
-        if (float.TryParse(value, out alpha))
-        {
-            overallSetting.SetafterMoveEndAlpha(alpha);
-        }
-        else
-        {
-            nativeSendErrorMessage("SetEndMoveAlpha Error :" + value + " " + "Parse Failed");
-        }
-        
-    }
 }

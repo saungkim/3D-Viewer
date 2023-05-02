@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using static UnityEngine.UI.Image;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class Constructor : MonoBehaviour
 {
@@ -30,7 +31,9 @@ public class Constructor : MonoBehaviour
     [SerializeField] private MiniMapConstructor miniMapConstructor;
     [SerializeField] private GameObject movePoint;
     [SerializeField] private Transform movePointGroup;
-    
+
+    [SerializeField] private SceneManagement sceneManagement;
+
     List<byte[]> textures;
     // Start is called before the first frame update
 
@@ -432,5 +435,31 @@ public class Constructor : MonoBehaviour
         }
     }
 
-    
+
+    public void Init()
+    {
+       
+        
+
+     
+
+        //isLoadDone = false;
+        //int camGroupChildCount = camGroup.childCount - 1;
+
+        //for(int  i = camGroupChildCount; i >= 0; --i)
+        //{  
+        //    Destroy(camGroup.GetChild(i).gameObject);
+        //}
+
+        //Destroy(modelFrame.GetChild(1).gameObject);
+
+        //Resources.UnloadUnusedAssets();
+    }
+
+    public void InitFileWithPath(string filePath)
+    {
+        sceneManagement.SetMessageFilePath(filePath);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
 }

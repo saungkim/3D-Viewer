@@ -5,6 +5,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using static DefectConstructor;
 
 public class DefectConstructor : MonoBehaviour
 {
@@ -39,25 +40,39 @@ public class DefectConstructor : MonoBehaviour
 
     }
 
-    public void CreateDot(Vector3 pos, Vector3 rot, bool sendMessage)
+    public void CreateDot(Vector3 pos, Vector3 rot, bool sendMessage) // TO DO SendMessage have to be devided
     {
         GameObject o = Instantiate(dot, pos, Quaternion.Euler(rot), defectDot);
         o.SetActive(true);
 
-
-        //defectList.Add();
         Defect defect = new Defect();
         defect.id =  o.transform.GetSiblingIndex().ToString();
         defect.type = "defect";
         defect.position = pos;
         defect.rotation = rot;
+
+        //if(defect.color != null || defect.color != "") // TO DO Create Error Message 
+        //{
+        //    Color outColor;
+
+        //    if (ColorUtility.TryParseHtmlString(defect.color, out outColor))
+        //    {
+        //        defectConstructor.SetDefectColor(id, outColor, nativeSendErrorMessage);
+        //    }
+        //    else
+        //    {
+        //        nativeSendErrorMessage("SetColorDefect Error :" + htmlColor + " " + "ParseHtmlString Failed");
+        //    }
+        //}
+
         defect.view = new View();
         defect.view.position = Camera.main.transform.position;
         defect.view.rotation = Camera.main.transform.eulerAngles;
         defect.view.fov = Camera.main.fieldOfView;
 
         defectList.Add(defect);
-        if (sendMessage)
+
+        if (sendMessage) // For Creating
             nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
     }
 
@@ -70,7 +85,7 @@ public class DefectConstructor : MonoBehaviour
         File.WriteAllText(filePath, jsonOutput);
     }
 
-    public IEnumerator ReadAllDefect(string filePath, Action<string> CallBack)
+    public IEnumerator ReadAllDefectWithFilePath(string filePath, Action<string> CallBack , bool init)
     {
         float loadTime = 0;
 
@@ -95,6 +110,48 @@ public class DefectConstructor : MonoBehaviour
         defectArray = defectArrayFromJson.defect;
 
         foreach (Defect defect in defectArray)
+        {
+            CreateDot(defect.position, defect.rotation, false);
+        }
+
+        CallBack("Success");
+    }
+
+    public void ReadAllDefect(string json, Action<string> CallBack , bool init)
+    {
+        if (init)
+        {
+            DestroyAllDefects(CallBack);
+
+            DefectArray defectArrayFromJson = JsonUtility.FromJson<DefectArray>(json);
+
+            defectArray = defectArrayFromJson.defect;
+
+            foreach (Defect defect in defectArray)
+            {
+                CreateDot(defect.position, defect.rotation, false);
+            }
+
+            CallBack("Success");
+        }
+        else
+        {
+            AddDefectsWithJson(json, CallBack);
+        }
+    }
+      
+    public void AddDefectsWithJson(string json, Action<string> CallBack)
+    {
+        DefectArray defectArrayFromJson = JsonUtility.FromJson<DefectArray>(json);
+
+        List<Defect> defectList = new List<Defect>();
+
+        defectList.AddRange(defectArrayFromJson.defect);
+        defectList.AddRange(defectArray);
+
+        defectArray = defectList.ToArray();
+
+        foreach (Defect defect in defectArrayFromJson.defect)
         {
             CreateDot(defect.position, defect.rotation, false);
         }
@@ -159,6 +216,41 @@ public class DefectConstructor : MonoBehaviour
 
     }
 
+    public void DestroyDefects(string json ,Action<string> callback)
+    {
+        bool destroied = false;
+
+        int defectListCount = defectList.Count;
+
+        if (defectListCount == 0)
+        {
+            callback("Destroy Defect Error :" + "There are no Defects.");
+        }
+    }
+
+    public void DestroyAllDefects(Action<string> callback)
+    {
+        int defectListCount = defectList.Count;
+
+        if (defectListCount == 0)
+        {
+            callback("Destroy Defect Error :" + "There are no Defects.");
+        }
+
+        for (int i = 0; i < defectListCount; ++i)
+        {
+            defectList.RemoveAt(0);
+            Destroy(defectDot.GetChild(i + 1).gameObject);
+        }
+
+        callback("Success");
+    }
+
+    public void SetDefectColor(Defect defect , Action<string> callback)
+    {
+
+    }
+
     public void SetDefectColor(string id, Color color, Action<string> callback)
     {
         bool changed = false;
@@ -196,6 +288,8 @@ public class DefectConstructor : MonoBehaviour
     {
         public string id;
         public string type;
+        public string color;
+        public string status;
         public Vector3 position;
         public Vector3 rotation;
         public View view;
