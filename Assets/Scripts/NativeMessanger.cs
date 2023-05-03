@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using static DefectConstructor;
 
 public class NativeMessanger : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class NativeMessanger : MonoBehaviour
     LoadState readDefectState = LoadState.None;
 
     public SceneManagement sceneManagement;
-
+    public string testJson;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +33,8 @@ public class NativeMessanger : MonoBehaviour
         string fileName = "inputNHMatterport";
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
 #endif
+        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+        ViewPanorama("19");
 
         //SetEndMoveAlpha("0");
         //SetEndImageTransTime("1");
@@ -40,25 +43,37 @@ public class NativeMessanger : MonoBehaviour
         //sceneManagement
 
         //sceneManagement = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManagement>();
-      
+
     }
 
     private void Update()
     {
+
+#if UNITY_EDITOR
         if(Input.GetKeyDown(KeyCode.Space)){
             ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-            ViewStage("0");
+            //ViewStage("0");
         }
-
+ 
         if (Input.GetKeyDown(KeyCode.A))
         {
             ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-            ReadDefectsWithFilePath(Application.streamingAssetsPath + "/input.json");
-            ViewStage("19");
-            SetCursor("false");
-            SetMovePointsVisible("true");
-            SetMoveTime("1");
+            //ReadDefectsWithFilePath(Application.streamingAssetsPath + "/input.json");
+            //string json = "{\"id\":\"4\",\"type\":\"defect\",\"position\":{\"x\":8.248558044433594,\"y\":0.9674921631813049,\"z\":-3.4797799587249758},\"rotation\":{\"x\":1.5485010147094727,\"y\":356.21142578125,\"z\":6.672542962604666e-9},\"view\":{\"position\":{\"x\":8.277060508728028,\"y\":1.5085253715515137,\"z\":-2.141184091567993},\"rotation\":{\"x\":34.679908752441409,\"y\":177.30267333984376,\"z\":-6.488875214927248e-8},\"fov\":60.0}}";
+            //ViewStage("19");
+             
+            AddDefectsJson(testJson);
+            //AddDefectsFile(Application.streamingAssetsPath + "/input.json");
+            //ActivateDefectCreateMode();
+            //ReadRoomViewerFile();
+            //ChangeDefectsJson();
+            //ViewStage("19");
+            //SetCursor("false");
+            //SetMovePointsVisible("true");
+            //SetMoveTime("1");
         }
+#endif
+
     }
 
 
@@ -104,41 +119,46 @@ public class NativeMessanger : MonoBehaviour
         print("ReadEnvState:" + readEnvState);
     }
 
-    public void ReadDefectsWithFilePath(string filePath)
-    {
-        if (readDefectState == LoadState.Done)
-        {
-            ReadEnvCallBack("");
-            return;
-        }
+    //public void ReadDefectsWithFilePath(string filePath)
+    //{
+    //    if (readDefectState == LoadState.Done)
+    //    {
+    //        ReadEnvCallBack("");
+    //        return;
+    //    }
 
-        readDefectState = LoadState.Loading;
-        StartCoroutine(defectConstructor.ReadAllDefectWithFilePath(filePath, ReadDefectCallBack,false));
-    }
+    //    readDefectState = LoadState.Loading;
+    //   // StartCoroutine(defectConstructor.ReadAllDefectWithFilePath(filePath, ReadDefectCallBack,false));
+    //}
+
+    /// <summary>
+    /// ///////////////////////////////
+    /// </summary>
+    /// <param name="json"></param>
 
     public void ChangeDefectsJson(string json)
     {
-        defectConstructor.ReadAllDefect(json,MessageReceiverCallBack,true);
+        defectConstructor.ReadDefects(json,MessageReceiverCallBack,true);
     }
 
     public void AddDefectsFile(string filePath)
     {
-
+        defectConstructor.ReadAllDefectsWithFilePath(filePath, MessageReceiverCallBack, true);
     }
 
     public void AddDefectsJson(string json)
     {
-        defectConstructor.ReadAllDefect(json, MessageReceiverCallBack,false);
+        defectConstructor.ReadDefects(json, MessageReceiverCallBack,false);
     }
 
-    public void DestroyDefect(int defectID)
+    public void DestroyDefect(string defectID)
     {
-       
+        defectConstructor.DestroyDefect(defectID, nativeSendErrorMessage);
     }
 
     public void DestroyDefectsJson(string json)
     {
-        defectConstructor.ReadAllDefect(json, MessageReceiverCallBack,false);
+        defectConstructor.DestroyDefectJson(json, nativeSendErrorMessage);
     }
 
     public void DestroyAllDefects()
@@ -146,9 +166,20 @@ public class NativeMessanger : MonoBehaviour
         defectConstructor.DestroyAllDefects(MessageReceiverCallBack);
     }
 
-    public void SetActiveDefectCreateMode()
-    {
 
+
+    public void SetActiveDefectCreateMode(string value)
+    {
+        bool createMode;
+
+        if (bool.TryParse(value, out createMode))
+        {
+            inputSystem.SetEnableDot(createMode);
+        }
+        else
+        {
+            nativeSendErrorMessage("EnableDotCreateMode Error :" + value + " " + "Parse Failed");
+        }
     }
 
     public void SetDefectColor(string value)
@@ -171,17 +202,17 @@ public class NativeMessanger : MonoBehaviour
 
     public void SetDefectsColorJson(string json)
     {
-
+        defectConstructor.SetDefectsColor(json, NativeSendMessage);
     }
 
     public void GetAllDefects()
     {
-
+        defectConstructor.GetAllDefects();
     }
 
     public void GetDefect(string value)
     {
-
+        defectConstructor.GetDefect(value);
     }
 
     public void SetCameraSensitivity(string value)
@@ -210,14 +241,38 @@ public class NativeMessanger : MonoBehaviour
         }
     }
 
-    public void SetCameraReverseDirectionVertical()
+    public void SetCameraReverseDirectionVertical(string value)
     {
 
+
+        float directionOut;
+
+        if(float.TryParse(value,out directionOut))
+        {
+            camController.SetDirectionX(directionOut); 
+        }
+        else
+        {
+            print("SetCameraReverseDirectionVertical Parse Faile :" + value);
+        }
+
+     
     }
 
-    public void SEtCameraReverseDirectionHorizontal()
+    public void SetCameraReverseDirectionHorizontal(string value)
     {
+        float directionOut;
 
+        if (float.TryParse(value,out directionOut))
+        {
+            camController.SetDirectionY(directionOut);
+        }
+        else
+        {
+            print("SetCameraReverseDirectionHorizontal Parse Faile :" + value);
+        }
+
+      
     }
 
     public void SetCameraFov(string value)
@@ -249,7 +304,8 @@ public class NativeMessanger : MonoBehaviour
 
     public void ViewPanorama(string value)
     {
-
+        int stage = int.Parse(value);
+        StartCoroutine(constructor.InitStage(stage));
     }
 
     public void ViewDefect(string defectId)
@@ -259,35 +315,57 @@ public class NativeMessanger : MonoBehaviour
 
     public void SetImageTransAlpha(string value)
     {
+        string[] values = value.Split(",");
 
+     
+        camController.SetmoveStartAlpha(float.Parse(values[0]));
+        camController.SetafterMoveEndAlpha(float.Parse(values[1]));
+       
     }
 
     public void SetImageTransAlphaTime(string value)
     {
+        string[] values = value.Split(",");
 
+        camController.SetstartImageTransTime(float.Parse(values[0]));
+        camController.SetendImageTransTime(float.Parse(values[1]));
     }
 
-    public void SetActiveZoomInitOnMove()
+    public void SetActiveZoomInitOnMove(string value)
     {
-
+        overallSetting.SetZoomInitWhenMove(value);
     }
 
-    public void SetActiveCursor()
+    public void SetActiveCursor(string value)
     {
-
+        overallSetting.SetCursor(value);
     }
 
-    public void SetActiveMinimap(bool onOff)
+    public void SetActiveMovePoints(string value)
     {
-       
+        bool visible = bool.Parse(value);
+        StartCoroutine(constructor.SetMovePointsVisible(visible));
     }
 
-    public void SetActiveDevelopmentUI()
+    public void SetActiveMinimap(string value)
     {
-
+        constructor.SetMiniMap();
     }
 
+    public void SetActiveDevelopmentUI(string value)
+    {
+        bool onOff;
 
+        if(bool.TryParse(value,out onOff))
+        {
+            uiMaanger.DevelopmentUISetActive(onOff);
+        }
+        else
+        {
+            print("SetActiveDevelopmentUI Bool Parse Failed :" + value);
+        }
+
+    }
 
     public void MessageReceiverCallBack(string message)
     {
@@ -304,25 +382,6 @@ public class NativeMessanger : MonoBehaviour
         readDefectState = LoadState.None;
     }
 
- 
-
-    public void DestoryDefect(string defectId)
-    {
-
-        defectConstructor.DestroyDefect(defectId, nativeSendErrorMessage);
-    }
-
- 
-
-
- 
-
-
-    public void ViewStage(string rStage)
-    {
-        int stage = int.Parse(rStage);
-        StartCoroutine(constructor.InitStage(stage));
-    }
 
     public void NativeSendMessage(string message)
     {
@@ -350,15 +409,7 @@ public class NativeMessanger : MonoBehaviour
         print(message);
     }
 
-    public void SetZoomInitWhenMove(string value)
-    {
-        overallSetting.SetZoomInitWhenMove(value);
-    }
 
-    public void SetCursor(string value)
-    {
-        overallSetting.SetCursor(value);
-    }
 
     public void SetMovePointsVisible(string value)
     {
@@ -370,10 +421,4 @@ public class NativeMessanger : MonoBehaviour
     {
         constructor.SetMiniMap();
     }
-
-
-
-
-
-
 }

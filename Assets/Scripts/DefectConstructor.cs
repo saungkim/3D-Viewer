@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using static DefectConstructor;
+using Newtonsoft.Json;
 
 public class DefectConstructor : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class DefectConstructor : MonoBehaviour
 
     List<Defect> defectList = new List<Defect>();
     Defect[] defectArray;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +55,7 @@ public class DefectConstructor : MonoBehaviour
         }
     }
 
-    public void CreateDot(Vector3 pos, Vector3 rot, bool sendMessage) // TO DO SendMessage have to be devided
+    public void CreateDot(Vector3 pos, Vector3 rot,bool sendMessage) // TO DO SendMessage have to be devided
     {
         GameObject o = Instantiate(dot, pos, Quaternion.Euler(rot), defectDot);
         o.SetActive(true);
@@ -62,6 +65,7 @@ public class DefectConstructor : MonoBehaviour
         defect.type = "defect";
         defect.position = pos;
         defect.rotation = rot;
+        
 
         //if(defect.color != null || defect.color != "") // TO DO Create Error Message 
         //{
@@ -88,6 +92,44 @@ public class DefectConstructor : MonoBehaviour
             nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
     }
 
+    public void CreateDot(Defect defect) // TO DO SendMessage have to be devided
+    {
+        GameObject o = Instantiate(dot, defect.position, Quaternion.Euler(defect.rotation), defectDot);
+        o.SetActive(true);
+
+        if (defect.status != null && defect.status != "")
+        {
+            if(defect.status == "")
+            {
+
+            }
+            else if(defect.status == "")
+            {
+
+            }
+            else if(defect.status == "")
+            {
+
+            }
+        }
+        else if (defect.color != null && defect.color != "")
+        {
+            Color outColor;
+
+            if (ColorUtility.TryParseHtmlString(defect.color, out outColor))
+            {
+                o.transform.GetChild(0).GetComponent<Image>().color = outColor;
+            }
+            else
+            {
+                print("ParseHtmlColorString Failed :" + defect.color);
+            }
+        }
+
+        defectList.Add(defect);
+    }
+
+
     public void WriteAllDefect(string filePath)
     {
         DefectArray defectArray = new DefectArray();
@@ -97,7 +139,12 @@ public class DefectConstructor : MonoBehaviour
         File.WriteAllText(filePath, jsonOutput);
     }
 
-    public IEnumerator ReadAllDefectWithFilePath(string filePath, Action<string> CallBack , bool init)
+    public void ReadAllDefectsWithFilePath(string filePath, Action<string> CallBack, bool init)
+    {
+        StartCoroutine(IEReadAllDefectsWithFilePath(filePath,CallBack,init));
+    }
+
+    public IEnumerator IEReadAllDefectsWithFilePath(string filePath, Action<string> CallBack , bool init)
     {
         float loadTime = 0;
 
@@ -143,7 +190,6 @@ public class DefectConstructor : MonoBehaviour
             {
                 CreateDot(defect.position, defect.rotation, false);
             }
-
             CallBack("Success");
         }
         else
@@ -151,21 +197,26 @@ public class DefectConstructor : MonoBehaviour
             AddDefectsWithJson(json, CallBack);
         }
     }
+
+    public void ReadDefects(String json , Action<string> callBack , bool init)
+    {
+        if (init)
+        {
+            Init();
+        }
+
+        AddDefectsWithJson(json, callBack);
+    }
       
     public void AddDefectsWithJson(string json, Action<string> CallBack)
     {
         DefectArray defectArrayFromJson = JsonUtility.FromJson<DefectArray>(json);
 
-        List<Defect> defectList = new List<Defect>();
-
-        defectList.AddRange(defectArrayFromJson.defect);
-        defectList.AddRange(defectArray);
-
         defectArray = defectList.ToArray();
 
         foreach (Defect defect in defectArrayFromJson.defect)
         {
-            CreateDot(defect.position, defect.rotation, false);
+           // CreateDot(defect.position, defect.rotation, defect.color , defect);
         }
 
         CallBack("Success");
@@ -223,8 +274,33 @@ public class DefectConstructor : MonoBehaviour
 
         if (!destroied)
         {
-            callback("Destroy Defect Error :" + id + " " + "Id doesn't exist.");
+            // callback("Destroy Defect Error :" + id + " " + "Id doesn't exist.");
+
+            print("Destroy Defect Error :" + id + " " + "Id doesn't exist.");
         }
+
+    }
+
+    public void DestroyDefectJson(string json, Action<string> callback)
+    {
+        Defect[] defects = JsonToDefectArray(json).defect;
+
+        foreach(Defect defect in defects)
+        {
+            int index = 0;
+
+            foreach(Defect oriDefect in defectList)
+            {
+                if(defect.id == oriDefect.id)
+                {
+                    defectList.RemoveAt(index);
+                    Destroy(defectDot.GetChild(index + 1).gameObject);
+                }
+
+                ++index;
+            }
+        }
+
 
     }
 
@@ -256,9 +332,34 @@ public class DefectConstructor : MonoBehaviour
         callback("Success");
     }
 
-    public void SetDefectColor(Defect defect , Action<string> callback)
+    public void SetDefectsColor(string json , Action<string> callback)
     {
+        Defect[] defects = JsonToDefectArray(json).defect;
 
+        foreach(Defect defect in defects)
+        {
+            int index = 0;
+
+            foreach(Defect defect2 in defectList)
+            {
+                if(defect.id == defect2.id)
+                {
+                    defects[index].color = defect2.color;
+                   
+
+                    Color outColor;
+
+                    if (ColorUtility.TryParseHtmlString(defects[index].color, out outColor))                    {
+                        defectDot.GetChild(index + 1).GetChild(0).GetComponent<Image>().color = outColor;
+                    }
+                    else 
+                    {
+                        print("SetDefectsColor Color Parse Failed :" + defects[index].color);
+                    }
+                }
+                ++index;
+            }
+        }
     }
 
     public void SetDefectColor(string id, Color color, Action<string> callback)
@@ -292,6 +393,31 @@ public class DefectConstructor : MonoBehaviour
             callback("SetDefectColor Error :" + id + " " + "Id doesn't exist.");
         }
     }
+
+    public string GetAllDefects() {
+        return JsonUtility.ToJson(defectList);
+    }
+
+    public string GetDefect(string defectID)
+    {
+        foreach(Defect defect in defectList)
+        {
+            if(defect.id == defectID)
+            {
+                return JsonUtility.ToJson(defect);
+            }   
+        }
+
+        return null;
+       
+    }
+
+    private DefectArray JsonToDefectArray(string json)
+    {
+        return JsonUtility.FromJson<DefectArray>(json);
+    }
+
+
 
     [Serializable]
     public class Defect

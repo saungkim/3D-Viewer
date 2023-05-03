@@ -7,6 +7,14 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+ 
+
+    [Header("Container")]
+    [SerializeField] private Camera uiCamera;
+    [SerializeField] private Camera measureCamera;
+    [SerializeField] private InputSystem inputSystem;
+
+    [Header("Settings")]
     public float dragSpeed = 0.5f;
     public float minPitch = -85;
     public float maxPitch = 85;
@@ -19,12 +27,6 @@ public class CameraController : MonoBehaviour
 
     private float directionX = -1;
     private float directionY = -1;
-
-
-
-    [SerializeField] private Camera uiCamera;
-    [SerializeField] private Camera measureCamera;
-    [SerializeField] private InputSystem inputSystem;
 
     private void Start()
     {
@@ -133,6 +135,16 @@ public class CameraController : MonoBehaviour
     public void SetafterMoveEndAlpha(float value)
     {
         afterMoveEndAlpha = value;
+    }
+
+    public void SetDirectionX(float input)
+    {
+        directionX = input;
+    }
+
+    public void SetDirectionY(float input)
+    {
+        directionY = input;
     }
 
     IEnumerator MoveCamera(Vector3 targetPosition)
