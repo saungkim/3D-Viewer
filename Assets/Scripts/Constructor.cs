@@ -54,7 +54,21 @@ public class Constructor : MonoBehaviour
         
 
         print("FileLoadStart");
-        StartCoroutine(FileLoad(url, callback));
+        // StartCoroutine(FileLoad(url, callback));
+        // FileLoadReadByte
+#if UNITY_ANDROID
+        //string url = Application.dataPath + "/Sources/";
+        StartCoroutine(FileLoad(url));
+#endif
+
+#if UNITY_IOS
+      StartCoroutine(FileLoadReadByte(url, callback));
+#endif
+
+#if UNITY_EDITOR
+     //  StartCoroutine(FileLoadReadByte(url, callback));
+#endif
+
     }
 
     IEnumerator FileLoad(string url, Action<string> callback)
@@ -83,6 +97,13 @@ public class Constructor : MonoBehaviour
             print("ReadEnv" + envData.Length);
             envToModel(envData, callback);
         }
+    }
+    IEnumerator FileLoadReadByte(string url, Action<string> callback)
+    {
+        Debug.Log("File Load");
+        yield return new WaitForSeconds(1.0f);
+        byte[] tBytes = File.ReadAllBytes(url);
+        envToModel(tBytes,callback);
     }
 
     void Update()

@@ -48,8 +48,8 @@ public class NativeMessanger : MonoBehaviour
         uiMaanger.InverseActivateDefectDot();
         constructor.CreateBoundaryTest();
 
-       // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-        //ViewPanorama("19");
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        ViewPanorama("19");
       // AddDefectsJson(testJson);
         
         //VIewDefectJson(testJson1);
