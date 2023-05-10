@@ -51,11 +51,14 @@ public class Constructor : MonoBehaviour
 
     public void FileOpen(string url, Action<string> callback)
     {
+        print("FileLoadStart");
         StartCoroutine(FileLoad(url, callback));
     }
 
     IEnumerator FileLoad(string url, Action<string> callback)
     {
+        print("StartCoruoutine FileLoad");
+
         float loadTime = 0;
 
         byte[] envData = null;
@@ -68,8 +71,14 @@ public class Constructor : MonoBehaviour
             yield return null;
         }
 
+        if (loadTime >= 5)
+        {
+            print("Faile File Load");
+        }
+
         {
             envData = reader.downloadHandler.data;
+            print("ReadEnv" + envData.Length);
             envToModel(envData, callback);
         }
     }

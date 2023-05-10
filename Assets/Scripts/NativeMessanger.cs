@@ -114,6 +114,8 @@ public class NativeMessanger : MonoBehaviour
 
     public void ReadRoomViewerFile(string fileName)
     {
+        print("ReadRoomViewerFile Start");
+
         if (readEnvState == LoadState.Done)
         {
             constructor.Init();
@@ -325,6 +327,8 @@ public class NativeMessanger : MonoBehaviour
 
     public void ViewPanoramaTag(string name)
     {
+        print("ViewPanoramaTag Start");
+
         if (name == "1")
         {
             ViewPanorama("30");
