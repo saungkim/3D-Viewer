@@ -114,7 +114,11 @@ public class NativeMessanger : MonoBehaviour
 
     public void ReadRoomViewerFile(string fileName)
     {
+        print("Input Value : " + fileName);
+
         print("ReadRoomViewerFile Start");
+
+
 
         if (readEnvState == LoadState.Done)
         {
@@ -327,6 +331,8 @@ public class NativeMessanger : MonoBehaviour
 
     public void ViewPanoramaTag(string name)
     {
+
+        print("Input Value : " + name);
         print("ViewPanoramaTag Start");
 
         if (name == "1")
@@ -385,11 +391,13 @@ public class NativeMessanger : MonoBehaviour
 
     public void VIewDefectJson(string json)
     {
+        print("Input Value:"+json);
         StartCoroutine(defectConstructor.VIewDefectJson(json));
     }
 
     public void ViewDefectJsonArray(string json)
     {
+        print("Input Value:" + json);
         StartCoroutine(defectConstructor.ViewDefectJsonArray(json));
       
     }
