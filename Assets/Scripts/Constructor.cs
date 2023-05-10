@@ -100,9 +100,25 @@ public class Constructor : MonoBehaviour
     }
     IEnumerator FileLoadReadByte(string url, Action<string> callback)
     {
-        Debug.Log("File Load");
+        Debug.Log("File Load Start");
+
+        if (File.Exists(url))
+        {
+            print("File Exist");
+        }
+        else
+        {
+            print("File Doesn't Exist");
+        }
+
+      
         yield return new WaitForSeconds(1.0f);
         byte[] tBytes = File.ReadAllBytes(url);
+
+        print("TBytesLength"+tBytes.Length);
+
+        
+
         envToModel(tBytes,callback);
     }
 
