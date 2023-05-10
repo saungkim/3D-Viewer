@@ -483,9 +483,9 @@ public class NativeMessanger : MonoBehaviour
 #if UNITY_ANDROID
         try
         {
-            AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayerActivity");
-            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("mUnityPlayer");
-            overrideActivity.Call("RoomViewerReceiveMessage", message);
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call(funcName, message);
         }
         catch (Exception e)
         {
