@@ -48,9 +48,12 @@ public class NativeMessanger : MonoBehaviour
         uiMaanger.InverseActivateDefectDot();
         constructor.CreateBoundaryTest();
 
-       // ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
-        //ViewPanorama("19");
-      // AddDefectsJson(testJson);
+        //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+        ViewPanorama("19");
+
+        NativeSendMessage("21231");
+        //AddDefectsJson(testJson);
         
         //VIewDefectJson(testJson1);
         //ViewDefectJsonArray(testJson2);
@@ -480,18 +483,9 @@ public class NativeMessanger : MonoBehaviour
 #if UNITY_ANDROID
         try
         {
-            if(androidState == AndroidState.Activity)
-            {
-                AndroidJavaClass jc = new AndroidJavaClass(className);
-                AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-                overrideActivity.Call(funcName, message);
-            }
-            else if (androidState == AndroidState.Fragment)
-            {
-                AndroidJavaClass jc = new AndroidJavaClass(className);
-                AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-                overrideActivity.Call(funcName, message);
-            }
+            AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayerActivity");
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("mUnityPlayer");
+            overrideActivity.Call("RoomViewerReceiveMessage", message);
         }
         catch (Exception e)
         {
