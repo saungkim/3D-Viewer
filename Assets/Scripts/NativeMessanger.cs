@@ -17,25 +17,45 @@ public class NativeMessanger : MonoBehaviour
     [SerializeField] private UIManager uiMaanger;
 
     public enum LoadState { None, Loading, Done }
-   public LoadState readEnvState = LoadState.None;
+    public LoadState readEnvState = LoadState.None;
     LoadState readDefectState = LoadState.None;
 
     public SceneManagement sceneManagement;
     public string testJson;
+    public string testJson1;
+    public string testJson2;
+    public string testJosn3;
+
+    public enum AndroidState {None,Fragment,Activity}
+
+    private AndroidState androidState;
+
+    public string className;
+    public string funcName;
+ 
+
     // Start is called before the first frame update
     void Start()
     {
         print("Start Unity");
 
-        Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value);};
+        Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
 
 #if UNITY_EDITOR
         string fileName = "inputNHMatterport";
         fileName = Application.dataPath + "/Sources/" + fileName + ".env";
 #endif
-        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-        ViewPanorama("19");
+        uiMaanger.InverseActivateDefectDot();
+        constructor.CreateBoundaryTest();
 
+       // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+        //ViewPanorama("19");
+      // AddDefectsJson(testJson);
+        
+        //VIewDefectJson(testJson1);
+        //ViewDefectJsonArray(testJson2);
+
+        //constructor.CreateBoundary(testJosn3);
         //SetEndMoveAlpha("0");
         //SetEndImageTransTime("1");
         //SetStartMoveAlpha("1");
@@ -50,19 +70,20 @@ public class NativeMessanger : MonoBehaviour
     {
 
 #if UNITY_EDITOR
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(KeyCode.Space)) {
             ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
             //ViewStage("0");
         }
- 
+
         if (Input.GetKeyDown(KeyCode.A))
         {
             ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
             //ReadDefectsWithFilePath(Application.streamingAssetsPath + "/input.json");
             //string json = "{\"id\":\"4\",\"type\":\"defect\",\"position\":{\"x\":8.248558044433594,\"y\":0.9674921631813049,\"z\":-3.4797799587249758},\"rotation\":{\"x\":1.5485010147094727,\"y\":356.21142578125,\"z\":6.672542962604666e-9},\"view\":{\"position\":{\"x\":8.277060508728028,\"y\":1.5085253715515137,\"z\":-2.141184091567993},\"rotation\":{\"x\":34.679908752441409,\"y\":177.30267333984376,\"z\":-6.488875214927248e-8},\"fov\":60.0}}";
-            //ViewStage("19");
-             
-            AddDefectsJson(testJson);
+           // ViewStage("19");
+
+            //AddDefectsJson(testJson);
+            
             //AddDefectsFile(Application.streamingAssetsPath + "/input.json");
             //ActivateDefectCreateMode();
             //ReadRoomViewerFile();
@@ -104,7 +125,7 @@ public class NativeMessanger : MonoBehaviour
 
     public void ReadEnvCallBack(string message)
     {
-        print("ReadEnvCallBack:" + message );
+        print("ReadEnvCallBack:" + message);
 
         if (message == "Success")
         {
@@ -138,7 +159,7 @@ public class NativeMessanger : MonoBehaviour
 
     public void ChangeDefectsJson(string json)
     {
-        defectConstructor.ReadDefects(json,MessageReceiverCallBack,true);
+        defectConstructor.ReadDefects(json, MessageReceiverCallBack, true);
     }
 
     public void AddDefectsFile(string filePath)
@@ -148,7 +169,7 @@ public class NativeMessanger : MonoBehaviour
 
     public void AddDefectsJson(string json)
     {
-        defectConstructor.ReadDefects(json, MessageReceiverCallBack,false);
+        defectConstructor.ReadDefects(json, MessageReceiverCallBack, false);
     }
 
     public void DestroyDefect(string defectID)
@@ -243,27 +264,23 @@ public class NativeMessanger : MonoBehaviour
 
     public void SetCameraReverseDirectionVertical(string value)
     {
-
-
         float directionOut;
 
-        if(float.TryParse(value,out directionOut))
+        if (float.TryParse(value, out directionOut))
         {
-            camController.SetDirectionX(directionOut); 
+            camController.SetDirectionX(directionOut);
         }
         else
         {
             print("SetCameraReverseDirectionVertical Parse Faile :" + value);
         }
-
-     
     }
 
     public void SetCameraReverseDirectionHorizontal(string value)
     {
         float directionOut;
 
-        if (float.TryParse(value,out directionOut))
+        if (float.TryParse(value, out directionOut))
         {
             camController.SetDirectionY(directionOut);
         }
@@ -271,8 +288,6 @@ public class NativeMessanger : MonoBehaviour
         {
             print("SetCameraReverseDirectionHorizontal Parse Faile :" + value);
         }
-
-      
     }
 
     public void SetCameraFov(string value)
@@ -308,6 +323,73 @@ public class NativeMessanger : MonoBehaviour
         StartCoroutine(constructor.InitStage(stage));
     }
 
+    public void ViewPanoramaTag(string name)
+    {
+        if (name == "1")
+        {
+            ViewPanorama("30");
+        }
+        else if (name == "2")
+        {
+            ViewPanorama("3");
+        }
+        else if (name == "3")
+        {
+            ViewPanorama("24");
+        }
+        else if (name == "4")
+        {
+            ViewPanorama("13");
+        }
+        else if (name == "5")
+        {
+            ViewPanorama("13");
+        }
+        else if (name == "6")
+        {
+            ViewPanorama("16");
+        }
+        else if (name == "7")
+        {
+            ViewPanorama("6");
+        }
+        else if (name == "8")
+        {
+            ViewPanorama("31");
+        }
+        else if (name == "9")
+        {
+            ViewPanorama("27");
+        }
+        else if (name == "10")
+        {
+            ViewPanorama("27");
+        }
+        else if (name == "11")
+        {
+            ViewPanorama("5");
+        }
+        else if (name == "12")
+        {
+            ViewPanorama("7");
+        }
+        else if (name == "13")
+        {
+            ViewPanorama("11");
+        }
+    }
+
+    public void VIewDefectJson(string json)
+    {
+        StartCoroutine(defectConstructor.VIewDefectJson(json));
+    }
+
+    public void ViewDefectJsonArray(string json)
+    {
+        StartCoroutine(defectConstructor.ViewDefectJsonArray(json));
+      
+    }
+
     public void ViewDefect(string defectId)
     {
         StartCoroutine(defectConstructor.MoveCamInstant(defectId));
@@ -317,10 +399,10 @@ public class NativeMessanger : MonoBehaviour
     {
         string[] values = value.Split(",");
 
-     
+
         camController.SetmoveStartAlpha(float.Parse(values[0]));
         camController.SetafterMoveEndAlpha(float.Parse(values[1]));
-       
+
     }
 
     public void SetImageTransAlphaTime(string value)
@@ -356,7 +438,7 @@ public class NativeMessanger : MonoBehaviour
     {
         bool onOff;
 
-        if(bool.TryParse(value,out onOff))
+        if (bool.TryParse(value, out onOff))
         {
             uiMaanger.DevelopmentUISetActive(onOff);
         }
@@ -364,7 +446,6 @@ public class NativeMessanger : MonoBehaviour
         {
             print("SetActiveDevelopmentUI Bool Parse Failed :" + value);
         }
-
     }
 
     public void MessageReceiverCallBack(string message)
@@ -382,34 +463,46 @@ public class NativeMessanger : MonoBehaviour
         readDefectState = LoadState.None;
     }
 
-
     public void NativeSendMessage(string message)
     {
 #if UNITY_ANDROID
         try
         {
-            AndroidJavaClass jc = new AndroidJavaClass("com.parallel.viewer3d.RoomViewerActivity");
-            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-            overrideActivity.Call("RoomViewerReceiveMessage", message);
+            if(androidState == AndroidState.Activity)
+            {
+                AndroidJavaClass jc = new AndroidJavaClass(className);
+                AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+                overrideActivity.Call(funcName, message);
+            }
+            else if (androidState == AndroidState.Fragment)
+            {
+                AndroidJavaClass jc = new AndroidJavaClass(className);
+                AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+                overrideActivity.Call(funcName, message);
+            }
         }
         catch (Exception e)
         {
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-        NativeAPI.showHostMainWindow(lastStringColor);
+       // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
-     
 #endif
         print(message);
     }
+
+    public void SetAndroidState(string value)
+    {
+        int state = int.Parse(value);
+        androidState = (AndroidState)state;
+    }
+   
 
     public void nativeSendErrorMessage(string message)
     {
         print(message);
     }
-
-
 
     public void SetMovePointsVisible(string value)
     {
@@ -420,5 +513,20 @@ public class NativeMessanger : MonoBehaviour
     public void SetActiveMinimap()
     {
         constructor.SetMiniMap();
+    }
+
+    public void Unload()
+    {
+        Application.Unload();
+    }
+
+    public void SetClassName(string value)
+    {
+        className = value;
+    }
+
+    public void SetFuncName(string value)
+    {
+        funcName= value; 
     }
 }

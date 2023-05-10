@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using static DefectConstructor;
 using Newtonsoft.Json;
+using System.Reflection;
 
 public class DefectConstructor : MonoBehaviour
 {
@@ -55,17 +56,18 @@ public class DefectConstructor : MonoBehaviour
         }
     }
 
-    public void CreateDot(Vector3 pos, Vector3 rot,bool sendMessage) // TO DO SendMessage have to be devided
+    public void CreateDot(Vector3 pos, Vector3 rot, bool sendMessage) // TO DO SendMessage have to be devided
     {
         GameObject o = Instantiate(dot, pos, Quaternion.Euler(rot), defectDot);
         o.SetActive(true);
 
         Defect defect = new Defect();
-        defect.id =  o.transform.GetSiblingIndex().ToString();
+        defect.id = o.transform.GetSiblingIndex().ToString();
         defect.type = "defect";
         defect.position = pos;
         defect.rotation = rot;
-        
+
+
 
         //if(defect.color != null || defect.color != "") // TO DO Create Error Message 
         //{
@@ -88,8 +90,20 @@ public class DefectConstructor : MonoBehaviour
 
         defectList.Add(defect);
 
-        if (sendMessage) // For Creating
+        if (sendMessage) // For Creating{
+        {
+            foreach(Constructor.Boundary boundary in constructor.boundaries)
+            {
+                if (IsPointInTrapezoid(new Vector2(pos.x,pos.z),boundary.polygon[0], boundary.polygon[1], boundary.polygon[2], boundary.polygon[3]))
+                {
+                    defect.name = boundary.name;
+                }
+               
+                        
+                        // boundary.polygon
+            }
             nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
+        }       
     }
 
     public void CreateDot(Defect defect) // TO DO SendMessage have to be devided
@@ -207,6 +221,31 @@ public class DefectConstructor : MonoBehaviour
 
         AddDefectsWithJson(json, callBack);
     }
+
+    public int GetDefectIndexFromDistance(string value)
+    {
+        Defect defectInput = JsonUtility.FromJson<Defect>(value); 
+
+        int index = 0;
+        int pick = -1;
+
+        float minDistancne = 10000;
+
+        foreach(Defect defect in defectList)
+        {
+            float distance = Vector3.Distance(defect.position, defectInput.position);
+
+            if(distance < minDistancne)
+            {
+                minDistancne = distance;
+                pick = index;
+            }
+
+            ++index;
+        }
+
+        return pick;
+    }
       
     public void AddDefectsWithJson(string json, Action<string> CallBack)
     {
@@ -216,7 +255,8 @@ public class DefectConstructor : MonoBehaviour
 
         foreach (Defect defect in defectArrayFromJson.defect)
         {
-           // CreateDot(defect.position, defect.rotation, defect.color , defect);
+            //CreateDot(defect.position, defect.rotation, defect.color , defect);
+            CreateDot(defect);
         }
 
         CallBack("Success");
@@ -238,14 +278,54 @@ public class DefectConstructor : MonoBehaviour
         }
     }
 
+    public IEnumerator MoveCamInstantIndex (int index)
+    {
+        yield return new WaitUntil(() => constructor.GetIsLoadDone());
+
+        playerMovement.MoveStageInstant(defectArray[index].view.position, defectArray[index].view.rotation, defectArray[index].view.fov);
+    }
+
+    public IEnumerator VIewDefectJson(string value)
+    {
+        yield return new WaitUntil(() => constructor.GetIsLoadDone());
+        
+        Defect defect = JsonUtility.FromJson<Defect>(value);
+
+        CreateDot(defect);
+
+        playerMovement.MoveStageInstant(defect.view.position, defect.view.rotation, defect.view.fov);
+    }
+
+    public IEnumerator ViewDefectJsonArray(string value)
+    {
+        yield return new WaitUntil(() => constructor.GetIsLoadDone());
+
+        DefectArray defects = JsonUtility.FromJson<DefectArray>(value);
+
+        //CreateDot(defect);
+
+        foreach (Defect defect in defects.defect)
+        {
+            if(defect.flag == "Pick")
+            {
+                playerMovement.MoveStageInstant(defect.view.position, defect.view.rotation, defect.view.fov);
+                CreateDot(defect);
+            }
+            else
+            {
+                CreateDot(defect);
+            }
+        }
+
+
+    }
+
     public void SendMessageSelectDefect(int id)
     {
         nativeMessanger.NativeSendMessage("SelectDefect." + JsonUtility.ToJson(defectArray[id]));
     }
-
     public void SetColor(int id, Color color)
     {
-
     }
 
     public void DestroyDefect(string id, Action<string> callback)
@@ -417,19 +497,37 @@ public class DefectConstructor : MonoBehaviour
         return JsonUtility.FromJson<DefectArray>(json);
     }
 
+    bool IsPointInTrapezoid(Vector2 point, Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+    {
+        float triangleArea(Vector2 p1, Vector2 p2, Vector2 p3)
+        {
+            return Mathf.Abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0f);
+        }
+
+        float trapezoidArea = triangleArea(a, b, c) + triangleArea(c, d, a);
+        float pointArea = triangleArea(point, a, b) + triangleArea(point, b, c) + triangleArea(point, c, d) + triangleArea(point, d, a);
+
+        return Mathf.Approximately(trapezoidArea, pointArea);
+    }
+
 
 
     [Serializable]
     public class Defect
     {
-        public string id;
-        public string type;
-        public string color;
-        public string status;
-        public Vector3 position;
-        public Vector3 rotation;
-        public View view;
+        public string id; //하자 ID
+        public string type; // 하자 공정 정보
+        public string color; //하자 색깔
+        public string status; //하자 상태 
+        public string flag; // Pick 값 입력시 해당 하자 바라보기 
+        public string name; //하자가 위치한 방 이름
+        public string detailName; //하자 디테일 방 이름
+        public Vector3 position; //하자 위치
+        public Vector3 rotation; //하자 각도
+        public View view; //카메라 관점
     }
+
+    
 
     [Serializable]
     public class DefectDefault{
@@ -442,15 +540,15 @@ public class DefectConstructor : MonoBehaviour
     [Serializable]
     public class DefectArray
     {
-        public Defect[] defect;
+        public Defect[] defect; //하자 배열
     }
 
     [Serializable]
-    public class View
+    public class View // 카메라 관점
     {
-        public Vector3 position;
-        public Vector3 rotation;
-        public float fov;
+        public Vector3 position; //카메라 위치
+        public Vector3 rotation; //카메라 각도
+        public float fov; //카메라 fov
     }
 
     

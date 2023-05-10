@@ -12,6 +12,7 @@ using System.Linq;
 using static UnityEngine.UI.Image;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using static DefectConstructor;
 
 public class Constructor : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class Constructor : MonoBehaviour
     // Start is called before the first frame update
 
     private bool waitForFixedUpdated = false;
-   
+
     void Start()
     {
 #if UNITY_EDITOR
@@ -48,12 +49,12 @@ public class Constructor : MonoBehaviour
 #endif
     }
 
-    public void FileOpen(string url , Action<string> callback)
+    public void FileOpen(string url, Action<string> callback)
     {
         StartCoroutine(FileLoad(url, callback));
     }
 
-    IEnumerator FileLoad(string url,Action<string> callback)
+    IEnumerator FileLoad(string url, Action<string> callback)
     {
         float loadTime = 0;
 
@@ -75,12 +76,12 @@ public class Constructor : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     public void MoveStage()
     {
-        print("MoveStage:" );
+        print("MoveStage:");
     }
 
     public byte[] GetTexture(int index)
@@ -90,11 +91,11 @@ public class Constructor : MonoBehaviour
 
     private void LoadDefects()
     {
-        Action<Vector3[] , Vector3[]> get = (Vector3[] defectPositions , Vector3[] defectRotations) => {
+        Action<Vector3[], Vector3[]> get = (Vector3[] defectPositions, Vector3[] defectRotations) => {
 
             int defectCount = defectPositions.Length;
 
-            for(int i = 0; i < defectCount; ++i)
+            for (int i = 0; i < defectCount; ++i)
             {
                 GameObject o = Instantiate(dot, defectPositions[i], Quaternion.Euler(defectRotations[i]));
                 o.SetActive(true);
@@ -105,10 +106,10 @@ public class Constructor : MonoBehaviour
         };
         StartCoroutine(networkManager.GetResidentsDefectsPositions(get));
 
-        
+
     }
     bool isLoadDone = false;
-    private void envToModel(byte[] content , Action<string> callback)
+    private void envToModel(byte[] content, Action<string> callback)
     {
         int[] info = new int[4];
         int index = 16;
@@ -250,9 +251,7 @@ public class Constructor : MonoBehaviour
             meshesScales[i] = new Vector3(meshesTransform[byteLenngth + 6], meshesTransform[byteLenngth + 7], meshesTransform[byteLenngth + 8]);
         }
 
-
         /////////////////////////////////////////////////////////////////////////////////////Above Same OutPutModelExporter
-
 
         for (int i = 0; i < info[2]; ++i)
         {
@@ -272,8 +271,8 @@ public class Constructor : MonoBehaviour
             o.transform.localRotation = Quaternion.identity;
             o.transform.localScale = Vector3.one;
         }
-       
-        for(int i = 0; i < info[1]; ++i)
+
+        for (int i = 0; i < info[1]; ++i)
         {
             GameObject o = Instantiate(cubeMap);
             o.transform.parent = camGroup;
@@ -295,7 +294,7 @@ public class Constructor : MonoBehaviour
 
     public void LateCall()
     {
-       
+
     }
 
     IEnumerator AddMeshCollider(GameObject o)
@@ -306,10 +305,10 @@ public class Constructor : MonoBehaviour
 
     public IEnumerator InitStage(int stage)
     {
-        yield return new WaitUntil(()=>isLoadDone);
+        yield return new WaitUntil(() => isLoadDone);
         playerMovement.InitStage(stage);
 
-      
+
         yield return new WaitForFixedUpdate();
         //SetMiniMap();
         waitForFixedUpdated = true;
@@ -332,7 +331,7 @@ public class Constructor : MonoBehaviour
 
         for (int k = 1; k < modelFrameChildCounnt; ++k)
         {
-            vertice.AddRange(modelFrame.GetChild(k).GetComponent<MeshFilter>().mesh.vertices.ToList());     
+            vertice.AddRange(modelFrame.GetChild(k).GetComponent<MeshFilter>().mesh.vertices.ToList());
         }
 
         Vector3[] vertices = vertice.ToArray();
@@ -375,7 +374,7 @@ public class Constructor : MonoBehaviour
 
         Vector3[] vertices = new Vector3[arrayLength];
 
-        int count = 0; 
+        int count = 0;
 
         foreach (Vector3[] v in vertice)
         {
@@ -414,24 +413,24 @@ public class Constructor : MonoBehaviour
             o.GetComponent<MeshRenderer>().sharedMaterial = minimapMaterial;
             o.localScale = Vector3.one * -1;
             o.gameObject.layer = LayerMask.NameToLayer("MiniMapMesh");
-        }      
+        }
     }
 
     public IEnumerator SetMovePointsVisible(bool visible)
     {
-        yield return new WaitUntil(()=>waitForFixedUpdated);
+        yield return new WaitUntil(() => waitForFixedUpdated);
 
         int camGroupChild = camGroup.childCount;
-        
-        for(int i = 0; i < camGroupChild; ++i)
+
+        for (int i = 0; i < camGroupChild; ++i)
         {
             RaycastHit hit;
-            if (Physics.Raycast(camGroup.GetChild(i).position, Vector3.down , out hit))
+            if (Physics.Raycast(camGroup.GetChild(i).position, Vector3.down, out hit))
             {
-               GameObject o = Instantiate(movePoint);
-               o.SetActive(visible);
-               o.transform.parent = movePointGroup;
-               o.transform.position = hit.point + hit.normal * 0.001f;
+                GameObject o = Instantiate(movePoint);
+                o.SetActive(visible);
+                o.transform.parent = movePointGroup;
+                o.transform.position = hit.point + hit.normal * 0.001f;
             }
         }
     }
@@ -442,8 +441,8 @@ public class Constructor : MonoBehaviour
         isLoadDone = false;
         int camGroupChildCount = camGroup.childCount - 1;
 
-        for(int  i = camGroupChildCount; i >= 0; --i)
-        {  
+        for (int i = camGroupChildCount; i >= 0; --i)
+        {
             Destroy(camGroup.GetChild(i).gameObject);
         }
 
@@ -455,6 +454,136 @@ public class Constructor : MonoBehaviour
         Resources.UnloadUnusedAssets();
     }
 
-    
+    public Boundary[] boundaries;
+    public void CreateBoundaryTest()
+    {
+        boundaries = new Boundary[13];
+
+        int i = 0;
+
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "침실1-욕실";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(4.55231f, 6.52542f);
+        boundaries[i].polygon[1] = new Vector2(7.130107f, 6.56804f);
+        boundaries[i].polygon[2] = new Vector2(7.002285f, 4.671975f);
+        boundaries[i].polygon[3] = new Vector2(4.509701f, 4.608055f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "침실1-화장대";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(7.130107f, 6.56804f);
+        boundaries[i].polygon[1] = new Vector2(8.685311f, 6.141956f);
+        boundaries[i].polygon[2] = new Vector2(8.727916f, 4.331108f);
+        boundaries[i].polygon[3] = new Vector2(7.002285f, 4.671975f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "침실1";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(8.685311f, 6.141956f);
+        boundaries[i].polygon[1] = new Vector2(12.58396f, 6.482823f);
+        boundaries[i].polygon[2] = new Vector2(12.58395f, 2.328519f);
+        boundaries[i].polygon[3] = new Vector2(8.727903f, 2.328519f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "발코니";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(12.62657f, 4.416324f);
+        boundaries[i].polygon[1] = new Vector2(14.60785f, 4.416324f);
+        boundaries[i].polygon[2] = new Vector2(14.56524f, 2.307214f);
+        boundaries[i].polygon[3] = new Vector2(12.58395f, 2.328519f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "거실";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(8.727903f, 2.328519f);
+        boundaries[i].polygon[1] = new Vector2(14.56524f, 2.307214f);
+        boundaries[i].polygon[2] = new Vector2(14.3735f, -2.592732f);
+        boundaries[i].polygon[3] = new Vector2(9.771808f, -2.614036f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "거실";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(6.128814f, 2.413735f);
+        boundaries[i].polygon[1] = new Vector2(8.727903f, 2.328519f);
+        boundaries[i].polygon[2] = new Vector2(9.782036f, -1.643538f);
+        boundaries[i].polygon[3] = new Vector2(6.725424f, -1.274137f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "주방/식당";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(6.725424f, -1.274137f);
+        boundaries[i].polygon[1] = new Vector2(9.782036f, -1.643538f);
+        boundaries[i].polygon[2] = new Vector2(9.782012f, -3.601231f);
+        boundaries[i].polygon[3] = new Vector2(6.743129f, -3.649982f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "발코니";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(5.443068f, -0.2698274f);
+        boundaries[i].polygon[1] = new Vector2(6.701488f, -0.2826328f);
+        boundaries[i].polygon[2] = new Vector2(6.743129f, -3.649982f);
+        boundaries[i].polygon[3] = new Vector2(5.443068f, -3.763739f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "침실";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(2.273213f, 0.9304333f);
+        boundaries[i].polygon[1] = new Vector2(5.416673f, 0.9401765f);
+        boundaries[i].polygon[2] = new Vector2(5.428894f, -2.970673f);
+        boundaries[i].polygon[3] = new Vector2(2.27577f, -2.897345f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "침실";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(-1.205194f, 2.474407f);
+        boundaries[i].polygon[1] = new Vector2(2.208837f, 2.449724f);
+        boundaries[i].polygon[2] = new Vector2(2.251328f, -1.601876f);
+        boundaries[i].polygon[3] = new Vector2(-1.102343f, -1.668993f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "거실";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(2.208837f, 2.449724f);
+        boundaries[i].polygon[1] = new Vector2(6.128814f, 2.413735f);
+        boundaries[i].polygon[2] = new Vector2(6.650831f, 0.9304333f);
+        boundaries[i].polygon[3] = new Vector2(2.273213f, 0.9304333f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "현관";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(2.170209f, 4.445397f);
+        boundaries[i].polygon[1] = new Vector2(4.509701f, 4.608055f);
+        boundaries[i].polygon[2] = new Vector2(4.577899f, 2.320971f);
+        boundaries[i].polygon[3] = new Vector2(2.208837f, 2.449724f);
+        ++i;
+        boundaries[i] = new Boundary();
+        boundaries[i].name = "욕실";
+        boundaries[i].polygon = new Vector2[4];
+        boundaries[i].polygon[0] = new Vector2(5.873165f, 3.905023f);
+        boundaries[i].polygon[1] = new Vector2(8.727916f, 4.331108f);
+        boundaries[i].polygon[2] = new Vector2(8.727903f, 2.328519f);
+        boundaries[i].polygon[3] = new Vector2(6.128814f, 2.413735f);
+        ++i;
+    }
+
+    public void CreateBoundaries(string json)
+    {
+       
+    }
+
+    [Serializable]
+    public class BoundaryArray
+    {
+        public Boundary[] boundaries;
+    }
+
+    [Serializable]
+    public class Boundary
+    {
+        public string name;
+        public Vector2[] polygon;
+    }
+
 
 }

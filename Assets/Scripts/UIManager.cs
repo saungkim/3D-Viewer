@@ -116,6 +116,22 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void InverseActivateDefectDot()
+    {
+        inputSystem.SetEnableDot(!defectDot.activeSelf);
+        defectDot.SetActive(!defectDot.activeSelf);
+
+        if (defectDot.activeSelf == false)
+        {
+            screenGauage.SetActive(false);
+        }
+        else
+        {
+            //screenGauage.SetActive(true);
+            inputSystem.SetControlState(InputSystem.ControlState.Defect);
+        }
+    }
+
     public void InverseMeasureMode(Image img)
     {
         if (controlAction == null)
