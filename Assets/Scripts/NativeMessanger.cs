@@ -50,15 +50,16 @@ public class NativeMessanger : MonoBehaviour
         constructor.CreateBoundaryTest();
 
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
-        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-        ViewPanorama("19");
-    
-
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+        //ViewPanorama("19");
+        //SetActiveDefectCreateMode("True");
+        //SetActiveDefectCreateModeRefresh("True");
+        //SetDefectCreateDefaultColor("#0BA094");
 
         //NativeSendMessage("21231");
 
-       // SetSafeArea("True");
-       // SetSafeAreaColor("#B93F25");
+        // SetSafeArea("True");
+        // SetSafeAreaColor("#B93F25");
 
         //AddDefectsJson(testJson);
 
@@ -542,5 +543,13 @@ public class NativeMessanger : MonoBehaviour
         bool onOff = bool.Parse(value);
 
         defectConstructor.SetCreateDotRefresh(onOff);
+    }
+
+    public void SetDefectCreateDefaultColor(string value)
+    {
+        Color outColor; 
+        ColorUtility.TryParseHtmlString(value,out outColor);
+
+        defectConstructor.SetDefaultColor(outColor);
     }
 }

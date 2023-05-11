@@ -543,6 +543,11 @@ public class DefectConstructor : MonoBehaviour
         createDotRefresh = onOff;
     }
 
+    public void SetDefaultColor(Color color)
+    {
+        dot.transform.GetChild(0).GetComponent<Image>().color = color;
+    }
+
     [Serializable]
     public class DefectDefault{
         public string id;
