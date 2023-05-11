@@ -55,9 +55,7 @@ public class NativeMessanger : MonoBehaviour
         //SetActiveDefectCreateMode("True");
         //SetActiveDefectCreateModeRefresh("True");
         //SetDefectCreateDefaultColor("#0BA094");
-
         //NativeSendMessage("21231");
-
         // SetSafeArea("True");
         // SetSafeAreaColor("#B93F25");
 
