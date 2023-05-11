@@ -48,7 +48,7 @@ public class NativeMessanger : MonoBehaviour
 
         //uiManager.SetActiveDefectCreateMode(true);
         constructor.CreateBoundaryTest();
-
+       
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //ViewPanorama("19");
@@ -99,6 +99,16 @@ public class NativeMessanger : MonoBehaviour
     public void ReadRoomViewerFile(string fileName)
     {
         print("Input Value : " + fileName);
+
+#if UNITY_EDITOR
+
+#elif UNITY_ANDROID
+fileName = "jar:file://" + fileName;
+
+      print("Fixed Input FileName Android: " + fileName);
+#endif
+
+
 
         print("ReadRoomViewerFile Start");
 
