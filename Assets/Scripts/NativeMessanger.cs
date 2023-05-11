@@ -48,7 +48,7 @@ public class NativeMessanger : MonoBehaviour
 
         //uiManager.SetActiveDefectCreateMode(true);
         constructor.CreateBoundaryTest();
-       
+
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //ViewPanorama("19");
@@ -58,6 +58,11 @@ public class NativeMessanger : MonoBehaviour
         //NativeSendMessage("21231");
         // SetSafeArea("True");
         // SetSafeAreaColor("#B93F25");
+
+        //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateMode", message: "True")
+        //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateModeRefresh", message: "True")
+
+
 
         //AddDefectsJson(testJson);
 
