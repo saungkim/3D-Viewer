@@ -2,11 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using static DefectConstructor;
+using ColorUtility = UnityEngine.ColorUtility;
 
 public class NativeMessanger : MonoBehaviour
 {
+#if UNITY_IOS
+    [DllImport("__Internal")]
+    public static extern void sendMessageToMobileApp(string message);
+#endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
 
@@ -14,11 +21,11 @@ public class NativeMessanger : MonoBehaviour
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private OverallSetting overallSetting;
     [SerializeField] private CameraController camController;
-    [SerializeField] private UIManager uiMaanger;
+    [SerializeField] private UIManager uiManager;
 
     public enum LoadState { None, Loading, Done }
     public LoadState readEnvState = LoadState.None;
-    LoadState readDefectState = LoadState.None;
+   // LoadState readDefectState = LoadState.None;
 
     public SceneManagement sceneManagement;
     public string testJson;
@@ -37,24 +44,24 @@ public class NativeMessanger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        print("Start Unity");
-
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
 
-#if UNITY_EDITOR
-        string fileName = "inputNHMatterport";
-        fileName = Application.dataPath + "/Sources/" + fileName + ".env";
-#endif
-        uiMaanger.InverseActivateDefectDot();
+        //uiManager.SetActiveDefectCreateMode(true);
         constructor.CreateBoundaryTest();
 
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         ViewPanorama("19");
+    
 
-        NativeSendMessage("21231");
+
+        //NativeSendMessage("21231");
+
+       // SetSafeArea("True");
+       // SetSafeAreaColor("#B93F25");
+
         //AddDefectsJson(testJson);
-        
+
         //VIewDefectJson(testJson1);
         //ViewDefectJsonArray(testJson2);
 
@@ -66,37 +73,10 @@ public class NativeMessanger : MonoBehaviour
         //sceneManagement
 
         //sceneManagement = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManagement>();
-
     }
 
     private void Update()
     {
-
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-            //ViewStage("0");
-        }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-            //ReadDefectsWithFilePath(Application.streamingAssetsPath + "/input.json");
-            //string json = "{\"id\":\"4\",\"type\":\"defect\",\"position\":{\"x\":8.248558044433594,\"y\":0.9674921631813049,\"z\":-3.4797799587249758},\"rotation\":{\"x\":1.5485010147094727,\"y\":356.21142578125,\"z\":6.672542962604666e-9},\"view\":{\"position\":{\"x\":8.277060508728028,\"y\":1.5085253715515137,\"z\":-2.141184091567993},\"rotation\":{\"x\":34.679908752441409,\"y\":177.30267333984376,\"z\":-6.488875214927248e-8},\"fov\":60.0}}";
-           // ViewStage("19");
-
-            //AddDefectsJson(testJson);
-            
-            //AddDefectsFile(Application.streamingAssetsPath + "/input.json");
-            //ActivateDefectCreateMode();
-            //ReadRoomViewerFile();
-            //ChangeDefectsJson();
-            //ViewStage("19");
-            //SetCursor("false");
-            //SetMovePointsVisible("true");
-            //SetMoveTime("1");
-        }
-#endif
 
     }
 
@@ -120,8 +100,6 @@ public class NativeMessanger : MonoBehaviour
         print("Input Value : " + fileName);
 
         print("ReadRoomViewerFile Start");
-
-
 
         if (readEnvState == LoadState.Done)
         {
@@ -198,19 +176,19 @@ public class NativeMessanger : MonoBehaviour
 
 
 
-    public void SetActiveDefectCreateMode(string value)
-    {
-        bool createMode;
+    //public void SetActiveDefectCreateMode(string value)
+    //{
+    //    bool createMode;
 
-        if (bool.TryParse(value, out createMode))
-        {
-            inputSystem.SetEnableDot(createMode);
-        }
-        else
-        {
-            nativeSendErrorMessage("EnableDotCreateMode Error :" + value + " " + "Parse Failed");
-        }
-    }
+    //    if (bool.TryParse(value, out createMode))
+    //    {
+    //        inputSystem.SetEnableDot(createMode);
+    //    }
+    //    else
+    //    {
+    //        nativeSendErrorMessage("EnableDotCreateMode Error :" + value + " " + "Parse Failed");
+    //    }
+    //}
 
     public void SetDefectColor(string value)
     {
@@ -455,7 +433,7 @@ public class NativeMessanger : MonoBehaviour
 
         if (bool.TryParse(value, out onOff))
         {
-            uiMaanger.DevelopmentUISetActive(onOff);
+            uiManager.DevelopmentUISetActive(onOff);
         }
         else
         {
@@ -470,12 +448,12 @@ public class NativeMessanger : MonoBehaviour
 
     public void ReadDefectCallBack(string message)
     {
-        if (message == "Succcess")
-        {
-            readDefectState = LoadState.Done;
-            return;
-        }
-        readDefectState = LoadState.None;
+        //if (message == "Succcess")
+        //{
+        //    readDefectState = LoadState.Done;
+        //    return;
+        //}
+        //readDefectState = LoadState.None;
     }
 
     public void NativeSendMessage(string message)
@@ -492,6 +470,7 @@ public class NativeMessanger : MonoBehaviour
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
+       NativeAPI.sendMessageToMobileApp(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
@@ -534,5 +513,34 @@ public class NativeMessanger : MonoBehaviour
     public void SetFuncName(string value)
     {
         funcName= value; 
+    }
+
+    //public void 
+
+    public void SetSafeArea(string value)
+    {
+        bool safeAreaBool = Boolean.Parse(value);
+        uiManager.SetActiveSafeArea(safeAreaBool);
+    }
+
+    public void SetSafeAreaColor(string value)
+    {
+        Color color;
+        ColorUtility.TryParseHtmlString(value, out color);
+        uiManager.SetSafeAreaHTMLColor(color);      
+    }
+
+    public void SetActiveDefectCreateMode(string value)
+    {
+        bool onOff = bool.Parse(value);
+
+        uiManager.SetActiveDefectCreateMode(onOff);
+    }
+
+    public void SetActiveDefectCreateModeRefresh(string value)
+    {
+        bool onOff = bool.Parse(value);
+
+        defectConstructor.SetCreateDotRefresh(onOff);
     }
 }
