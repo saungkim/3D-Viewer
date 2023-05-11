@@ -26,6 +26,8 @@ public class UIManager : MonoBehaviour
     //[SerializeField] private GameObject ;
     [SerializeField] private GameObject developmentUI;
 
+    [SerializeField] private GameObject safeArea;
+
 
     Action<Image> controlAction;
     Image selectedImage;
@@ -124,6 +126,23 @@ public class UIManager : MonoBehaviour
         if (defectDot.activeSelf == false)
         {
             screenGauage.SetActive(false);
+        }
+        else
+        {
+            //screenGauage.SetActive(true);
+            inputSystem.SetControlState(InputSystem.ControlState.Defect);
+        }
+    }
+
+    public void SetActiveDefectCreateMode(bool onOff)
+    {
+        inputSystem.SetEnableDot(onOff);
+        defectDot.SetActive(onOff);
+        screenGauage.SetActive(onOff);
+       
+        if (onOff == false)
+        {
+            inputSystem.SetControlState(InputSystem.ControlState.None);
         }
         else
         {
@@ -285,5 +304,22 @@ public class UIManager : MonoBehaviour
     public void Init()
     {
        
+    }
+
+    public void SetActiveSafeArea(bool onOff)
+    {
+        safeArea.SetActive(onOff);
+    }
+
+    public void SetSafeAreaHTMLColor(Color color)
+    {
+        Transform safeAreaGroup = safeArea.transform.GetChild(0).GetChild(0);
+
+        foreach(Transform safeArea in safeAreaGroup)
+        {
+            safeArea.GetComponent<Image>().color = color;
+        }
+
+        //safeArea.SetActive(onOff);
     }
 }

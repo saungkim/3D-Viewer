@@ -21,7 +21,7 @@ public class DefectConstructor : MonoBehaviour
     List<Defect> defectList = new List<Defect>();
     Defect[] defectArray;
 
-
+    [SerializeField] bool createDotRefresh = false;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +58,10 @@ public class DefectConstructor : MonoBehaviour
 
     public void CreateDot(Vector3 pos, Vector3 rot, bool sendMessage) // TO DO SendMessage have to be devided
     {
+        if (createDotRefresh)
+            DestroyAllDefects();
+
+
         GameObject o = Instantiate(dot, pos, Quaternion.Euler(rot), defectDot);
         o.SetActive(true);
 
@@ -66,8 +70,6 @@ public class DefectConstructor : MonoBehaviour
         defect.type = "defect";
         defect.position = pos;
         defect.rotation = rot;
-
-
 
         //if(defect.color != null || defect.color != "") // TO DO Create Error Message 
         //{
@@ -380,8 +382,6 @@ public class DefectConstructor : MonoBehaviour
                 ++index;
             }
         }
-
-
     }
 
     public void DestroyDefects(string json ,Action<string> callback)
@@ -410,6 +410,17 @@ public class DefectConstructor : MonoBehaviour
         }
 
         callback("Success");
+    }
+
+    public void DestroyAllDefects()
+    {
+        int defectListCount = defectList.Count;
+
+        for (int i = 0; i < defectListCount; ++i)
+        {
+            defectList.RemoveAt(0);
+            Destroy(defectDot.GetChild(i + 1).gameObject);
+        }
     }
 
     public void SetDefectsColor(string json , Action<string> callback)
@@ -527,7 +538,15 @@ public class DefectConstructor : MonoBehaviour
         public View view; //카메라 관점
     }
 
-    
+    public void SetCreateDotRefresh(bool onOff)
+    {
+        createDotRefresh = onOff;
+    }
+
+    public void SetDefaultColor(Color color)
+    {
+        dot.transform.GetChild(0).GetComponent<Image>().color = color;
+    }
 
     [Serializable]
     public class DefectDefault{
@@ -550,6 +569,7 @@ public class DefectConstructor : MonoBehaviour
         public Vector3 rotation; //카메라 각도
         public float fov; //카메라 fov
     }
+
 
     
 }

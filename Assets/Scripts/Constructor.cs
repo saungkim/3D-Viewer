@@ -63,7 +63,7 @@ public class Constructor : MonoBehaviour
 #endif
 
 #if UNITY_IOS
-      StartCoroutine(FileLoadReadByte(url, callback));
+        StartCoroutine(FileLoadReadByte(url, callback));
 #endif
 
 #if UNITY_EDITOR
@@ -112,15 +112,13 @@ public class Constructor : MonoBehaviour
             print("File Doesn't Exist");
         }
 
-      
-        yield return new WaitForSeconds(1.0f);
         byte[] tBytes = File.ReadAllBytes(url);
 
-        print("TBytesLength"+tBytes.Length);
-
-        
+        print("TBytesLength"+tBytes.Length);  
 
         envToModel(tBytes,callback);
+
+        yield return null;
     }
 
     void Update()
@@ -154,8 +152,6 @@ public class Constructor : MonoBehaviour
             }
         };
         StartCoroutine(networkManager.GetResidentsDefectsPositions(get));
-
-
     }
     bool isLoadDone = false;
     private void envToModel(byte[] content, Action<string> callback)
