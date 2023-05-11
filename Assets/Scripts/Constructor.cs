@@ -58,7 +58,8 @@ public class Constructor : MonoBehaviour
         // FileLoadReadByte
 #if UNITY_ANDROID
         //string url = Application.dataPath + "/Sources/";
-        StartCoroutine(FileLoad(url));
+        //StartCoroutine(FileLoadReadByte(url,callback));
+        StartCoroutine(FileLoad(url, callback));
 #endif
 
 #if UNITY_IOS
@@ -66,7 +67,7 @@ public class Constructor : MonoBehaviour
 #endif
 
 #if UNITY_EDITOR
-     //  StartCoroutine(FileLoadReadByte(url, callback));
+        //  StartCoroutine(FileLoadReadByte(url, callback));
 #endif
 
     }
