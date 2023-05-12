@@ -49,8 +49,8 @@ public class NativeMessanger : MonoBehaviour
         SetActiveDefectCreateModeRefresh("True");
 
 #if UNITY_EDITOR
-        // ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
-        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         uiManager.SetActiveDefectCreateMode(true);
         SetActiveDefectCreateMode("True");
 
