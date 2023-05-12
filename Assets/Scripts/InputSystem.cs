@@ -32,15 +32,18 @@ public class InputSystem : MonoBehaviour
     float holdTime;
 
     private Vector3 firstMousePos;
+    private Vector3 firstCursorPos;
     float currentPinchDistance;
     // Start is called before the first frame update
 
     private float enableDotDistance = 50;
+   
 
     public enum ControlState { None, Defect, Measure , AutoTour , Tag , MeasureDot }
     public ControlState controlState = ControlState.None;
 
     private bool cursorOnUI = false;
+      
 
     int pointerID;
     void Start()
@@ -70,8 +73,6 @@ public class InputSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         if (Pinch())
         {
             onClickStart = false;
@@ -151,7 +152,12 @@ public class InputSystem : MonoBehaviour
 
                 if (holdTime > 0.7f)
                 {
+                    if (!hold)
+                        firstCursorPos = cursor.cursor.position;
+
                     hold = true;
+
+                    
                 }
 
                 if (controlState == ControlState.Defect || controlState == ControlState.Measure)
@@ -175,7 +181,7 @@ public class InputSystem : MonoBehaviour
 
                         if(controlState == ControlState.Defect)
                         {
-                            defectConstructor.CreateDot(cursor.cursor.position, cursor.cursor.eulerAngles, true);
+                            defectConstructor.CreateDot(firstCursorPos, cursor.cursor.eulerAngles, true);
                         }
                         else if (controlState == ControlState.Measure)
                         {
