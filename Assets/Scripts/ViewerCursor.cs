@@ -19,6 +19,9 @@ public class ViewerCursor : MonoBehaviour
 
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private Transform measureRenderUI;
+   // [SerializeField] private DefectConstructor defectConstructor;
+   // [SerializeField] private NativeMessanger nativeMessanger;
+
     //[SerializeField] private 
     LayerMask layermask;
     void Start()
@@ -40,7 +43,7 @@ public class ViewerCursor : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit,100, layermask))
+        if (Physics.Raycast(ray, out hit, 100, layermask))
         {
             //Debug.Log("Hit:" + hit.transform.name);
             //transform.position = ray.GetPoint(100.0f);
@@ -49,6 +52,18 @@ public class ViewerCursor : MonoBehaviour
 
             gauge.position = Input.mousePosition + gaugePlusPosition;
 
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    if (hit.transform.tag == "Defect")
+            //    {
+            //        //print("CreateDot");
+            //        //defectConstructor.defect
+            //        print("Defect");
+                 
+            //        nativeMessanger.NativeSendMessage("CreateDot,"+defectConstructor.GetDefectInfo(hit.transform.GetSiblingIndex() - 1));
+            //    }
+            //}
+    
             //gauge.LookAt(hit.point + hit.normal);
         }
     }
@@ -86,8 +101,6 @@ public class ViewerCursor : MonoBehaviour
   
     public void SetMeasureCursorMode()
     {
-
-   
         cursorChild.SetActive(true);
         cursorChild.layer = LayerMask.NameToLayer("Cubemap");
         cursorChild.transform.localScale = new Vector3(0.04f,0.005f,0.04f);

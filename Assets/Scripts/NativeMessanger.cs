@@ -45,10 +45,20 @@ public class NativeMessanger : MonoBehaviour
     void Start()
     {
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
-
-        //uiManager.SetActiveDefectCreateMode(true);
         constructor.CreateBoundaryTest();
 
+#if UNITY_EDITOR
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+  
+        uiManager.SetActiveDefectCreateMode(true);
+        SetActiveDefectCreateMode("True");
+
+        ViewPanorama("19");
+
+        //SetDefectColliderSize("30,30,30");
+#endif
+
+        //uiManager.SetActiveDefectCreateMode(true);
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //ViewPanorama("19");
@@ -61,8 +71,6 @@ public class NativeMessanger : MonoBehaviour
 
         //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateMode", message: "True")
         //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateModeRefresh", message: "True")
-
-
 
         //AddDefectsJson(testJson);
 
@@ -81,6 +89,12 @@ public class NativeMessanger : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_ANDROID
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Quit();
+        }
+#endif
 
     }
 
@@ -110,10 +124,6 @@ fileName = "jar:file://" + fileName;
 
       print("Fixed Input FileName Android: " + fileName);
 #endif
-
-
-
-        print("ReadRoomViewerFile Start");
 
         if (readEnvState == LoadState.Done)
         {
@@ -564,5 +574,17 @@ fileName = "jar:file://" + fileName;
         ColorUtility.TryParseHtmlString(value,out outColor);
 
         defectConstructor.SetDefaultColor(outColor);
+    }
+
+    public void SetDefectColliderSize(string value)
+    {
+        string[] valueOut = value.Split(',');
+        Vector3 size = new Vector3(float.Parse(valueOut[0]), float.Parse(valueOut[1]), float.Parse(valueOut[2]));
+        defectConstructor.SetColliderSize(size);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }

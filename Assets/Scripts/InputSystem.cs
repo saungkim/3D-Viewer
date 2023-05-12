@@ -222,7 +222,7 @@ public class InputSystem : MonoBehaviour
 
         if (holdTime < 0.5f)
         {
-            if (controlState == ControlState.None && CheckDefectCollider())
+            if (controlState == ControlState.Defect && CheckDefectCollider())
                 return;
 
             if (controlState == ControlState.Measure && CheckMeasurementCollider())
@@ -258,8 +258,7 @@ public class InputSystem : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if(hit.transform.tag == "Defect")
-            {
-                print("Collision Defect");
+            {           
                 defectConstructor.SendMessageSelectDefect(hit.transform.GetSiblingIndex());
                 return true;
             }

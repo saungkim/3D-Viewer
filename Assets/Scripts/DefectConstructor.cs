@@ -17,11 +17,13 @@ public class DefectConstructor : MonoBehaviour
     [SerializeField] private Constructor constructor;
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private NativeMessanger nativeMessanger;
-
+    
     List<Defect> defectList = new List<Defect>();
     Defect[] defectArray;
 
     [SerializeField] bool createDotRefresh = false;
+     
+
 
     // Start is called before the first frame update
     void Start()
@@ -104,7 +106,7 @@ public class DefectConstructor : MonoBehaviour
                         
                         // boundary.polygon
             }
-            nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
+            //nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
         }       
     }
 
@@ -324,7 +326,7 @@ public class DefectConstructor : MonoBehaviour
 
     public void SendMessageSelectDefect(int id)
     {
-        nativeMessanger.NativeSendMessage("SelectDefect." + JsonUtility.ToJson(defectArray[id]));
+        nativeMessanger.NativeSendMessage("SelectDefect," + JsonUtility.ToJson(defectList[id - 1]));
     }
     public void SetColor(int id, Color color)
     {
@@ -437,7 +439,6 @@ public class DefectConstructor : MonoBehaviour
                 {
                     defects[index].color = defect2.color;
                    
-
                     Color outColor;
 
                     if (ColorUtility.TryParseHtmlString(defects[index].color, out outColor))                    {
@@ -521,7 +522,10 @@ public class DefectConstructor : MonoBehaviour
         return Mathf.Approximately(trapezoidArea, pointArea);
     }
 
-
+    public string GetDefectInfo(int index)
+    {
+        return JsonUtility.ToJson(defectList[index]).ToString();
+    }
 
     [Serializable]
     public class Defect
@@ -546,6 +550,11 @@ public class DefectConstructor : MonoBehaviour
     public void SetDefaultColor(Color color)
     {
         dot.transform.GetChild(0).GetComponent<Image>().color = color;
+    }
+
+    public void SetColliderSize(Vector3 size)
+    {
+        dot.transform.GetComponent<BoxCollider>().size = size;
     }
 
     [Serializable]
