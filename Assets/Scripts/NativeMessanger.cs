@@ -11,8 +11,8 @@ using ColorUtility = UnityEngine.ColorUtility;
 public class NativeMessanger : MonoBehaviour
 {
 #if UNITY_IOS
-    [DllImport("__Internal")]
-    public static extern void sendMessageToMobileApp(string message);
+   // [DllImport("__Internal")]
+  //  public static extern void sendMessageToMobileApp(string message);
 #endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
@@ -46,6 +46,7 @@ public class NativeMessanger : MonoBehaviour
     {
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
         constructor.CreateBoundaryTest();
+        SetActiveDefectCreateModeRefresh("True");
 
 #if UNITY_EDITOR
         // ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
@@ -55,6 +56,7 @@ public class NativeMessanger : MonoBehaviour
 
         ViewPanorama("19");
         SetActiveDevelopmentUI("True");
+    
         //SetDefectColliderSize("30,30,30");
 #endif
         //ReadRoomViewerFileDebug(Application.streamingAssetsPath + "/input.env");
@@ -99,7 +101,6 @@ public class NativeMessanger : MonoBehaviour
             Quit();
         }
 #endif
-
     }
 
 
@@ -127,10 +128,6 @@ public class NativeMessanger : MonoBehaviour
 fileName = "jar:file://" + fileName;
       print("Fixed Input FileName Android: " + fileName);
 #endif
-
-
-
-
         if (readEnvState == LoadState.Done)
         {
             constructor.Init();
@@ -512,7 +509,7 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-       NativeAPI.sendMessageToMobileApp(message);
+      // NativeAPI.sendMessageToMobileApp(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
