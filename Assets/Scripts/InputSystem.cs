@@ -187,6 +187,7 @@ public class InputSystem : MonoBehaviour
             else
             {
                 holdTime = 0;
+                StartCoroutine(ImgsFD.DelaySetActive(false));
             }
 
             if (!hold)

@@ -48,15 +48,19 @@ public class NativeMessanger : MonoBehaviour
         constructor.CreateBoundaryTest();
 
 #if UNITY_EDITOR
-        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
-  
+        // ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         uiManager.SetActiveDefectCreateMode(true);
         SetActiveDefectCreateMode("True");
 
         ViewPanorama("19");
-
+        SetActiveDevelopmentUI("True");
         //SetDefectColliderSize("30,30,30");
 #endif
+        //ReadRoomViewerFileDebug(Application.streamingAssetsPath + "/input.env");
+        //uiManager.SetActiveDefectCreateMode(true);
+        //SetActiveDefectCreateMode("True");
+        //ViewPanorama("19");
 
         //uiManager.SetActiveDefectCreateMode(true);
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
@@ -121,10 +125,24 @@ public class NativeMessanger : MonoBehaviour
 
 #elif UNITY_ANDROID
 fileName = "jar:file://" + fileName;
-
       print("Fixed Input FileName Android: " + fileName);
 #endif
 
+
+
+
+        if (readEnvState == LoadState.Done)
+        {
+            constructor.Init();
+        }
+
+        readEnvState = LoadState.Loading;
+        constructor.FileOpen(fileName, ReadEnvCallBack);
+    }
+
+    public void ReadRoomViewerFileDebug(string fileName)
+    {
+  
         if (readEnvState == LoadState.Done)
         {
             constructor.Init();
@@ -587,4 +605,6 @@ fileName = "jar:file://" + fileName;
     {
         Application.Quit();
     }
+
+    
 }
