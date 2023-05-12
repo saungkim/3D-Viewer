@@ -48,7 +48,12 @@ public class NativeMessanger : MonoBehaviour
 
         //uiManager.SetActiveDefectCreateMode(true);
         constructor.CreateBoundaryTest();
-
+#if UNITY_EDITOR
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        ViewPanorama("19");
+        SetSafeArea("True");
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+#endif
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //ViewPanorama("19");
@@ -61,8 +66,6 @@ public class NativeMessanger : MonoBehaviour
 
         //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateMode", message: "True")
         //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateModeRefresh", message: "True")
-
-
 
         //AddDefectsJson(testJson);
 
@@ -78,12 +81,6 @@ public class NativeMessanger : MonoBehaviour
 
         //sceneManagement = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManagement>();
     }
-
-    private void Update()
-    {
-
-    }
-
 
     public void ActivateDefectCreateMode(string value)
     {
@@ -110,8 +107,6 @@ fileName = "jar:file://" + fileName;
 
       print("Fixed Input FileName Android: " + fileName);
 #endif
-
-
 
         print("ReadRoomViewerFile Start");
 
