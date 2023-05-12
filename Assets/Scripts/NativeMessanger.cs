@@ -61,10 +61,12 @@ public class NativeMessanger : MonoBehaviour
 #endif
         //ReadRoomViewerFileDebug(Application.streamingAssetsPath + "/input.env");
         //uiManager.SetActiveDefectCreateMode(true);
+
         //SetActiveDefectCreateMode("True");
         //ViewPanorama("19");
 
         //uiManager.SetActiveDefectCreateMode(true);
+
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //ViewPanorama("19");
@@ -93,6 +95,7 @@ public class NativeMessanger : MonoBehaviour
         //sceneManagement = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManagement>();
     }
 
+
     private void Update()
     {
 #if UNITY_ANDROID
@@ -102,7 +105,6 @@ public class NativeMessanger : MonoBehaviour
         }
 #endif
     }
-
 
     public void ActivateDefectCreateMode(string value)
     {
@@ -132,6 +134,7 @@ fileName = "jar:file://" + fileName;
         {
             constructor.Init();
         }
+
 
         readEnvState = LoadState.Loading;
         constructor.FileOpen(fileName, ReadEnvCallBack);
