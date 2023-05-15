@@ -101,10 +101,7 @@ public class NativeMessanger : MonoBehaviour
     private void Update()
     {
 #if UNITY_ANDROID
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            Quit();
-        }
+      
 #endif
     }
 
