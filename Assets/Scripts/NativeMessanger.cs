@@ -11,8 +11,8 @@ using ColorUtility = UnityEngine.ColorUtility;
 public class NativeMessanger : MonoBehaviour
 {
 #if UNITY_IOS
-    [DllImport("__Internal")]
-    public static extern void sendMessageToMobileApp(string message);
+   // [DllImport("__Internal")]
+  // public static extern void sendMessageToMobileApp(string message);
 #endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
@@ -45,15 +45,28 @@ public class NativeMessanger : MonoBehaviour
     void Start()
     {
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
+        constructor.CreateBoundaryTest();
+        SetActiveDefectCreateModeRefresh("True");
+
+#if UNITY_EDITOR
+         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
+        //uiManager.SetActiveDefectCreateMode(true);
+        SetActiveDefectCreateMode("True");
+
+        ViewPanorama("19");
+        //SetActiveDevelopmentUI("True");
+    
+        //SetDefectColliderSize("30,30,30");
+#endif
+        //ReadRoomViewerFileDebug(Application.streamingAssetsPath + "/input.env");
+        //uiManager.SetActiveDefectCreateMode(true);
+
+        //SetActiveDefectCreateMode("True");
+        //ViewPanorama("19");
 
         //uiManager.SetActiveDefectCreateMode(true);
-        constructor.CreateBoundaryTest();
-#if UNITY_EDITOR
-        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
-        ViewPanorama("19");
-        SetSafeArea("True");
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-#endif
+
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //ViewPanorama("19");
@@ -82,6 +95,17 @@ public class NativeMessanger : MonoBehaviour
         //sceneManagement = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManagement>();
     }
 
+
+    private void Update()
+    {
+#if UNITY_ANDROID
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Quit();
+        }
+#endif
+    }
+
     public void ActivateDefectCreateMode(string value)
     {
         bool createMode;
@@ -104,12 +128,21 @@ public class NativeMessanger : MonoBehaviour
 
 #elif UNITY_ANDROID
 fileName = "jar:file://" + fileName;
-
       print("Fixed Input FileName Android: " + fileName);
 #endif
+        if (readEnvState == LoadState.Done)
+        {
+            constructor.Init();
+        }
 
-        print("ReadRoomViewerFile Start");
 
+        readEnvState = LoadState.Loading;
+        constructor.FileOpen(fileName, ReadEnvCallBack);
+    }
+
+    public void ReadRoomViewerFileDebug(string fileName)
+    {
+  
         if (readEnvState == LoadState.Done)
         {
             constructor.Init();
@@ -479,7 +512,7 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-       NativeAPI.sendMessageToMobileApp(message);
+      // NativeAPI.sendMessageToMobileApp(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
@@ -560,4 +593,18 @@ fileName = "jar:file://" + fileName;
 
         defectConstructor.SetDefaultColor(outColor);
     }
+
+    public void SetDefectColliderSize(string value)
+    {
+        string[] valueOut = value.Split(',');
+        Vector3 size = new Vector3(float.Parse(valueOut[0]), float.Parse(valueOut[1]), float.Parse(valueOut[2]));
+        defectConstructor.SetColliderSize(size);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    
 }

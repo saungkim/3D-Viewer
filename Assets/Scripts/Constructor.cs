@@ -62,13 +62,13 @@ public class Constructor : MonoBehaviour
         StartCoroutine(FileLoad(url, callback));
 #endif
 
-#if UNITY_IOS
+#if UNITY_EDITOR
+        StartCoroutine(FileLoadReadByte(url, callback));
+#elif UNITY_IOS
         StartCoroutine(FileLoadReadByte(url, callback));
 #endif
 
-#if UNITY_EDITOR
-        //  StartCoroutine(FileLoadReadByte(url, callback));
-#endif
+
 
     }
 
@@ -507,7 +507,7 @@ public class Constructor : MonoBehaviour
         int i = 0;
 
         boundaries[i] = new Boundary();
-        boundaries[i].name = "Ä§½Ç1-¿å½Ç";
+        boundaries[i].name = "Ä§ï¿½ï¿½1-ï¿½ï¿½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(4.55231f, 6.52542f);
         boundaries[i].polygon[1] = new Vector2(7.130107f, 6.56804f);
@@ -515,7 +515,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(4.509701f, 4.608055f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "Ä§½Ç1-È­Àå´ë";
+        boundaries[i].name = "Ä§ï¿½ï¿½1-È­ï¿½ï¿½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(7.130107f, 6.56804f);
         boundaries[i].polygon[1] = new Vector2(8.685311f, 6.141956f);
@@ -523,7 +523,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(7.002285f, 4.671975f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "Ä§½Ç1";
+        boundaries[i].name = "Ä§ï¿½ï¿½1";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(8.685311f, 6.141956f);
         boundaries[i].polygon[1] = new Vector2(12.58396f, 6.482823f);
@@ -531,7 +531,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(8.727903f, 2.328519f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "¹ßÄÚ´Ï";
+        boundaries[i].name = "ï¿½ï¿½ï¿½Ú´ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(12.62657f, 4.416324f);
         boundaries[i].polygon[1] = new Vector2(14.60785f, 4.416324f);
@@ -539,7 +539,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(12.58395f, 2.328519f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "°Å½Ç";
+        boundaries[i].name = "ï¿½Å½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(8.727903f, 2.328519f);
         boundaries[i].polygon[1] = new Vector2(14.56524f, 2.307214f);
@@ -547,7 +547,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(9.771808f, -2.614036f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "°Å½Ç";
+        boundaries[i].name = "ï¿½Å½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(6.128814f, 2.413735f);
         boundaries[i].polygon[1] = new Vector2(8.727903f, 2.328519f);
@@ -555,7 +555,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(6.725424f, -1.274137f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "ÁÖ¹æ/½Ä´ç";
+        boundaries[i].name = "ï¿½Ö¹ï¿½/ï¿½Ä´ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(6.725424f, -1.274137f);
         boundaries[i].polygon[1] = new Vector2(9.782036f, -1.643538f);
@@ -563,7 +563,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(6.743129f, -3.649982f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "¹ßÄÚ´Ï";
+        boundaries[i].name = "ï¿½ï¿½ï¿½Ú´ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(5.443068f, -0.2698274f);
         boundaries[i].polygon[1] = new Vector2(6.701488f, -0.2826328f);
@@ -571,7 +571,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(5.443068f, -3.763739f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "Ä§½Ç";
+        boundaries[i].name = "Ä§ï¿½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(2.273213f, 0.9304333f);
         boundaries[i].polygon[1] = new Vector2(5.416673f, 0.9401765f);
@@ -579,7 +579,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(2.27577f, -2.897345f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "Ä§½Ç";
+        boundaries[i].name = "Ä§ï¿½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(-1.205194f, 2.474407f);
         boundaries[i].polygon[1] = new Vector2(2.208837f, 2.449724f);
@@ -587,7 +587,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(-1.102343f, -1.668993f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "°Å½Ç";
+        boundaries[i].name = "ï¿½Å½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(2.208837f, 2.449724f);
         boundaries[i].polygon[1] = new Vector2(6.128814f, 2.413735f);
@@ -595,7 +595,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(2.273213f, 0.9304333f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "Çö°ü";
+        boundaries[i].name = "ï¿½ï¿½ï¿½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(2.170209f, 4.445397f);
         boundaries[i].polygon[1] = new Vector2(4.509701f, 4.608055f);
@@ -603,7 +603,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(2.208837f, 2.449724f);
         ++i;
         boundaries[i] = new Boundary();
-        boundaries[i].name = "¿å½Ç";
+        boundaries[i].name = "ï¿½ï¿½ï¿½";
         boundaries[i].polygon = new Vector2[4];
         boundaries[i].polygon[0] = new Vector2(5.873165f, 3.905023f);
         boundaries[i].polygon[1] = new Vector2(8.727916f, 4.331108f);
