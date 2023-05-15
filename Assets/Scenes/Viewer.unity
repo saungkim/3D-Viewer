@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311915, g: 0.3807396, b: 0.35872662, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3873,7 +3873,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548723550}
-  m_Mesh: {fileID: 7929705312494171938, guid: a371e0a36e14d754cacb4c2e6fd3f668, type: 3}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &554422518
 GameObject:
   m_ObjectHideFlags: 0
@@ -8251,7 +8251,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1504252571}
-  m_Mesh: {fileID: 7929705312494171938, guid: a371e0a36e14d754cacb4c2e6fd3f668, type: 3}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1508974022
 GameObject:
   m_ObjectHideFlags: 0
@@ -8409,7 +8409,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538942810}
-  m_Mesh: {fileID: 7929705312494171938, guid: a371e0a36e14d754cacb4c2e6fd3f668, type: 3}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1565669765
 GameObject:
   m_ObjectHideFlags: 0
@@ -8491,7 +8491,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565669765}
-  m_Mesh: {fileID: 7929705312494171938, guid: a371e0a36e14d754cacb4c2e6fd3f668, type: 3}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1569883501
 GameObject:
   m_ObjectHideFlags: 0
@@ -9534,7 +9534,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695602468}
-  m_Mesh: {fileID: 7929705312494171938, guid: a371e0a36e14d754cacb4c2e6fd3f668, type: 3}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1704795200
 GameObject:
   m_ObjectHideFlags: 0
@@ -10164,12 +10164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9330118a462aa0b4bacafdc8d9334023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dotPositions: []
-  line: {fileID: 1423189147}
-  dot: {fileID: 1273987431}
-  dots: []
-  lines: []
-  pool: {fileID: 1300303520}
 --- !u!1 &1857384393
 GameObject:
   m_ObjectHideFlags: 0
@@ -12142,4 +12136,4 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2133829593}
-  m_Mesh: {fileID: 7929705312494171938, guid: a371e0a36e14d754cacb4c2e6fd3f668, type: 3}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}

@@ -51,11 +51,11 @@ public class NativeMessanger : MonoBehaviour
 #if UNITY_EDITOR
          ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-        uiManager.SetActiveDefectCreateMode(true);
+        //uiManager.SetActiveDefectCreateMode(true);
         SetActiveDefectCreateMode("True");
 
         ViewPanorama("19");
-        SetActiveDevelopmentUI("True");
+        //SetActiveDevelopmentUI("True");
     
         //SetDefectColliderSize("30,30,30");
 #endif
