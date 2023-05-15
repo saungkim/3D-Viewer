@@ -37,8 +37,8 @@ public class NativeMessanger : MonoBehaviour
 
     private AndroidState androidState;
 
-    public string className = "com.parallel.viewer3d.RoomViewerActivity";
-    public string funcName = "RoomViewerReceiveMessage";
+    private string className = "com.parallel.viewer3d.RoomViewerActivity";
+    private string funcName = "RoomViewerReceiveMessage";
  
 
     // Start is called before the first frame update
@@ -54,7 +54,9 @@ public class NativeMessanger : MonoBehaviour
         //uiManager.SetActiveDefectCreateMode(true);
         SetActiveDefectCreateMode("True");
 
-        ViewPanorama("19");
+        //ViewPanorama("19");
+
+        VIewDefectJson(testJson1);
         //SetActiveDevelopmentUI("True");
     
         //SetDefectColliderSize("30,30,30");
