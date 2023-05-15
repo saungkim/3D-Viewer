@@ -37,8 +37,8 @@ public class NativeMessanger : MonoBehaviour
 
     private AndroidState androidState;
 
-    public string className;
-    public string funcName;
+    public string className = "com.parallel.viewer3d.RoomViewerActivity";
+    public string funcName = "RoomViewerReceiveMessage";
  
 
     // Start is called before the first frame update
