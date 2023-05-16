@@ -11,8 +11,8 @@ using ColorUtility = UnityEngine.ColorUtility;
 public class NativeMessanger : MonoBehaviour
 {
 #if UNITY_IOS
-   // [DllImport("__Internal")]
-  // public static extern void sendMessageToMobileApp(string message);
+  [DllImport("__Internal")]
+    public static extern void sendMessageToMobileApp(string message);
 #endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
@@ -511,7 +511,7 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-      // NativeAPI.sendMessageToMobileApp(message);
+        NativeAPI.sendMessageToMobileApp(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
