@@ -15,7 +15,7 @@ public class DefectDot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       
     }
 
     public void CreateToServer(Vector3 pos , Vector3 rot)

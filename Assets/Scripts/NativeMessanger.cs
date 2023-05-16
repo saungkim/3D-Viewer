@@ -11,8 +11,8 @@ using ColorUtility = UnityEngine.ColorUtility;
 public class NativeMessanger : MonoBehaviour
 {
 #if UNITY_IOS
-   // [DllImport("__Internal")]
-  // public static extern void sendMessageToMobileApp(string message);
+  [DllImport("__Internal")]
+    public static extern void sendMessageToMobileApp(string message);
 #endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
@@ -37,8 +37,8 @@ public class NativeMessanger : MonoBehaviour
 
     private AndroidState androidState;
 
-    public string className;
-    public string funcName;
+    private string className = "com.parallel.viewer3d.RoomViewerActivity";
+    private string funcName = "RoomViewerReceiveMessage";
  
 
     // Start is called before the first frame update
@@ -54,7 +54,9 @@ public class NativeMessanger : MonoBehaviour
         //uiManager.SetActiveDefectCreateMode(true);
         SetActiveDefectCreateMode("True");
 
-        ViewPanorama("19");
+        //ViewPanorama("19");
+
+        VIewDefectJson(testJson1);
         //SetActiveDevelopmentUI("True");
     
         //SetDefectColliderSize("30,30,30");
@@ -99,10 +101,7 @@ public class NativeMessanger : MonoBehaviour
     private void Update()
     {
 #if UNITY_ANDROID
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            Quit();
-        }
+      
 #endif
     }
 
@@ -512,7 +511,7 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-      // NativeAPI.sendMessageToMobileApp(message);
+        NativeAPI.sendMessageToMobileApp(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
