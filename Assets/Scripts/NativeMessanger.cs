@@ -57,11 +57,11 @@ public class NativeMessanger : MonoBehaviour
         //SetActiveDefectCreateMode("True");
         //Adddef
         //ViewPanoramaTag("1");
-        //ViewPanorama("19");
+        ViewPanorama("19");
         //ViewDef
-        //AddDefectJson(testJson1);
+        AddDefectJson(testJson1);
         //VIewDefectJson(testJson1);
-        ViewDefectJson(testJson1);
+        //ViewDefectJson(testJson1);
         //SetActiveDevelopmentUI("True");
     
         //SetDefectColliderSize("30,30,30");
