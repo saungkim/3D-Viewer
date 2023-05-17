@@ -348,7 +348,7 @@ public class Constructor : MonoBehaviour
         o.AddComponent<MeshCollider>();
     }
 
-    public IEnumerator InitStage(int stage)
+    public IEnumerator InitStage(int stage , Action<string> callBack)
     {
         yield return new WaitUntil(() => isLoadDone);
         playerMovement.InitStage(stage);
@@ -358,6 +358,7 @@ public class Constructor : MonoBehaviour
         //SetMiniMap();
         waitForFixedUpdated = true;
 
+        callBack("LoadComplete");
         //SetMovePointsVisible();
     }
 

@@ -7,7 +7,8 @@
 @protocol NativeCallsProtocol
 @required
 - (void) showHostMainWindow:(NSString*)color;
-- (void) sendMessageToMobileApp:(NSString*)message;
+- (void) onViewerClicked:(NSString*)message;
+- (void) onViewerLoaded:(NSString*)message;
 // other methods
 @end
 

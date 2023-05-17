@@ -18,9 +18,16 @@ extern "C" {
 }
 extern "C"
 {
-    void sendMessageToMobileApp(const char* message)
+    void onViewerClicked(const char* message)
     {
-        return [api sendMessageToMobileApp:[NSString stringWithUTF8String:message]];
+        return [api onViewerClicked:[NSString stringWithUTF8String:message]];
+    }
+}
+extern "C"
+{
+    void onViewerLoaded(const char* message)
+    {
+        return [api onViewerLoaded:[NSString stringWithUTF8String:message]];
     }
 }
 

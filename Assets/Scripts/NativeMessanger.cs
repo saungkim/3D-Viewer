@@ -11,8 +11,10 @@ using ColorUtility = UnityEngine.ColorUtility;
 public class NativeMessanger : MonoBehaviour
 {
 #if UNITY_IOS
-  [DllImport("__Internal")]
-    public static extern void sendMessageToMobileApp(string message);
+     [DllImport("__Internal")]
+    public static extern void onViewerLoaded(string message);
+     [DllImport("__Internal")]
+    public static extern void onViewerClicked(string message);
 #endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
@@ -49,16 +51,17 @@ public class NativeMessanger : MonoBehaviour
         SetActiveDefectCreateModeRefresh("True");
 
 #if UNITY_EDITOR
-        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.pssw");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //uiManager.SetActiveDefectCreateMode(true);
         //SetActiveDefectCreateMode("True");
         //Adddef
+        //ViewPanoramaTag("1");
         //ViewPanorama("19");
         //ViewDef
         //AddDefectJson(testJson1);
         //VIewDefectJson(testJson1);
-        //VIewDefectJson(testJson1);
+        ViewDefectJson(testJson1);
         //SetActiveDevelopmentUI("True");
     
         //SetDefectColliderSize("30,30,30");
@@ -253,7 +256,7 @@ fileName = "jar:file://" + fileName;
 
     public void SetDefectsColorJson(string json)
     {
-        defectConstructor.SetDefectsColor(json, NativeSendMessage);
+        defectConstructor.SetDefectsColor(json);
     }
 
     public void GetAllDefects()
@@ -350,7 +353,7 @@ fileName = "jar:file://" + fileName;
     public void ViewPanorama(string value)
     {
         int stage = int.Parse(value);
-        StartCoroutine(constructor.InitStage(stage));
+        StartCoroutine(constructor.InitStage(stage,OnViewerLoaded));
     }
 
     public void ViewPanoramaTag(string name)
@@ -416,14 +419,9 @@ fileName = "jar:file://" + fileName;
     public void ViewDefectJson(string json)
     {
         print("VIewDefectJson Input Value:" + json);
-        StartCoroutine(defectConstructor.VIewDefectJson(json));
+        StartCoroutine(defectConstructor.VIewDefectJson(json, OnViewerLoaded));
     }
 
-    public void ViewOneDefect(string json)
-    {
-        print("ViewOneDefect Input Value:" + json);
-        StartCoroutine(defectConstructor.VIewDefectJson(json));
-    }
 
     public void ViewDefectJsonArray(string json)
     {
@@ -505,27 +503,48 @@ fileName = "jar:file://" + fileName;
         //readDefectState = LoadState.None;
     }
 
-    public void NativeSendMessage(string message)
+    public void OnViewerClicked(string message)
     {
 #if UNITY_ANDROID
         try
         {
             AndroidJavaClass jc = new AndroidJavaClass(className);
             AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-            overrideActivity.Call(funcName, message);
+            overrideActivity.Call("onViewerClicked", message);
         }
         catch (Exception e)
         {
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-       sendMessageToMobileApp(message);
+       onViewerClicked(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
         print(message);
     }
 
+    public void OnViewerLoaded(string message)
+    {
+#if UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call("onViewerLoaded", message);
+        }
+        catch (Exception e)
+        {
+            print(e);
+        }
+#elif UNITY_IOS || UNITY_TVOS
+       onViewerLoaded(message);
+       // NativeAPI.showHostMainWindow(lastStringColor);
+#elif UNITY_EDITOR
+#endif
+        print(message);
+    }
+    
     public void SetAndroidState(string value)
     {
         int state = int.Parse(value);

@@ -304,7 +304,7 @@ public class DefectConstructor : MonoBehaviour
         playerMovement.MoveStageInstant(defectArray[index].view.position, defectArray[index].view.rotation, defectArray[index].view.fov);
     }
 
-    public IEnumerator VIewDefectJson(string value)
+    public IEnumerator VIewDefectJson(string value,Action<string> callBack)
     {
         yield return new WaitUntil(() => constructor.GetIsLoadDone());
         
@@ -313,6 +313,8 @@ public class DefectConstructor : MonoBehaviour
         CreateDot(defect);
 
         playerMovement.MoveStageInstant(defect.view.position, defect.view.rotation, defect.view.fov);
+
+        callBack("LoadComplete");
     }
 
     public IEnumerator ViewDefectJsonArray(string value)
@@ -341,7 +343,7 @@ public class DefectConstructor : MonoBehaviour
 
     public void SendMessageSelectDefect(int id)
     {
-        nativeMessanger.NativeSendMessage("SelectDefect," + JsonUtility.ToJson(defectList[id - 1]));
+        nativeMessanger.OnViewerClicked(JsonUtility.ToJson(defectList[id - 1]));
     }
     public void SetColor(int id, Color color)
     {
@@ -440,7 +442,7 @@ public class DefectConstructor : MonoBehaviour
         }
     }
 
-    public void SetDefectsColor(string json , Action<string> callback)
+    public void SetDefectsColor(string json)
     {
         Defect[] defects = JsonToDefectArray(json).defect;
 
