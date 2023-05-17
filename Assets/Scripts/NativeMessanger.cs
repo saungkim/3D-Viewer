@@ -49,14 +49,16 @@ public class NativeMessanger : MonoBehaviour
         SetActiveDefectCreateModeRefresh("True");
 
 #if UNITY_EDITOR
-         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
         //uiManager.SetActiveDefectCreateMode(true);
-        SetActiveDefectCreateMode("True");
-
+        //SetActiveDefectCreateMode("True");
+        //Adddef
         //ViewPanorama("19");
-
-        VIewDefectJson(testJson1);
+        //ViewDef
+        //AddDefectJson(testJson1);
+        //VIewDefectJson(testJson1);
+        //VIewDefectJson(testJson1);
         //SetActiveDevelopmentUI("True");
     
         //SetDefectColliderSize("30,30,30");
@@ -411,9 +413,15 @@ fileName = "jar:file://" + fileName;
         }
     }
 
-    public void VIewDefectJson(string json)
+    public void ViewDefectJson(string json)
     {
-        print("Input Value:"+json);
+        print("VIewDefectJson Input Value:" + json);
+        StartCoroutine(defectConstructor.VIewDefectJson(json));
+    }
+
+    public void ViewOneDefect(string json)
+    {
+        print("ViewOneDefect Input Value:" + json);
         StartCoroutine(defectConstructor.VIewDefectJson(json));
     }
 
@@ -511,7 +519,7 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-        NativeAPI.sendMessageToMobileApp(message);
+       sendMessageToMobileApp(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
@@ -556,7 +564,11 @@ fileName = "jar:file://" + fileName;
         funcName= value; 
     }
 
-    //public void 
+    public void AddDefectJson(string json)
+    {
+        print("Unity Message AddDefectJson : " + json);
+        defectConstructor.AddDefectJson(json);
+    }
 
     public void SetSafeArea(string value)
     {

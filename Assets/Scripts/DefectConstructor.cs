@@ -112,6 +112,8 @@ public class DefectConstructor : MonoBehaviour
 
     public void CreateDot(Defect defect) // TO DO SendMessage have to be devided
     {
+        print("Create Dot Defect ID" + defect.id);
+
         GameObject o = Instantiate(dot, defect.position, Quaternion.Euler(defect.rotation), defectDot);
         o.SetActive(true);
 
@@ -264,6 +266,19 @@ public class DefectConstructor : MonoBehaviour
         }
 
         CallBack("Success");
+    }
+
+    public void AddDefectJson(string json)
+    {
+     
+        Defect defect = JsonUtility.FromJson <Defect>(json);  
+     
+        if(defect.id == null)
+        {
+            print("defect Id is null");
+        }
+        
+        CreateDot(defect);
     }
 
     public IEnumerator MoveCamInstant(string defectId)
