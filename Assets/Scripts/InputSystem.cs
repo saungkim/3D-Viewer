@@ -70,11 +70,24 @@ public class InputSystem : MonoBehaviour
         currentPinchDistance = 0;
     }
 
+    public void TouchInit()
+    {
+        if (hold)
+        {
+            hold = false;
+            ImgsFD.SetActive(false);
+            //cursor.CursorUpdate();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        //print("CursorPosition:" + cursor.gameObject.activeSelf +":" + cursor.cursor.position);// cursor.cursor.position
+        
         if (Pinch())
         {
+            TouchInit();
             onClickStart = false;
             return;
         }
@@ -123,6 +136,7 @@ public class InputSystem : MonoBehaviour
 
     private void MouseButtonDown()
     {
+
         dragTime = 0;
 
         holdTime = 0;
@@ -153,10 +167,14 @@ public class InputSystem : MonoBehaviour
                 if (holdTime > 0.7f)
                 {
                     if (!hold)
-                        firstCursorPos = cursor.cursor.position;
+                    {
+                        firstCursorPos = cursor.cursor.position;     
+                    }
+      
 
                     hold = true;
 
+                  
                     
                 }
 

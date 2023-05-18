@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Progress;
-using UnityEditor;
 using TMPro;
 
 [CustomEditor(typeof(SceneView))]

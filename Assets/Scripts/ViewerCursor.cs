@@ -36,8 +36,11 @@ public class ViewerCursor : MonoBehaviour
 
     void Update()
     {
-        // Move this object to the position clicked by the mouse.
+        CursorUpdate();
+    }
 
+    public void CursorUpdate()
+    {
         SetScaleFov();
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -52,6 +55,8 @@ public class ViewerCursor : MonoBehaviour
 
             gauge.position = Input.mousePosition + gaugePlusPosition;
 
+
+
             //if (Input.GetMouseButtonDown(0))
             //{
             //    if (hit.transform.tag == "Defect")
@@ -59,11 +64,11 @@ public class ViewerCursor : MonoBehaviour
             //        //print("CreateDot");
             //        //defectConstructor.defect
             //        print("Defect");
-                 
+
             //        nativeMessanger.NativeSendMessage("CreateDot,"+defectConstructor.GetDefectInfo(hit.transform.GetSiblingIndex() - 1));
             //    }
             //}
-    
+
             //gauge.LookAt(hit.point + hit.normal);
         }
     }
@@ -75,12 +80,13 @@ public class ViewerCursor : MonoBehaviour
 
     public void SetInvisible()
     {
-        cursor.gameObject.SetActive(false);
+       // cursor.gameObject.SetActive(false);
+        cursor.GetChild(0).gameObject.SetActive(false);
     }
 
     public void SetVisible()
     {
-        cursor.gameObject.SetActive(true);
+        //cursor.GetChild(0).gameObject.SetActive(true);
     }
 
     public void SetGaugeVisible(bool onOff)
