@@ -69,10 +69,11 @@ public class DefectConstructor : MonoBehaviour
 
         Defect defect = new Defect();
         defect.id = o.transform.GetSiblingIndex().ToString();
-        defect.type = "defect";
+        //defect.type = "defect";
         defect.position = pos;
         defect.rotation = rot;
-
+        defect.status = "scheduled";
+      
         //if(defect.color != null || defect.color != "") // TO DO Create Error Message 
         //{
         //    Color outColor;
@@ -119,32 +120,32 @@ public class DefectConstructor : MonoBehaviour
 
         if (defect.status != null && defect.status != "")
         {
-            if(defect.status == "")
+            if(defect.status == "scheduled")
             {
-
+                o.transform.GetChild(0).GetComponent<Image>().color = Color.red;
             }
-            else if(defect.status == "")
+            else if(defect.status == "complete")
             {
-
-            }
-            else if(defect.status == "")
-            {
-
-            }
-        }
-        else if (defect.color != null && defect.color != "")
-        {
-            Color outColor;
-
-            if (ColorUtility.TryParseHtmlString(defect.color, out outColor))
-            {
-                o.transform.GetChild(0).GetComponent<Image>().color = outColor;
+                o.transform.GetChild(0).GetComponent<Image>().color = Color.green;
             }
             else
             {
-                print("ParseHtmlColorString Failed :" + defect.color);
+                
             }
         }
+        //else if (defect.color != null && defect.color != "")
+        //{
+        //    Color outColor;
+
+        //    if (ColorUtility.TryParseHtmlString(defect.color, out outColor))
+        //    {
+        //        o.transform.GetChild(0).GetComponent<Image>().color = outColor;
+        //    }
+        //    else
+        //    {
+        //        print("ParseHtmlColorString Failed :" + defect.color);
+        //    }
+        //}
 
         defectList.Add(defect);
     }
@@ -327,18 +328,11 @@ public class DefectConstructor : MonoBehaviour
 
         foreach (Defect defect in defects.defect)
         {
-            if(defect.flag == "Pick")
-            {
+           
                 playerMovement.MoveStageInstant(defect.view.position, defect.view.rotation, defect.view.fov);
                 CreateDot(defect);
-            }
-            else
-            {
-                CreateDot(defect);
-            }
+           
         }
-
-
     }
 
     public void SendMessageSelectDefect(int id)
@@ -454,17 +448,17 @@ public class DefectConstructor : MonoBehaviour
             {
                 if(defect.id == defect2.id)
                 {
-                    defects[index].color = defect2.color;
+                    //defects[index].color = defect2.color;
                    
-                    Color outColor;
+                    //Color outColor;
 
-                    if (ColorUtility.TryParseHtmlString(defects[index].color, out outColor))                    {
-                        defectDot.GetChild(index + 1).GetChild(0).GetComponent<Image>().color = outColor;
-                    }
-                    else 
-                    {
-                        print("SetDefectsColor Color Parse Failed :" + defects[index].color);
-                    }
+                    //if (ColorUtility.TryParseHtmlString(defects[index].color, out outColor))                    {
+                    //    defectDot.GetChild(index + 1).GetChild(0).GetComponent<Image>().color = outColor;
+                    //}
+                    //else 
+                    //{
+                    //    print("SetDefectsColor Color Parse Failed :" + defects[index].color);
+                    //}
                 }
                 ++index;
             }
@@ -548,12 +542,10 @@ public class DefectConstructor : MonoBehaviour
     public class Defect
     {
         public string id; //하자 ID
-        public string type; // 하자 공정 정보
-        public string color; //하자 색깔
         public string status; //하자 상태 
-        public string flag; // Pick 값 입력시 해당 하자 바라보기 
         public string name; //하자가 위치한 방 이름
         public string detailName; //하자 디테일 방 이름
+        public string code; //하자가 위치한 영역코드
         public Vector3 position; //하자 위치
         public Vector3 rotation; //하자 각도
         public View view; //카메라 관점
