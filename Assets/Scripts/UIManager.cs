@@ -193,7 +193,7 @@ public class UIManager : MonoBehaviour
 
     public void InverseMeasureFixMode()
     {
-        measureMent.InverseActivateMeasurement();
+      
         if(inputSystem.GetControlState() == InputSystem.ControlState.Measure)
         {
             inputSystem.SetControlState(InputSystem.ControlState.MeasureDot);

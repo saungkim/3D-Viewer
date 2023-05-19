@@ -27,15 +27,8 @@ public class NativeMessanger : MonoBehaviour
 
     public enum LoadState { None, Loading, Done }
     public LoadState readEnvState = LoadState.None;
-   // LoadState readDefectState = LoadState.None;
 
     public SceneManagement sceneManagement;
-    //public string testJson;
-    //public string testJson1;
-    //public string testJson2;
-    //public string testJosn3;
-    //public string testJson4;
-    //public string testJson5;
 
     public enum AndroidState {None,Fragment,Activity}
 
@@ -54,63 +47,9 @@ public class NativeMessanger : MonoBehaviour
 
 #if UNITY_EDITOR
         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/output.env");
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
-        //uiManager.SetActiveDefectCreateMode(true);
-        SetActiveDefectCreateMode("True");
-        //Adddef
-        //ViewPanoramaTag("1");
-        ViewPanorama("19");
-        //ViewDef
-        //AddDefectJson(testJson5);
-        //VIewDefectJson(testJson1);
-        //ViewDefectJson(testJson1);
-        //SetActiveDevelopmentUI("True");
-
-        //SetDefectColliderSize("30,30,30");
+        SetActiveDefectCreateMode("True");   
+        ViewPanorama("19"); 
 #endif
-
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
-        //uiManager.SetActiveDefectCreateMode(true);
-        //SetActiveDefectCreateMode("True");
-       
-        //Adddef
-        //ViewPanoramaTag("1");
-        //ViewPanorama("19");
-        //ViewDefectJson(testJson4);
-        //ReadRoomViewerFileDebug(Application.streamingAssetsPath + "/input.env");
-        //uiManager.SetActiveDefectCreateMode(true);
-
-        //SetActiveDefectCreateMode("True");
-        //ViewPanorama("19");
-
-        //uiManager.SetActiveDefectCreateMode(true);
-
-        //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input.env");
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.env");
-        //ViewPanorama("19");
-        //SetActiveDefectCreateMode("True");
-        //SetActiveDefectCreateModeRefresh("True");
-        //SetDefectCreateDefaultColor("#0BA094");
-        //NativeSendMessage("21231");
-        // SetSafeArea("True");
-        // SetSafeAreaColor("#B93F25");
-
-        //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateMode", message: "True")
-        //self.ufw?.sendMessageToGO(withName: "System", functionName: "SetActiveDefectCreateModeRefresh", message: "True")
-
-        //AddDefectsJson(testJson);
-
-        //VIewDefectJson(testJson1);
-        //ViewDefectJsonArray(testJson2);
-
-        //constructor.CreateBoundary(testJosn3);
-        //SetEndMoveAlpha("0");
-        //SetEndImageTransTime("1");
-        //SetStartMoveAlpha("1");
-        //SetStartImageTransTime("1"); 
-        //sceneManagement
-
-        //sceneManagement = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneManagement>();
     }
 
 
@@ -184,23 +123,6 @@ fileName = "jar:file://" + fileName;
         print("ReadEnvState:" + readEnvState);
     }
 
-    //public void ReadDefectsWithFilePath(string filePath)
-    //{
-    //    if (readDefectState == LoadState.Done)
-    //    {
-    //        ReadEnvCallBack("");
-    //        return;
-    //    }
-
-    //    readDefectState = LoadState.Loading;
-    //   // StartCoroutine(defectConstructor.ReadAllDefectWithFilePath(filePath, ReadDefectCallBack,false));
-    //}
-
-    /// <summary>
-    /// ///////////////////////////////
-    /// </summary>
-    /// <param name="json"></param>
-
     public void ChangeDefectsJson(string json)
     {
         print("ChangeDefectsJson Input Value : " + json);
@@ -242,22 +164,6 @@ fileName = "jar:file://" + fileName;
 
         defectConstructor.DestroyAllDefects(MessageReceiverCallBack);
     }
-
-
-
-    //public void SetActiveDefectCreateMode(string value)
-    //{
-    //    bool createMode;
-
-    //    if (bool.TryParse(value, out createMode))
-    //    {
-    //        inputSystem.SetEnableDot(createMode);
-    //    }
-    //    else
-    //    {
-    //        nativeSendErrorMessage("EnableDotCreateMode Error :" + value + " " + "Parse Failed");
-    //    }
-    //}
 
     public void SetDefectColor(string value)
     {
@@ -546,12 +452,7 @@ fileName = "jar:file://" + fileName;
 
     public void ReadDefectCallBack(string message)
     {
-        //if (message == "Succcess")
-        //{
-        //    readDefectState = LoadState.Done;
-        //    return;
-        //}
-        //readDefectState = LoadState.None;
+        
     }
 
     public void OnViewerClicked(string message)
@@ -569,7 +470,6 @@ fileName = "jar:file://" + fileName;
         }
 #elif UNITY_IOS || UNITY_TVOS
        onViewerClicked(message);
-       // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
 #endif
         print("OnViewerClicked" + message);
@@ -596,9 +496,6 @@ fileName = "jar:file://" + fileName;
         print("OnViewerLoaded" + message);
     }
     
-
-   
-
     public void nativeSendErrorMessage(string message)
     {
         print(message);
@@ -695,6 +592,4 @@ fileName = "jar:file://" + fileName;
     {
         Application.Quit();
     }
-
-    
 }

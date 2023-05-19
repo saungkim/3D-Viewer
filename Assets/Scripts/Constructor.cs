@@ -51,21 +51,15 @@ public class Constructor : MonoBehaviour
 
     public void FileOpen(string url, Action<string> callback)
     {
-        
 
-        print("FileLoadStart");
-        // StartCoroutine(FileLoad(url, callback));
-        // FileLoadReadByte
-#if UNITY_ANDROID
+#if UNITY_EDITOR
+        StartCoroutine(FileLoad(url, callback));
+#elif UNITY_IOS
+        StartCoroutine(FileLoadReadByte(url, callback));
+#elif UNITY_ANDROID
         //string url = Application.dataPath + "/Sources/";
         //StartCoroutine(FileLoadReadByte(url,callback));
         StartCoroutine(FileLoad(url, callback));
-#endif
-
-#if UNITY_EDITOR
-        StartCoroutine(FileLoadReadByte(url, callback));
-#elif UNITY_IOS
-        StartCoroutine(FileLoadReadByte(url, callback));
 #endif
 
 
@@ -156,6 +150,9 @@ public class Constructor : MonoBehaviour
     bool isLoadDone = false;
     private void envToModel(byte[] content, Action<string> callback)
     {
+
+        print("Envtomodel");
+
         int[] info = new int[4];
         int index = 16;
         float version;
@@ -298,6 +295,8 @@ public class Constructor : MonoBehaviour
 
         /////////////////////////////////////////////////////////////////////////////////////Above Same OutPutModelExporter
 
+        print("메쉬 개수:" + info[2]);
+
         for (int i = 0; i < info[2]; ++i)
         {
             GameObject o = new GameObject();
@@ -313,8 +312,10 @@ public class Constructor : MonoBehaviour
             o.AddComponent<MeshRenderer>().sharedMaterial = meshMaterial;
             o.AddComponent<MeshCollider>().sharedMesh = mesh;
             o.transform.parent = modelFrame;
-            o.transform.localRotation = Quaternion.identity;
-            o.transform.localScale = Vector3.one;
+
+            o.transform.position = meshesPositions[i];
+            o.transform.eulerAngles = meshesRotations[i];
+            o.transform.localScale = meshesScales[i];
         }
 
         for (int i = 0; i < info[1]; ++i)
@@ -330,22 +331,8 @@ public class Constructor : MonoBehaviour
 
         }
         playerMovement.Init();
-        //playerMovement.InitStage(0);
         inputSystem.enabled = true;
         isLoadDone = true;
-
-        callback("Success");
-    }
-
-    public void LateCall()
-    {
-
-    }
-
-    IEnumerator AddMeshCollider(GameObject o)
-    {
-        yield return new WaitForEndOfFrame();
-        o.AddComponent<MeshCollider>();
     }
 
     public IEnumerator InitStage(int stage , Action<string> callBack)
@@ -353,13 +340,10 @@ public class Constructor : MonoBehaviour
         yield return new WaitUntil(() => isLoadDone);
         playerMovement.InitStage(stage);
 
-
         yield return new WaitForFixedUpdate();
-        //SetMiniMap();
+
         waitForFixedUpdated = true;
 
-        callBack("LoadComplete");
-        //SetMovePointsVisible();
     }
 
     public bool GetIsLoadDone()
@@ -368,7 +352,6 @@ public class Constructor : MonoBehaviour
 
     }
 
-    //16.95838
     private float GetMeshVerticesMaxDistance()
     {
         int modelFrameChildCounnt = modelFrame.childCount;
@@ -461,7 +444,6 @@ public class Constructor : MonoBehaviour
             o.gameObject.layer = LayerMask.NameToLayer("MiniMapMesh");
         }
     }
-
     public IEnumerator SetMovePointsVisible(bool visible)
     {
         yield return new WaitUntil(() => waitForFixedUpdated);
@@ -480,8 +462,6 @@ public class Constructor : MonoBehaviour
             }
         }
     }
-
-
     public void Init()
     {
         isLoadDone = false;
@@ -612,7 +592,6 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(6.128814f, 2.413735f);
         ++i;
     }
-
     public void CreateBoundaries(string json)
     {
        
@@ -630,6 +609,4 @@ public class Constructor : MonoBehaviour
         public string name;
         public Vector2[] polygon;
     }
-
-
 }

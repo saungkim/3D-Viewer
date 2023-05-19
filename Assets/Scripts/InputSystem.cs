@@ -124,8 +124,7 @@ public class InputSystem : MonoBehaviour
     private void zoomInOutWithWheel()
     {
         float fov = Camera.main.fieldOfView;
-        fov -= Input.mouseScrollDelta.y * zoomSpeed;
-        //Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
+        fov -= Input.mouseScrollDelta.y * zoomSpeed;  
         camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
     }
 
@@ -171,11 +170,7 @@ public class InputSystem : MonoBehaviour
                         firstCursorPos = cursor.cursor.position;     
                     }
       
-
-                    hold = true;
-
-                  
-                    
+                    hold = true;             
                 }
 
                 if (controlState == ControlState.Defect || controlState == ControlState.Measure)
@@ -218,14 +213,11 @@ public class InputSystem : MonoBehaviour
             {
                 if(controlState != ControlState.MeasureDot)
                 {
-
                     if (EventSystem.current.IsPointerOverGameObject(pointerID))
                     {
                         return;
                     }
-
                     camController.UpdateRotation();
-
                 }
                 else
                 {
@@ -288,7 +280,6 @@ public class InputSystem : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 
@@ -306,7 +297,6 @@ public class InputSystem : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 

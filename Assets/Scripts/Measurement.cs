@@ -137,57 +137,6 @@ public class Measurement : MonoBehaviour
         measureRenderUI.position = pos;
     }
 
-    public void InverseActivateMeasurement()
-    {
-        print("InverseActivateMeasurement");
-
-        //if(measureMentState == MeasurementState.None)
-        //{
-        //    measureMentState = MeasurementState.Start;
-        //}
-        //else if(measureMentState == MeasurementState.Start)
-        //{
-        //    measureMentState = MeasurementState.None;
-        //}
-
-
-        //bool onOff = !measureCamera.gameObject.activeSelf;
-
-        //measureRenderUI.gameObject.SetActive(onOff);
-        //measureCamera.gameObject.SetActive(onOff);
-
-        //print("OnOffCamera" + measureCamera.gameObject.activeSelf + ":" + measureRenderUI.gameObject.activeSelf);
-
-        //if (measureMentState == MeasurementState.Connect )
-        //{
-        //    print("Inver Connect Move");
-
-        //    measureMentState = MeasurementState.ConnectMove;
-        //    return;
-        //}else if(measureMentState == MeasurementState.ConnectMove)
-        //{
-
-        //    measureMentState = MeasurementState.Connect;
-        //    return;
-        //}
-        //else if(measureMentState == MeasurementState.Start)
-        //{
-        //    InitSelect();
-        //    selectedMeasurementDot = null;
-        //    selectedMeasureUnit = null;
-        //    selectedLine = null;
-
-        //    measureMentState = MeasurementState.None;
-        //    cursor.SetNormalCursorMode();
-        //}
-        //else 
-        //{
-        //    measureMentState = MeasurementState.Start;
-        //    cursor.SetMeasureCursorMode();
-        //}
-        
-    }
-
     public void ActivateMeasurement(bool onOff)
     {
         if (onOff)
@@ -204,55 +153,12 @@ public class Measurement : MonoBehaviour
         }
     }
 
-    public void CreateMeasurementDot(Vector3 pos , Vector3 rot)
-    {
-        //GameObject o = Instantiate(measurementDot, pos, Quaternion.Euler(rot)).gameObject;
-        //o.SetActive(true);
-
-        //o.transform.parent = measurement;
-
-        //if (selectedMeasurementDot != null)
-        //{
-        //    selectedMeasurementDot.SelectDot(false);
-           
-        //}
-
-        //InitSelect();
-
-        //selectedMeasurementDot = o.GetComponent<MeasurementDot>();
-        //selectedMeasurementDot.SelectDot(true);
-        
-        ////print(selectedMeasurementDot.transform.name);
-        //if (measureMentState == MeasurementState.Start)
-        //{
-        //    measureUnit = new GameObject();
-        //    measureUnit.name = "MeasureUnit";
-        //    measureUnit.transform.parent = measurement;
-        //    o.transform.parent = measureUnit.transform;
-        //    measureMentState = MeasurementState.Connect;
-        //    selectedLine = Instantiate(line);
-        //    selectedLine.transform.parent = measureUnit.transform;
-        //    selectedLine.gameObject.SetActive(true);
-        //    selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
-        //}else if (measureMentState == MeasurementState.Connect)
-        //{
-            
-        //    o.transform.parent = measureUnit.transform;
-        //    selectedLine.GetComponent<MeasurementLine>().SetCollider();
-        //    //selectedLine.GetComponent<MeasurementLine>().SetStartDot(selectedMeasurementDot.transform);
-        //    measureMentState = MeasurementState.Start;
-        //    selectedLine = null;
-        //}                                                                                                                      
-    }
-
-
     public void SelectDot(Transform dotObj)
     {
         Select(dotObj.parent.parent.gameObject, false);
         dotObj.parent.GetComponent<MeasurementDot>().Select(true);
         preMeasureUnit = dotObj.parent.parent.GetComponent<MeasurementUnit>();
-        selectedDotIndex = preMeasureUnit.FindDotIndex(dotObj.parent.gameObject);
-        //selectedDotIndex = dotObj
+        selectedDotIndex = preMeasureUnit.FindDotIndex(dotObj.parent.gameObject);  
         print("SelectedDOtIndex :" + selectedDotIndex);
     }
     
@@ -296,41 +202,13 @@ public class Measurement : MonoBehaviour
         {
             group.GetChild(i).GetComponent<MeasurementObject>().Select(onOff);
         }
-
     }
-
-
-    private void InitSelect()
-    {
-
-        //print("InitSelect");
-        //if(selectedMeasurementDot != null)
-        //{
-        //    print("SelectedMeasurementDot null!");
-        //    selectedMeasurementDot.Select(false);
-        //}
-
-        //if(preMeasureUnit != null)
-        //{
-        //    int gropuChildCount = preMeasureUnit.transform.childCount;
-
-        //    for(int i = 0; i < gropuChildCount; ++i)
-        //    {
-        //        preMeasureUnit.transform.GetChild(i).GetComponent<MeasurementObject>().Select(false);
-        //    }
-        //}
-
-  
-    }
-
-    //Drag Fix Dot
 
     public void StartDrag()
     {
         if (measureMentState != MeasurementState.None)
             return;
             
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -408,7 +286,6 @@ public class Measurement : MonoBehaviour
                 preMeasureUnit = Instantiate(measureUnit).GetComponent<MeasurementUnit>();
                 preMeasureUnit.transform.SetParent(measurementUnitGroup);
                 preMeasureUnit.AddDot(cursor.cursor.position, cursor.cursor.eulerAngles );
-                //preMeasureUnit.Select(true);
             }
 
             removeUI.SetActive(true);
@@ -439,19 +316,8 @@ public class Measurement : MonoBehaviour
 
             inputSystem.SetControlState(InputSystem.ControlState.Measure);
 
-            measureMentState = MeasurementState.None;
-
-           
+            measureMentState = MeasurementState.None;     
         }
-
-        //if (ondrag)
-        //{
-        //    measureMentState = MeasurementState.Start;
-        //    selectedLine = null;
-
-        //}
-
-        //ondrag = false;
     }
 
   
@@ -553,19 +419,4 @@ public class Measurement : MonoBehaviour
             preMeasureUnit = null;
         }
     }
-
-    //public bool CheckMeasurementDotCollider()
-    //{
-    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //    if (Physics.Raycast(ray, out RaycastHit hit))
-    //    {
-    //        if (hit.transform.tag == "MeasurementDot")
-    //        {        
-    //        }
-    //        else if (hit.transform.tag == "Measurement")
-    //        {
-    //        }
-    //    }
-    //}
-
 }
