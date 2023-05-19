@@ -475,7 +475,7 @@ fileName = "jar:file://" + fileName;
         print("OnViewerClicked" + message);
     }
 
-    public void OnViewerLoaded(string message)
+    public void OnViewerLoaded(string message) 
     {
 #if UNITY_ANDROID
         try

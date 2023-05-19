@@ -339,11 +339,13 @@ public class Constructor : MonoBehaviour
     {
         yield return new WaitUntil(() => isLoadDone);
         playerMovement.InitStage(stage);
-
+        
         yield return new WaitForFixedUpdate();
 
         waitForFixedUpdated = true;
 
+        //callBack
+        callBack("Success");
     }
 
     public bool GetIsLoadDone()
