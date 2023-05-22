@@ -50,7 +50,7 @@ public class NativeMessanger : MonoBehaviour
         //ReadRoomViewerFile(Application.streamingAssetsPath + "output123.env");
         SetActiveDefectCreateMode("True");   
         ViewPanorama("19");
-
+        //constructor.SetInverse();
         //ViewPano
 #endif
 
@@ -599,5 +599,10 @@ fileName = "jar:file://" + fileName;
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void InverseModelFrame()
+    {
+        constructor.SetInverse();
     }
 }
