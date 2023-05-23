@@ -27,20 +27,16 @@ public class MeasurementLine : MeasurementObject
     // Start is called before the first frame update
     void Start()
     {
-        //Select(transform.parent.GetComponent<MeasurementUnit>().GetSelect());
 
-        //   lineRenderer = GetComponent<LineRenderer>();
     }
     
-    // Update is called once per frame
     void Update()
     {
         if (lineRenderer == null)
             return;
 
         if (dottedLineOnOff != dottedLine.gameObject.activeSelf || dottedLineOnOff != !lineRenderer.gameObject.activeSelf)
-        {
-            print("If Go : " + dottedLineOnOff);
+        {     
             if (dottedLineOnOff)
             {
                 dottedLine.gameObject.SetActive(true);
@@ -48,7 +44,6 @@ public class MeasurementLine : MeasurementObject
             }
             else
             {
-                print("LineRendereTrue");
                 dottedLine.gameObject.SetActive(false);
                 lineRenderer.gameObject.SetActive(true);
             }
@@ -100,7 +95,6 @@ public class MeasurementLine : MeasurementObject
 
     public override void SetCollider()
     {
-        //Collider
         boxCollider.size = new Vector3(0.03f, 0.03f, 0.9f * Vector3.Distance(lineRenderer.GetPosition(0), lineRenderer.GetPosition(1)));
         boxCollider.transform.position = (lineRenderer.GetPosition(0) + lineRenderer.GetPosition(1)) / 2;
         boxCollider.transform.LookAt(lineRenderer.GetPosition(1));

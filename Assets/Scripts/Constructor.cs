@@ -41,6 +41,8 @@ public class Constructor : MonoBehaviour
 
     private bool waitForFixedUpdated = false;
 
+    private int inverse = 1;
+
     void Start()
     {
 #if UNITY_EDITOR
@@ -51,21 +53,15 @@ public class Constructor : MonoBehaviour
 
     public void FileOpen(string url, Action<string> callback)
     {
-        
 
-        print("FileLoadStart");
-        // StartCoroutine(FileLoad(url, callback));
-        // FileLoadReadByte
-#if UNITY_ANDROID
+#if UNITY_EDITOR
+        StartCoroutine(FileLoad(url, callback));
+#elif UNITY_IOS
+        StartCoroutine(FileLoadReadByte(url, callback));
+#elif UNITY_ANDROID
         //string url = Application.dataPath + "/Sources/";
         //StartCoroutine(FileLoadReadByte(url,callback));
         StartCoroutine(FileLoad(url, callback));
-#endif
-
-#if UNITY_EDITOR
-        StartCoroutine(FileLoadReadByte(url, callback));
-#elif UNITY_IOS
-        StartCoroutine(FileLoadReadByte(url, callback));
 #endif
 
 
@@ -156,6 +152,9 @@ public class Constructor : MonoBehaviour
     bool isLoadDone = false;
     private void envToModel(byte[] content, Action<string> callback)
     {
+
+        print("Envtomodel");
+
         int[] info = new int[4];
         int index = 16;
         float version;
@@ -298,6 +297,8 @@ public class Constructor : MonoBehaviour
 
         /////////////////////////////////////////////////////////////////////////////////////Above Same OutPutModelExporter
 
+        print("메쉬 개수:" + info[2]);
+
         for (int i = 0; i < info[2]; ++i)
         {
             GameObject o = new GameObject();
@@ -313,8 +314,10 @@ public class Constructor : MonoBehaviour
             o.AddComponent<MeshRenderer>().sharedMaterial = meshMaterial;
             o.AddComponent<MeshCollider>().sharedMesh = mesh;
             o.transform.parent = modelFrame;
-            o.transform.localRotation = Quaternion.identity;
-            o.transform.localScale = Vector3.one;
+
+            o.transform.position = meshesPositions[i];
+            o.transform.eulerAngles = meshesRotations[i];
+            o.transform.localScale = meshesScales[i];
         }
 
         for (int i = 0; i < info[1]; ++i)
@@ -329,37 +332,25 @@ public class Constructor : MonoBehaviour
 
 
         }
+
+        modelFrame.localScale = new Vector3(-1, -1, -1 * inverse);
+
         playerMovement.Init();
-        //playerMovement.InitStage(0);
         inputSystem.enabled = true;
         isLoadDone = true;
-
-        callback("Success");
-    }
-
-    public void LateCall()
-    {
-
-    }
-
-    IEnumerator AddMeshCollider(GameObject o)
-    {
-        yield return new WaitForEndOfFrame();
-        o.AddComponent<MeshCollider>();
     }
 
     public IEnumerator InitStage(int stage , Action<string> callBack)
     {
         yield return new WaitUntil(() => isLoadDone);
         playerMovement.InitStage(stage);
-
-
+        
         yield return new WaitForFixedUpdate();
-        //SetMiniMap();
+
         waitForFixedUpdated = true;
 
-        callBack("LoadComplete");
-        //SetMovePointsVisible();
+        //callBack
+        callBack("Success");
     }
 
     public bool GetIsLoadDone()
@@ -368,7 +359,6 @@ public class Constructor : MonoBehaviour
 
     }
 
-    //16.95838
     private float GetMeshVerticesMaxDistance()
     {
         int modelFrameChildCounnt = modelFrame.childCount;
@@ -461,7 +451,6 @@ public class Constructor : MonoBehaviour
             o.gameObject.layer = LayerMask.NameToLayer("MiniMapMesh");
         }
     }
-
     public IEnumerator SetMovePointsVisible(bool visible)
     {
         yield return new WaitUntil(() => waitForFixedUpdated);
@@ -480,8 +469,6 @@ public class Constructor : MonoBehaviour
             }
         }
     }
-
-
     public void Init()
     {
         isLoadDone = false;
@@ -515,6 +502,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(7.002285f, 4.671975f);
         boundaries[i].polygon[3] = new Vector2(4.509701f, 4.608055f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "침실1-화장대";
         boundaries[i].polygon = new Vector2[4];
@@ -523,6 +511,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(8.727916f, 4.331108f);
         boundaries[i].polygon[3] = new Vector2(7.002285f, 4.671975f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "침실1";
         boundaries[i].polygon = new Vector2[4];
@@ -531,6 +520,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(12.58395f, 2.328519f);
         boundaries[i].polygon[3] = new Vector2(8.727903f, 2.328519f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "발코니";
         boundaries[i].polygon = new Vector2[4];
@@ -539,6 +529,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(14.56524f, 2.307214f);
         boundaries[i].polygon[3] = new Vector2(12.58395f, 2.328519f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "거실";
         boundaries[i].polygon = new Vector2[4];
@@ -547,6 +538,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(14.3735f, -2.592732f);
         boundaries[i].polygon[3] = new Vector2(9.771808f, -2.614036f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "거실";
         boundaries[i].polygon = new Vector2[4];
@@ -555,6 +547,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(9.782036f, -1.643538f);
         boundaries[i].polygon[3] = new Vector2(6.725424f, -1.274137f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "주방/식당";
         boundaries[i].polygon = new Vector2[4];
@@ -563,6 +556,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(9.782012f, -3.601231f);
         boundaries[i].polygon[3] = new Vector2(6.743129f, -3.649982f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "발코니";
         boundaries[i].polygon = new Vector2[4];
@@ -571,6 +565,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(6.743129f, -3.649982f);
         boundaries[i].polygon[3] = new Vector2(5.443068f, -3.763739f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "침실";
         boundaries[i].polygon = new Vector2[4];
@@ -579,6 +574,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(5.428894f, -2.970673f);
         boundaries[i].polygon[3] = new Vector2(2.27577f, -2.897345f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "침실";
         boundaries[i].polygon = new Vector2[4];
@@ -587,6 +583,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(2.251328f, -1.601876f);
         boundaries[i].polygon[3] = new Vector2(-1.102343f, -1.668993f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "거실";
         boundaries[i].polygon = new Vector2[4];
@@ -595,6 +592,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(6.650831f, 0.9304333f);
         boundaries[i].polygon[3] = new Vector2(2.273213f, 0.9304333f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "현관";
         boundaries[i].polygon = new Vector2[4];
@@ -603,6 +601,7 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[2] = new Vector2(4.577899f, 2.320971f);
         boundaries[i].polygon[3] = new Vector2(2.208837f, 2.449724f);
         ++i;
+
         boundaries[i] = new Boundary();
         boundaries[i].name = "욕실";
         boundaries[i].polygon = new Vector2[4];
@@ -612,7 +611,6 @@ public class Constructor : MonoBehaviour
         boundaries[i].polygon[3] = new Vector2(6.128814f, 2.413735f);
         ++i;
     }
-
     public void CreateBoundaries(string json)
     {
        
@@ -631,5 +629,8 @@ public class Constructor : MonoBehaviour
         public Vector2[] polygon;
     }
 
-
+    public void SetInverse()
+    {
+        inverse = -1;
+    }
 }

@@ -124,8 +124,7 @@ public class InputSystem : MonoBehaviour
     private void zoomInOutWithWheel()
     {
         float fov = Camera.main.fieldOfView;
-        fov -= Input.mouseScrollDelta.y * zoomSpeed;
-        //Camera.main.fieldOfView = Mathf.Clamp(fov, 20, 70);
+        fov -= Input.mouseScrollDelta.y * zoomSpeed;  
         camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
     }
 
@@ -149,6 +148,8 @@ public class InputSystem : MonoBehaviour
 
         camController.StartDrag();
         measurement.StartDrag();
+
+        CheckDefectColliderInit();
     }
 
     private void MouseButtonHold()
@@ -171,11 +172,7 @@ public class InputSystem : MonoBehaviour
                         firstCursorPos = cursor.cursor.position;     
                     }
       
-
-                    hold = true;
-
-                  
-                    
+                    hold = true;             
                 }
 
                 if (controlState == ControlState.Defect || controlState == ControlState.Measure)
@@ -218,14 +215,11 @@ public class InputSystem : MonoBehaviour
             {
                 if(controlState != ControlState.MeasureDot)
                 {
-
                     if (EventSystem.current.IsPointerOverGameObject(pointerID))
                     {
                         return;
                     }
-
                     camController.UpdateRotation();
-
                 }
                 else
                 {
@@ -245,7 +239,7 @@ public class InputSystem : MonoBehaviour
         if (!onClickStart)
             return;
 
-        if (holdTime < 0.5f)
+        if (holdTime < 0.2f)
         {
             if (controlState == ControlState.Defect && CheckDefectCollider())
                 return;
@@ -276,6 +270,7 @@ public class InputSystem : MonoBehaviour
         onClickStart = false;
     }
 
+    Transform hitDefect;
     private bool CheckDefectCollider()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -284,11 +279,30 @@ public class InputSystem : MonoBehaviour
         {
             if(hit.transform.tag == "Defect")
             {           
+                if(hit.transform == hitDefect)
                 defectConstructor.SendMessageSelectDefect(hit.transform.GetSiblingIndex());
+
                 return true;
             }
         }
+        return false;
+    }
 
+    private bool CheckDefectColliderInit()
+    {
+        hitDefect = null; 
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.transform.tag == "Defect")
+            {
+                hitDefect = hit.transform;
+
+                return true;
+            }
+        }
         return false;
     }
 
@@ -306,7 +320,6 @@ public class InputSystem : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 

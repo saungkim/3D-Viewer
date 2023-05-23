@@ -19,10 +19,7 @@ public class ViewerCursor : MonoBehaviour
 
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private Transform measureRenderUI;
-   // [SerializeField] private DefectConstructor defectConstructor;
-   // [SerializeField] private NativeMessanger nativeMessanger;
-
-    //[SerializeField] private 
+ 
     LayerMask layermask;
     void Start()
     {
@@ -31,7 +28,6 @@ public class ViewerCursor : MonoBehaviour
        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
 
        layermask = ~( 1 << LayerMask.NameToLayer("Measurement"));
-
     }
 
     void Update()
@@ -47,29 +43,11 @@ public class ViewerCursor : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100, layermask))
-        {
-            //Debug.Log("Hit:" + hit.transform.name);
-            //transform.position = ray.GetPoint(100.0f);
+        {       
             cursor.position = hit.point + hit.normal * 0.001f;
             cursor.LookAt(hit.point + hit.normal);
 
             gauge.position = Input.mousePosition + gaugePlusPosition;
-
-
-
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    if (hit.transform.tag == "Defect")
-            //    {
-            //        //print("CreateDot");
-            //        //defectConstructor.defect
-            //        print("Defect");
-
-            //        nativeMessanger.NativeSendMessage("CreateDot,"+defectConstructor.GetDefectInfo(hit.transform.GetSiblingIndex() - 1));
-            //    }
-            //}
-
-            //gauge.LookAt(hit.point + hit.normal);
         }
     }
 
@@ -79,22 +57,19 @@ public class ViewerCursor : MonoBehaviour
     }
 
     public void SetInvisible()
-    {
-       // cursor.gameObject.SetActive(false);
+    { 
         cursor.GetChild(0).gameObject.SetActive(false);
     }
 
     public void SetVisible()
     {
-        //cursor.GetChild(0).gameObject.SetActive(true);
+     
     }
 
     public void SetGaugeVisible(bool onOff)
     {
         gauge.gameObject.SetActive(onOff);
     }
-
-
     public void SetScaleFov()
     {
         cursor.transform.localScale = originScale   * Camera.main.fieldOfView / 60  ;
