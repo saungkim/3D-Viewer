@@ -27,7 +27,7 @@ public class ViewerCursor : MonoBehaviour
        UnityEngine.Cursor.visible = false;
        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
 
-       layermask = ~( 1 << LayerMask.NameToLayer("Measurement"));
+       layermask = ~( 1 << LayerMask.NameToLayer("Measurement") | 1 << LayerMask.NameToLayer("UI"));
     }
 
     void Update()

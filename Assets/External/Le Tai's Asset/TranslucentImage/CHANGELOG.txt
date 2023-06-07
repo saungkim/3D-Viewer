@@ -1,5 +1,9 @@
 Changelog:
 
+v3.16.0:
+ - Fix incorrect rendering when using non default viewport in URP.
+   As a result of this change, Blur Region is now relative to the actual viewport, instead of the one show in the Camera inspector. You may need to re-tune your Blur Region.
+
 v3.15.0:
  - Fix color space mixed up. Your UIs appearance may change after this update.
 

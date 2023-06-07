@@ -51,6 +51,8 @@ public partial class TranslucentImageSource : MonoBehaviour
 
     Rect lastBlurRegion = new Rect(0, 0, 1, 1);
 
+    Vector2Int lastCamPixelSize = Vector2Int.zero;
+
     //Disable non-sense warning from Unity
 #pragma warning disable 0108
     Camera camera;
@@ -101,6 +103,8 @@ public partial class TranslucentImageSource : MonoBehaviour
         get { return camera ? camera : camera = GetComponent<Camera>(); }
     }
 
+    public Rect CamRectOverride { get; set; } = Rect.zero;
+
     /// <summary>
     /// The rendered image will be shrinked by a factor of 2^{{this}} before bluring to reduce processing time
     /// </summary>
@@ -136,14 +140,20 @@ public partial class TranslucentImageSource : MonoBehaviour
     {
         get
         {
-            var camRect = Cam.rect;
+            var camRect = CamRectOverride.width == 0 ? Cam.rect : CamRectOverride;
+            camRect.min = Vector2.Max(Vector2.zero, camRect.min);
+            camRect.max = Vector2.Min(Vector2.one, camRect.max);
+
             return new Rect(camRect.position + BlurRegion.position * camRect.size,
                             camRect.size * BlurRegion.size);
         }
 
         set
         {
-            var camRect = Cam.rect;
+            var camRect = CamRectOverride.width == 0 ? Cam.rect : CamRectOverride;
+            camRect.min = Vector2.Max(Vector2.zero, camRect.min);
+            camRect.max = Vector2.Min(Vector2.one, camRect.max);
+
             blurRegion.position = (value.position - camRect.position) / camRect.size;
             blurRegion.size     = value.size / camRect.size;
         }
@@ -194,7 +204,7 @@ public partial class TranslucentImageSource : MonoBehaviour
         previewMaterial = new Material(Shader.Find("Hidden/FillCrop"));
 
         InitializeBlurAlgorithm();
-        CreateNewBlurredScreen();
+        CreateNewBlurredScreen(Vector2Int.RoundToInt(Cam.pixelRect.size));
 
         lastDownsample = Downsample;
     }
@@ -220,7 +230,7 @@ public partial class TranslucentImageSource : MonoBehaviour
         blurAlgorithm.Init(BlurConfig);
     }
 
-    protected virtual void CreateNewBlurredScreen()
+    protected virtual void CreateNewBlurredScreen(Vector2Int camPixelSize)
     {
         if (BlurredScreen)
             BlurredScreen.Release();
@@ -228,16 +238,16 @@ public partial class TranslucentImageSource : MonoBehaviour
 #if ENABLE_VR
         if (XRSettings.enabled)
         {
-            BlurredScreen = new RenderTexture(XRSettings.eyeTextureDesc);
-            BlurredScreen.width = Mathf.RoundToInt(BlurredScreen.width * BlurRegion.width) >> Downsample;
+            BlurredScreen        = new RenderTexture(XRSettings.eyeTextureDesc);
+            BlurredScreen.width  = Mathf.RoundToInt(BlurredScreen.width * BlurRegion.width) >> Downsample;
             BlurredScreen.height = Mathf.RoundToInt(BlurredScreen.height * BlurRegion.height) >> Downsample;
-            BlurredScreen.depth = 0;
+            BlurredScreen.depth  = 0;
         }
         else
 #endif
         {
-            BlurredScreen = new RenderTexture(Mathf.RoundToInt(Cam.pixelWidth * BlurRegion.width) >> Downsample,
-                                              Mathf.RoundToInt(Cam.pixelHeight * BlurRegion.height) >> Downsample, 0);
+            BlurredScreen = new RenderTexture(Mathf.RoundToInt(camPixelSize.x * BlurRegion.width) >> Downsample,
+                                              Mathf.RoundToInt(camPixelSize.y * BlurRegion.height) >> Downsample, 0);
         }
 
         BlurredScreen.antiAliasing = 1;
@@ -251,21 +261,23 @@ public partial class TranslucentImageSource : MonoBehaviour
 
     TextureDimension lastEyeTexDim;
 
-    public void OnBeforeBlur()
+    public void OnBeforeBlur(Vector2Int camPixelSize)
     {
         if (
             BlurredScreen == null
          || !BlurredScreen.IsCreated()
          || Downsample != lastDownsample
          || !BlurRegion.Approximately(lastBlurRegion)
+         || camPixelSize != lastCamPixelSize
 #if ENABLE_VR
          || XRSettings.deviceEyeTextureDimension != lastEyeTexDim
 #endif
         )
         {
-            CreateNewBlurredScreen();
-            lastDownsample = Downsample;
-            lastBlurRegion = BlurRegion;
+            CreateNewBlurredScreen(camPixelSize);
+            lastDownsample   = Downsample;
+            lastBlurRegion   = BlurRegion;
+            lastCamPixelSize = camPixelSize;
 #if ENABLE_VR
             lastEyeTexDim = XRSettings.deviceEyeTextureDimension;
 #endif
@@ -279,7 +291,7 @@ public partial class TranslucentImageSource : MonoBehaviour
 
         if (shouldUpdateBlur())
         {
-            OnBeforeBlur();
+            OnBeforeBlur(Vector2Int.RoundToInt(Cam.pixelRect.size));
             blurAlgorithm.Blur(source, BlurRegion, ref blurredScreen);
         }
 
