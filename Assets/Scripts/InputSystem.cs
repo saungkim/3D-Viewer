@@ -219,6 +219,7 @@ public class InputSystem : MonoBehaviour
                     {
                         return;
                     }
+
                     camController.UpdateRotation();
                 }
                 else

@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace LeTai.Asset.TranslucentImage
@@ -41,10 +43,13 @@ public partial class TranslucentImage : Image, IMeshModifier
 
     Material materialForRenderingCached;
     bool     shouldRun;
+    bool     isBirp;
 
     protected override void Start()
     {
         base.Start();
+
+        isBirp = !GraphicsSettings.currentRenderPipeline;
 
         oldVibrancy   = vibrancy;
         oldBrightness = brightness;
@@ -74,7 +79,7 @@ public partial class TranslucentImage : Image, IMeshModifier
     bool IsInPrefabMode()
     {
 #if UNITY_EDITOR
-        var stage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
+        var stage = UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
         if (stage != null)
         {
             return true;
@@ -128,7 +133,15 @@ public partial class TranslucentImage : Image, IMeshModifier
         }
 
         materialForRenderingCached.SetTexture(_blurTexPropId, source.BlurredScreen);
-        materialForRenderingCached.SetVector(_cropRegionPropId, source.BlurRegionNormalizedScreenSpace.ToMinMaxVector());
+
+        if (isBirp || canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+        {
+            materialForRenderingCached.SetVector(_cropRegionPropId, source.BlurRegionNormalizedScreenSpace.ToMinMaxVector());
+        }
+        else
+        {
+            materialForRenderingCached.SetVector(_cropRegionPropId, source.BlurRegion.ToMinMaxVector());
+        }
     }
 
     void Update()

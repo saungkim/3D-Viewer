@@ -251,7 +251,7 @@ public class Constructor : MonoBehaviour
                 Array.Copy(content, index, bytes, 0, 4);
                 index += 4;
 
-                meshesTransform[i * 9 + j] = BitConverter.ToSingle(bytes);
+                meshesTransform[i * 9 + j] = BitConverter.ToSingle(bytes,0);
             }
         }
 

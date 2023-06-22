@@ -46,17 +46,21 @@ public class NativeMessanger : MonoBehaviour
         SetActiveDefectCreateModeRefresh("True");
 
 #if UNITY_EDITOR
-        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/temp/input23.pssw");
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "output123.env");
         SetActiveDefectCreateMode("True");   
         ViewPanorama("19");
+
+        //SetTextureCompressFormat("True");
         //constructor.SetInverse();
         //ViewPano
 #endif
 
-       // ReadRoomViewerFile(Application.streamingAssetsPath + "/input12.pssw");
-       // SetActiveDefectCreateMode("True");
-       // ViewPanorama("19");
+        // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+        //  SetActiveDefectCreateMode("True");
+        //  ViewPanorama("19");
+        // SetActiveDefectCreateMode("True");
+        // ViewPanorama("19");
 
     }
 
@@ -396,8 +400,8 @@ fileName = "jar:file://" + fileName;
     public void SetImageTransAlpha(string value)
     {
         print("SetImageTransAlpha Input Value:" + value);
-        string[] values = value.Split(",");
-
+        string[] values = value.Split(',');
+   
 
         camController.SetmoveStartAlpha(float.Parse(values[0]));
         camController.SetafterMoveEndAlpha(float.Parse(values[1]));
@@ -407,7 +411,7 @@ fileName = "jar:file://" + fileName;
     public void SetImageTransAlphaTime(string value)
     {
         print("SetImageTransAlphaTime Input Value:" + value);
-        string[] values = value.Split(",");
+        string[] values = value.Split(',');
 
         camController.SetstartImageTransTime(float.Parse(values[0]));
         camController.SetendImageTransTime(float.Parse(values[1]));
@@ -605,4 +609,11 @@ fileName = "jar:file://" + fileName;
     {
         constructor.SetInverse();
     }
+
+    public void SetTextureCompressFormat(string value)
+    {
+        LoadTextureFromStreamingAsset.textureCompress = true;
+       // if(value == "0")
+    }
+
 }

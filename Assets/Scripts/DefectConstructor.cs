@@ -6,7 +6,6 @@ using System.IO;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using static DefectConstructor;
-using Newtonsoft.Json;
 using System.Reflection;
 
 public class DefectConstructor : MonoBehaviour
