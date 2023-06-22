@@ -50,13 +50,15 @@ public class NativeMessanger : MonoBehaviour
         //ReadRoomViewerFile(Application.streamingAssetsPath + "output123.env");
         SetActiveDefectCreateMode("True");   
         ViewPanorama("19");
+
+        //SetTextureCompressFormat("True");
         //constructor.SetInverse();
         //ViewPano
 #endif
 
-      // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
-      //  SetActiveDefectCreateMode("True");
-      //  ViewPanorama("19");
+        // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+        //  SetActiveDefectCreateMode("True");
+        //  ViewPanorama("19");
         // SetActiveDefectCreateMode("True");
         // ViewPanorama("19");
 
@@ -607,4 +609,11 @@ fileName = "jar:file://" + fileName;
     {
         constructor.SetInverse();
     }
+
+    public void SetTextureCompressFormat(string value)
+    {
+        LoadTextureFromStreamingAsset.textureCompress = true;
+       // if(value == "0")
+    }
+
 }

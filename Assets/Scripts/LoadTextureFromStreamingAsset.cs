@@ -12,9 +12,14 @@ public class LoadTextureFromStreamingAsset : MonoBehaviour
     int parentIndex;
     int childCubeCount;
 
+    string textureCompressFormat;
+    public static bool textureCompress = false;
+
     // Start is called before the first frame update
     void Awake()
     {
+       
+
         parentIndex = transform.GetSiblingIndex();
 
         Transform childCube = transform.GetChild(0);
@@ -81,15 +86,32 @@ public class LoadTextureFromStreamingAsset : MonoBehaviour
 
     public void SetTextureFromMemory(int parentIndex, int childIndex)
     {
+      
+
         byte[] imgData = constructor.GetTexture(parentIndex * 6 + childIndex);
         Texture2D tex = new Texture2D(2, 2);
-        
+
+     
+ 
+
         textures[childIndex] = tex;
    
         tex.wrapMode = TextureWrapMode.Clamp;
+      
         tex.LoadImage(imgData);
 
+        if (textureCompress)
+        {
+           tex.Compress(true);
+        }
+
         materials[childIndex].SetTexture("_MainTex", tex);
+    }
+    
+    public void SetTextureCompressFormat(string input)
+    {
+        textureCompressFormat = input;
+        textureCompress = true;
     }
 
 }
