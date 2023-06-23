@@ -15,6 +15,9 @@ public class NativeMessanger : MonoBehaviour
     public static extern void onViewerLoaded(string message);
      [DllImport("__Internal")]
     public static extern void onViewerClicked(string message);
+    [DllImport("__Internal")]
+    public static extern void onViewerMoved(string message);
+
 #endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
@@ -485,6 +488,26 @@ fileName = "jar:file://" + fileName;
 #elif UNITY_EDITOR
 #endif
         print("OnViewerClicked" + message);
+    }
+
+    public void OnViewerMoved(string message)
+    {
+#if UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call("OnViewerMoved", message);
+        }
+        catch (Exception e)
+        {
+            print(e);
+        }
+#elif UNITY_IOS || UNITY_TVOS
+        onViewerClicked(message);
+#elif UNITY_EDITOR
+#endif
+        print("OnViewerMoved" + message);
     }
 
     public void OnViewerLoaded(string message) 

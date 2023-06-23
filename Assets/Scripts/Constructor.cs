@@ -13,6 +13,7 @@ using static UnityEngine.UI.Image;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using static DefectConstructor;
+using static UnityEditor.PlayerSettings;
 
 public class Constructor : MonoBehaviour
 {
@@ -615,6 +616,33 @@ public class Constructor : MonoBehaviour
     {
        
     }
+
+    public string GetBoundaryName(Vector2 v2)
+    {
+        foreach (Constructor.Boundary boundary in boundaries)
+        {
+            if (IsPointInTrapezoid(new Vector2(v2.x, v2.y), boundary.polygon[0], boundary.polygon[1], boundary.polygon[2], boundary.polygon[3]))
+            {
+               return boundary.name;
+            }
+        }
+
+        return null;
+    }
+
+    bool IsPointInTrapezoid(Vector2 point, Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+    {
+        float triangleArea(Vector2 p1, Vector2 p2, Vector2 p3)
+        {
+            return Mathf.Abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0f);
+        }
+
+        float trapezoidArea = triangleArea(a, b, c) + triangleArea(c, d, a);
+        float pointArea = triangleArea(point, a, b) + triangleArea(point, b, c) + triangleArea(point, c, d) + triangleArea(point, d, a);
+
+        return Mathf.Approximately(trapezoidArea, pointArea);
+    }
+
 
     [Serializable]
     public class BoundaryArray

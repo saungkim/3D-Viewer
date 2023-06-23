@@ -96,16 +96,19 @@ public class DefectConstructor : MonoBehaviour
 
         if (sendMessage) // For Creating{
         {
-            foreach(Constructor.Boundary boundary in constructor.boundaries)
-            {
-                if (IsPointInTrapezoid(new Vector2(pos.x,pos.z),boundary.polygon[0], boundary.polygon[1], boundary.polygon[2], boundary.polygon[3]))
-                {
-                    defect.name = boundary.name;
-                }
+            //foreach(Constructor.Boundary boundary in constructor.boundaries)
+            //{
+            //    if (constructor.IsPointInTrapezoid(new Vector2(pos.x,pos.z),boundary.polygon[0], boundary.polygon[1], boundary.polygon[2], boundary.polygon[3]))
+            //    {
+            //        defect.name = boundary.name;
+            //    }
                
                         
-                        // boundary.polygon
-            }
+            //            // boundary.polygon
+            //}
+
+
+            defect.name = constructor.GetBoundaryName(new Vector2(pos.x,pos.z));
             //nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
         }       
     }
