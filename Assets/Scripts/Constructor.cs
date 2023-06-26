@@ -14,6 +14,10 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using static DefectConstructor;
 
+using System.Text;
+using static Constructor;
+
+
 public class Constructor : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
@@ -45,6 +49,8 @@ public class Constructor : MonoBehaviour
 
     void Start()
     {
+        BoundTest();
+
 #if UNITY_EDITOR
         //string url = Application.dataPath + "/Sources/";
         //StartCoroutine(FileLoad(url));
@@ -155,9 +161,154 @@ public class Constructor : MonoBehaviour
 
         print("Envtomodel");
 
+        //int[] info = new int[4];
+        //int index = 16;
+        //float version;
+
+        //for (int i = 0; i < index; i = i + 4)
+        //{
+        //    info[i / 4] = BitConverter.ToInt32(content, i);
+        //}
+
+        //version = BitConverter.ToSingle(content, index);
+        //index += 4;
+
+        //int[] verticeLengths = new int[info[2]];
+        //int iterCount = info[2] * 4;
+
+        //for (int i = 0; i < iterCount; i = i + 4)
+        //{
+        //    verticeLengths[i / 4] = BitConverter.ToInt32(content, index + i);
+        //}
+
+        //index += iterCount;
+        //int[] indiciesLengths = new int[info[2]];
+        //iterCount = info[2] * 4;
+
+        //for (int i = 0; i < iterCount; i = i + 4)
+        //{
+        //    indiciesLengths[i / 4] = BitConverter.ToInt32(content, index + i);
+        //}
+
+        //index += iterCount;
+        //int[] textureLengths = new int[info[3]];
+        //iterCount = info[3] * 4;
+        //for (int i = 0; i < iterCount; i = i + 4)
+        //{
+        //    textureLengths[i / 4] = BitConverter.ToInt32(content, index + i);
+        //}
+
+        //index += iterCount;
+        //Vector3[] panoramaPosition = new Vector3[info[1]];
+        //Vector3[] panoramaRotation = new Vector3[info[1]];
+        //iterCount = info[1] * 12;
+        //for (int i = 0; i < iterCount; i = i + 12)
+        //{
+        //    panoramaPosition[i / 12] = new Vector3(BitConverter.ToSingle(content, index + i), BitConverter.ToSingle(content, index + i + 4), BitConverter.ToSingle(content, index + i + 8));
+        //}
+
+        //index += iterCount;
+        //iterCount = info[1] * 12;
+        //for (int i = 0; i < iterCount; i = i + 12)
+        //{
+        //    panoramaRotation[i / 12] = new Vector3(BitConverter.ToSingle(content, index + i), BitConverter.ToSingle(content, index + i + 4), BitConverter.ToSingle(content, index + i + 8));
+        //}
+
+        //textures = new List<byte[]>();
+        //List<byte[]> indiciesList = new List<byte[]>();
+        //List<byte[]> verticiesList = new List<byte[]>();
+
+        //float[] meshesTransform = new float[info[2] * 9];
+
+        //index += iterCount;
+
+        //foreach (int length in textureLengths)
+        //{
+        //    byte[] bytes = new byte[length];
+        //    Array.Copy(content, index, bytes, 0, length);
+        //    index += length;
+
+        //    textures.Add(bytes);
+        //}
+
+        //foreach (int length in verticeLengths)
+        //{
+        //    byte[] bytes = new byte[length];
+        //    Array.Copy(content, index, bytes, 0, length);
+        //    index += length;
+
+        //    verticiesList.Add(bytes);
+        //}
+
+        //foreach (int length in indiciesLengths)
+        //{
+        //    byte[] bytes = new byte[length];
+        //    Array.Copy(content, index, bytes, 0, length);
+        //    index += length;
+
+        //    indiciesList.Add(bytes);
+        //}
+
+        //for (int i = 0; i < info[2]; ++i)
+        //{
+        //    for (int j = 0; j < 9; ++j)
+        //    {
+        //        byte[] bytes = new byte[4];
+        //        Array.Copy(content, index, bytes, 0, 4);
+        //        index += 4;
+
+        //        meshesTransform[i * 9 + j] = BitConverter.ToSingle(bytes,0);
+        //    }
+        //}
+
+        //List<Vector3[]> verticies = new List<Vector3[]>();
+        //List<int[]> indicies = new List<int[]>();
+
+        //Vector3[] meshesPositions = new Vector3[info[2]];
+        //Vector3[] meshesRotations = new Vector3[info[2]];
+        //Vector3[] meshesScales = new Vector3[info[2]];
+
+        //foreach (byte[] verticesBytes in verticiesList)
+        //{
+        //    int byteLength = verticesBytes.Length;
+
+        //    Vector3[] localVertices = new Vector3[byteLength / 12];
+        //    for (int i = 0; i < byteLength; i = i + 12)
+        //    {
+        //        localVertices[i / 12] = new Vector3(BitConverter.ToSingle(verticesBytes, i), BitConverter.ToSingle(verticesBytes, i + 4), BitConverter.ToSingle(verticesBytes, i + 8));
+        //    }
+        //    verticies.Add(localVertices);
+
+        //}
+
+        //foreach (byte[] indiciesBytes in indiciesList)
+        //{
+        //    int byteLength = indiciesBytes.Length;
+        //    int[] localIndicies = new int[byteLength / 4];
+        //    for (int i = 0; i < byteLength; i = i + 4)
+        //    {
+        //        localIndicies[i / 4] = BitConverter.ToInt32(indiciesBytes, i);
+        //    }
+        //    indicies.Add(localIndicies);
+        //}
+
+        //for (int i = 0; i < info[2]; ++i)
+        //{
+        //    int byteLenngth = i * 9;
+
+        //    meshesPositions[i] = new Vector3(meshesTransform[byteLenngth], meshesTransform[byteLenngth + 1], meshesTransform[byteLenngth + 2]);
+        //    meshesRotations[i] = new Vector3(meshesTransform[byteLenngth + 3], meshesTransform[byteLenngth + 4], meshesTransform[byteLenngth + 5]);
+        //    meshesScales[i] = new Vector3(meshesTransform[byteLenngth + 6], meshesTransform[byteLenngth + 7], meshesTransform[byteLenngth + 8]);
+        //}
+
+   
+
         int[] info = new int[4];
         int index = 16;
         float version;
+        int modelType;
+        int boundBytesLength;
+        int panoramaTagLength;
 
         for (int i = 0; i < index; i = i + 4)
         {
@@ -166,10 +317,21 @@ public class Constructor : MonoBehaviour
 
         version = BitConverter.ToSingle(content, index);
         index += 4;
+        print("Version" + version);
+
+        modelType = BitConverter.ToInt32(content, index);
+        index += 4;
+
+        boundBytesLength = BitConverter.ToInt32(content, index);
+        index += 4;
+        print("bounBytesLength" + boundBytesLength);
+
+        panoramaTagLength = BitConverter.ToInt32(content, index);
+        index += 4;
+        print("panoramaTagLength" + panoramaTagLength);
 
         int[] verticeLengths = new int[info[2]];
         int iterCount = info[2] * 4;
-
         for (int i = 0; i < iterCount; i = i + 4)
         {
             verticeLengths[i / 4] = BitConverter.ToInt32(content, index + i);
@@ -186,6 +348,9 @@ public class Constructor : MonoBehaviour
 
         index += iterCount;
         int[] textureLengths = new int[info[3]];
+
+        print("info[3] :" + info[3]);
+
         iterCount = info[3] * 4;
         for (int i = 0; i < iterCount; i = i + 4)
         {
@@ -213,6 +378,8 @@ public class Constructor : MonoBehaviour
         List<byte[]> verticiesList = new List<byte[]>();
 
         float[] meshesTransform = new float[info[2] * 9];
+        string panoramaTagJson = null;
+        string boundaryJson = null;
 
         index += iterCount;
 
@@ -255,6 +422,15 @@ public class Constructor : MonoBehaviour
             }
         }
 
+        byte[] boundBytes = new byte[boundBytesLength];
+        Array.Copy(content, index, boundBytes, 0, boundBytesLength);
+        index += boundBytesLength;
+
+        byte[] panoramaTagBytes = new byte[panoramaTagLength];
+        Array.Copy(content, index, panoramaTagBytes, 0, panoramaTagLength);
+        index += panoramaTagLength;
+
+
         List<Vector3[]> verticies = new List<Vector3[]>();
         List<int[]> indicies = new List<int[]>();
 
@@ -295,9 +471,20 @@ public class Constructor : MonoBehaviour
             meshesScales[i] = new Vector3(meshesTransform[byteLenngth + 6], meshesTransform[byteLenngth + 7], meshesTransform[byteLenngth + 8]);
         }
 
+        panoramaTagJson = UTF8Encoding.UTF8.GetString(panoramaTagBytes);
+        boundaryJson = UTF8Encoding.UTF8.GetString(boundBytes);
+
+
         /////////////////////////////////////////////////////////////////////////////////////Above Same OutPutModelExporter
 
+
+        print("파일 정보 길이:" + info[0]);
+        print("파노라마 개수:" + info[1]);
         print("메쉬 개수:" + info[2]);
+        print("텍스쳐 개수:" + info[3]);
+        print("버젼:" + version);
+        print("모델 타입" + modelType);
+
 
         for (int i = 0; i < info[2]; ++i)
         {
@@ -338,6 +525,9 @@ public class Constructor : MonoBehaviour
         playerMovement.Init();
         inputSystem.enabled = true;
         isLoadDone = true;
+
+        CreateBounds(boundaryJson);
+        CreatePanoramaTags(panoramaTagJson);
     }
 
     public IEnumerator InitStage(int stage , Action<string> callBack)
@@ -345,6 +535,29 @@ public class Constructor : MonoBehaviour
         yield return new WaitUntil(() => isLoadDone);
         playerMovement.InitStage(stage);
         
+        yield return new WaitForFixedUpdate();
+
+        waitForFixedUpdated = true;
+
+        //callBack
+        callBack("Success");
+    }
+
+    public IEnumerator InitStageTag(string tag ,Action<string> callBack)
+    {
+        yield return new WaitUntil(() => isLoadDone);
+       // playerMovement.InitStage(stage);
+
+        foreach(PanoramaView panoView in panormaViews.panoramaViews)
+        {
+            print(panoView.tag + ":" + tag);
+            if(panoView.tag == tag)
+            {
+                playerMovement.InitStage(panoView.position);
+                break;
+            }
+        }
+
         yield return new WaitForFixedUpdate();
 
         waitForFixedUpdated = true;
@@ -487,150 +700,312 @@ public class Constructor : MonoBehaviour
         Resources.UnloadUnusedAssets();
     }
 
-    public Boundary[] boundaries;
+
+
+    Bounds bounds;
+    public void CreateBounds(string json)
+    {
+        bounds = JsonUtility.FromJson<Bounds>(json);
+        
+        print("boundsLength:" + bounds.bounds.Count);
+    }
+    PanoramaViews panormaViews;
+    public void CreatePanoramaTags(string json)
+    {
+        panormaViews = JsonUtility.FromJson<PanoramaViews>(json);
+        print("PanoramaViews:" + panormaViews.panoramaViews.Length);
+    }
+
     public void CreateBoundaryTest()
     {
-        boundaries = new Boundary[13];
 
-        int i = 0;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "침실1-욕실";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(4.55231f, 6.52542f);
-        boundaries[i].polygon[1] = new Vector2(7.130107f, 6.56804f);
-        boundaries[i].polygon[2] = new Vector2(7.002285f, 4.671975f);
-        boundaries[i].polygon[3] = new Vector2(4.509701f, 4.608055f);
-        ++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "침실1-화장대";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(7.130107f, 6.56804f);
-        boundaries[i].polygon[1] = new Vector2(8.685311f, 6.141956f);
-        boundaries[i].polygon[2] = new Vector2(8.727916f, 4.331108f);
-        boundaries[i].polygon[3] = new Vector2(7.002285f, 4.671975f);
-        ++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "침실1";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(8.685311f, 6.141956f);
-        boundaries[i].polygon[1] = new Vector2(12.58396f, 6.482823f);
-        boundaries[i].polygon[2] = new Vector2(12.58395f, 2.328519f);
-        boundaries[i].polygon[3] = new Vector2(8.727903f, 2.328519f);
-        ++i;
+        //isInsidePolygon();
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "발코니";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(12.62657f, 4.416324f);
-        boundaries[i].polygon[1] = new Vector2(14.60785f, 4.416324f);
-        boundaries[i].polygon[2] = new Vector2(14.56524f, 2.307214f);
-        boundaries[i].polygon[3] = new Vector2(12.58395f, 2.328519f);
-        ++i;
+        //boundaries = new Boundary[13];
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "거실";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(8.727903f, 2.328519f);
-        boundaries[i].polygon[1] = new Vector2(14.56524f, 2.307214f);
-        boundaries[i].polygon[2] = new Vector2(14.3735f, -2.592732f);
-        boundaries[i].polygon[3] = new Vector2(9.771808f, -2.614036f);
-        ++i;
+        //int i = 0;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "거실";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(6.128814f, 2.413735f);
-        boundaries[i].polygon[1] = new Vector2(8.727903f, 2.328519f);
-        boundaries[i].polygon[2] = new Vector2(9.782036f, -1.643538f);
-        boundaries[i].polygon[3] = new Vector2(6.725424f, -1.274137f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "침실1-욕실";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(4.55231f, 6.52542f);
+        //boundaries[i].polygon[1] = new Vector2(7.130107f, 6.56804f);
+        //boundaries[i].polygon[2] = new Vector2(7.002285f, 4.671975f);
+        //boundaries[i].polygon[3] = new Vector2(4.509701f, 4.608055f);
+        //++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "주방/식당";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(6.725424f, -1.274137f);
-        boundaries[i].polygon[1] = new Vector2(9.782036f, -1.643538f);
-        boundaries[i].polygon[2] = new Vector2(9.782012f, -3.601231f);
-        boundaries[i].polygon[3] = new Vector2(6.743129f, -3.649982f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "침실1-화장대";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(7.130107f, 6.56804f);
+        //boundaries[i].polygon[1] = new Vector2(8.685311f, 6.141956f);
+        //boundaries[i].polygon[2] = new Vector2(8.727916f, 4.331108f);
+        //boundaries[i].polygon[3] = new Vector2(7.002285f, 4.671975f);
+        //++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "발코니";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(5.443068f, -0.2698274f);
-        boundaries[i].polygon[1] = new Vector2(6.701488f, -0.2826328f);
-        boundaries[i].polygon[2] = new Vector2(6.743129f, -3.649982f);
-        boundaries[i].polygon[3] = new Vector2(5.443068f, -3.763739f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "침실1";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(8.685311f, 6.141956f);
+        //boundaries[i].polygon[1] = new Vector2(12.58396f, 6.482823f);
+        //boundaries[i].polygon[2] = new Vector2(12.58395f, 2.328519f);
+        //boundaries[i].polygon[3] = new Vector2(8.727903f, 2.328519f);
+        //++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "침실";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(2.273213f, 0.9304333f);
-        boundaries[i].polygon[1] = new Vector2(5.416673f, 0.9401765f);
-        boundaries[i].polygon[2] = new Vector2(5.428894f, -2.970673f);
-        boundaries[i].polygon[3] = new Vector2(2.27577f, -2.897345f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "발코니";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(12.62657f, 4.416324f);
+        //boundaries[i].polygon[1] = new Vector2(14.60785f, 4.416324f);
+        //boundaries[i].polygon[2] = new Vector2(14.56524f, 2.307214f);
+        //boundaries[i].polygon[3] = new Vector2(12.58395f, 2.328519f);
+        //++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "침실";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(-1.205194f, 2.474407f);
-        boundaries[i].polygon[1] = new Vector2(2.208837f, 2.449724f);
-        boundaries[i].polygon[2] = new Vector2(2.251328f, -1.601876f);
-        boundaries[i].polygon[3] = new Vector2(-1.102343f, -1.668993f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "거실";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(8.727903f, 2.328519f);
+        //boundaries[i].polygon[1] = new Vector2(14.56524f, 2.307214f);
+        //boundaries[i].polygon[2] = new Vector2(14.3735f, -2.592732f);
+        //boundaries[i].polygon[3] = new Vector2(9.771808f, -2.614036f);
+        //++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "거실";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(2.208837f, 2.449724f);
-        boundaries[i].polygon[1] = new Vector2(6.128814f, 2.413735f);
-        boundaries[i].polygon[2] = new Vector2(6.650831f, 0.9304333f);
-        boundaries[i].polygon[3] = new Vector2(2.273213f, 0.9304333f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "거실";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(6.128814f, 2.413735f);
+        //boundaries[i].polygon[1] = new Vector2(8.727903f, 2.328519f);
+        //boundaries[i].polygon[2] = new Vector2(9.782036f, -1.643538f);
+        //boundaries[i].polygon[3] = new Vector2(6.725424f, -1.274137f);
+        //++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "현관";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(2.170209f, 4.445397f);
-        boundaries[i].polygon[1] = new Vector2(4.509701f, 4.608055f);
-        boundaries[i].polygon[2] = new Vector2(4.577899f, 2.320971f);
-        boundaries[i].polygon[3] = new Vector2(2.208837f, 2.449724f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "주방/식당";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(6.725424f, -1.274137f);
+        //boundaries[i].polygon[1] = new Vector2(9.782036f, -1.643538f);
+        //boundaries[i].polygon[2] = new Vector2(9.782012f, -3.601231f);
+        //boundaries[i].polygon[3] = new Vector2(6.743129f, -3.649982f);
+        //++i;
 
-        boundaries[i] = new Boundary();
-        boundaries[i].name = "욕실";
-        boundaries[i].polygon = new Vector2[4];
-        boundaries[i].polygon[0] = new Vector2(5.873165f, 3.905023f);
-        boundaries[i].polygon[1] = new Vector2(8.727916f, 4.331108f);
-        boundaries[i].polygon[2] = new Vector2(8.727903f, 2.328519f);
-        boundaries[i].polygon[3] = new Vector2(6.128814f, 2.413735f);
-        ++i;
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "발코니";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(5.443068f, -0.2698274f);
+        //boundaries[i].polygon[1] = new Vector2(6.701488f, -0.2826328f);
+        //boundaries[i].polygon[2] = new Vector2(6.743129f, -3.649982f);
+        //boundaries[i].polygon[3] = new Vector2(5.443068f, -3.763739f);
+        //++i;
+
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "침실";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(2.273213f, 0.9304333f);
+        //boundaries[i].polygon[1] = new Vector2(5.416673f, 0.9401765f);
+        //boundaries[i].polygon[2] = new Vector2(5.428894f, -2.970673f);
+        //boundaries[i].polygon[3] = new Vector2(2.27577f, -2.897345f);
+        //++i;
+
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "침실";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(-1.205194f, 2.474407f);
+        //boundaries[i].polygon[1] = new Vector2(2.208837f, 2.449724f);
+        //boundaries[i].polygon[2] = new Vector2(2.251328f, -1.601876f);
+        //boundaries[i].polygon[3] = new Vector2(-1.102343f, -1.668993f);
+        //++i;
+
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "거실";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(2.208837f, 2.449724f);
+        //boundaries[i].polygon[1] = new Vector2(6.128814f, 2.413735f);
+        //boundaries[i].polygon[2] = new Vector2(6.650831f, 0.9304333f);
+        //boundaries[i].polygon[3] = new Vector2(2.273213f, 0.9304333f);
+        //++i;
+
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "현관";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(2.170209f, 4.445397f);
+        //boundaries[i].polygon[1] = new Vector2(4.509701f, 4.608055f);
+        //boundaries[i].polygon[2] = new Vector2(4.577899f, 2.320971f);
+        //boundaries[i].polygon[3] = new Vector2(2.208837f, 2.449724f);
+        //++i;
+
+        //boundaries[i] = new Boundary();
+        //boundaries[i].name = "욕실";
+        //boundaries[i].polygon = new Vector2[4];
+        //boundaries[i].polygon[0] = new Vector2(5.873165f, 3.905023f);
+        //boundaries[i].polygon[1] = new Vector2(8.727916f, 4.331108f);
+        //boundaries[i].polygon[2] = new Vector2(8.727903f, 2.328519f);
+        //boundaries[i].polygon[3] = new Vector2(6.128814f, 2.413735f);
+        //++i;
     }
     public void CreateBoundaries(string json)
     {
        
     }
 
-    [Serializable]
-    public class BoundaryArray
+    public string GetBoundaryName(Vector2 v2)
     {
-        public Boundary[] boundaries;
+        int count = 0;
+
+        foreach (bound boundary in bounds.bounds)
+        {
+            List<Vector3> boundaryV3 = new List<Vector3>();
+
+            foreach(Vector3 v3 in boundary.vertices)
+            {
+                boundaryV3.Add(new Vector3(v3.x,0,v3.y));
+            }
+
+            if (isInsidePolygon (boundaryV3, new Vector3(v2.x,0, v2.y)))
+            {
+                
+               return boundary.name;
+            }
+
+            boundaryV3.Clear();
+
+            ++count;
+       }
+
+        return null;
+    }
+
+    public void BoundTest()
+    {
+        List<Vector3> vector3s = new List<Vector3>();
+        //vector3s.Add(new Vector3(0, 0, 0));
+        //vector3s.Add(new Vector3(0, 2, 0));
+        //vector3s.Add(new Vector3(2, 0, 0));
+        //vector3s.Add(new Vector3(2, 2, 0));
+
+        //Vector3 v3 = new Vector3(1, 1, 0);
+
+        //vector3s.Add(new Vector3(0, 0, 0));
+        //vector3s.Add(new Vector3(0, 0, 2));
+        //vector3s.Add(new Vector3(2, 0, 2));
+        //vector3s.Add(new Vector3(2, 0, 0));
+
+        //Vector3 v3 = new Vector3(1, 0, 1);
+
+        vector3s.Add(new Vector3(0, 0, 0));
+        vector3s.Add(new Vector3(0, 2, 0));
+        vector3s.Add(new Vector3(2, 0, 0));
+        vector3s.Add(new Vector3(2, 2, 0));
+
+        Vector3 v3 = new Vector3(1, 1, 0);
+
+
+        print("boundtest" + isInsidePolygon(vector3s, v3));
+    }
+
+    public void SetBounds()
+    {
+        
+    }
+
+    bool checkDotInLine(Vector3 a, Vector3 b, Vector3 dot)
+    {
+        float epsilon = 0.00001f;
+        float dAB = Vector3.Distance(a, b);
+        float dADot = Vector3.Distance(a, dot);
+        float dBDot = Vector3.Distance(b, dot);
+
+        return ((dAB + epsilon) >= (dADot + dBDot));
+    }
+
+    bool crossCheck2D(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+    {
+        // (x, 0, z)
+        float x1, x2, x3, x4, z1, z2, z3, z4, X, Z;
+
+        x1 = a.x; z1 = a.z;
+        x2 = b.x; z2 = b.z;
+        x3 = c.x; z3 = c.z;
+        x4 = d.x; z4 = d.z;
+
+        float cross = ((x1 - x2) * (z3 - z4) - (z1 - z2) * (x3 - x4));
+
+        if (cross == 0 /* parallel */) return false;
+
+        X = ((x1 * z2 - z1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * z4 - z3 * x4)) / cross;
+        Z = ((x1 * z2 - z1 * x2) * (z3 - z4) - (z1 - z2) * (x3 * z4 - z3 * x4)) / cross;
+
+        return
+            checkDotInLine(a, b, new Vector3(X, 0, Z))
+            && checkDotInLine(c, d, new Vector3(X, 0, Z));
+    }
+
+    bool isInsidePolygon(List<Vector3> polygonPos, Vector3 dotPos)
+    {
+        Vector3 outsidePos = dotPos;
+        outsidePos.x += 100.0f;
+
+        int count = polygonPos.Count;
+        int crossCount = 0;
+        for (int i = 0; i < count - 1; i++)
+        {
+            if (crossCheck2D(polygonPos[i], polygonPos[i + 1], dotPos, outsidePos))
+            {
+                crossCount++;
+            }
+        }
+
+        if (crossCheck2D(polygonPos[0], polygonPos[count - 1], dotPos, outsidePos))
+            crossCount++;
+
+        return (crossCount % 2) == 1; // 홀수면 inside
+    }
+
+
+    //[Serializable]
+    //public class BoundaryArray
+    //{
+    //    public Boundary[] boundaries;
+    //}
+
+    //[Serializable]
+    //public class Boundary
+    //{
+    //    public string name;
+    //    public Vector2[] polygon;
+    //}
+
+    [Serializable]
+    public class Bounds
+    {
+        public List<bound> bounds;
     }
 
     [Serializable]
-    public class Boundary
+    public class bound
     {
         public string name;
-        public Vector2[] polygon;
+        public List<Vector2> vertices = new List<Vector2>();
     }
 
     public void SetInverse()
     {
         inverse = -1;
+    }
+
+    [Serializable]
+    public class PanoramaViews
+    {
+        public PanoramaView[] panoramaViews;
+    }
+
+    [Serializable]
+    public class PanoramaView
+    {
+        public string tag;
+        public Vector3 position;
+        public Vector3 rotation;
     }
 }

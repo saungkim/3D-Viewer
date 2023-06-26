@@ -30,6 +30,13 @@ extern "C"
         return [api onViewerLoaded:[NSString stringWithUTF8String:message]];
     }
 }
+extern "C"
+{
+    void onViewerMoved(const char* message)
+    {
+        return [api onViewerMoved:[NSString stringWithUTF8String:message]];
+    }
+}
 
 
 

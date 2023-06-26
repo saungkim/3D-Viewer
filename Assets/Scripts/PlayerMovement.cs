@@ -9,11 +9,14 @@ public class PlayerMovement : MonoBehaviour
 {
 
     [SerializeField] private Transform construction;
+    [SerializeField] private Constructor constructor;
+    [SerializeField] private NativeMessanger nativeMessanger;    
     [SerializeField] private Vector3[] movePoints;
 
     [SerializeField] private ViewerCursor cursor;
 
     [SerializeField] private CameraController camController;
+
     
 
     private int stage = -1;
@@ -163,7 +166,25 @@ public class PlayerMovement : MonoBehaviour
         construction.GetChild(panoramaID).gameObject.SetActive(true);
         transform.position = construction.GetChild(panoramaID).position;
         stage = panoramaID;
+
+        OnViewerMoved();
     }
+
+    public void InitStage(Vector3 panoramaPos)
+    {
+        if (stage == -1)
+            stage = 0;
+        construction.GetChild(stage).gameObject.SetActive(false);
+
+        poi poi = FindNearPointFrom(panoramaPos);
+
+        construction.GetChild(poi.index).gameObject.SetActive(true);
+        transform.position = construction.GetChild(poi.index).position;
+        stage = poi.index;
+
+        OnViewerMoved();
+    }
+
     public IEnumerator MoveStage()
     {
         poi p = FindNearPointFromMouse();
@@ -182,6 +203,8 @@ public class PlayerMovement : MonoBehaviour
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
 
             stage = p.index;
+
+            OnViewerMoved();
         }
     }
 
@@ -217,7 +240,11 @@ public class PlayerMovement : MonoBehaviour
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
 
             stage = p.index;
+
+            OnViewerMoved();
         }
+
+    
     }
 
     public IEnumerator MoveStage(int index, float fov)
@@ -234,7 +261,19 @@ public class PlayerMovement : MonoBehaviour
             construction.GetChild(stage).GetComponent<LoadTextureFromStreamingAsset>().DestroyTex();
             construction.GetChild(stage).gameObject.SetActive(false);
             stage = index;
+
+            OnViewerMoved();
         }
+
+     
+    }
+
+    public void OnViewerMoved()
+    {
+        // Camera.main.transform.position
+        string positionName = constructor.GetBoundaryName(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z));
+        print("OnViewerMoved:" + positionName);
+        nativeMessanger.OnViewerMoved(positionName);
     }
 
     public void MoveStageInstant(Vector3 pos, Vector3 rot, float fov)

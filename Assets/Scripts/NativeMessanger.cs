@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using Unity.VisualScripting;
+
 using UnityEngine;
 using static DefectConstructor;
 using ColorUtility = UnityEngine.ColorUtility;
@@ -15,6 +16,9 @@ public class NativeMessanger : MonoBehaviour
     public static extern void onViewerLoaded(string message);
      [DllImport("__Internal")]
     public static extern void onViewerClicked(string message);
+    [DllImport("__Internal")]
+    public static extern void onViewerMoved(string message);
+
 #endif
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
@@ -48,9 +52,10 @@ public class NativeMessanger : MonoBehaviour
 #if UNITY_EDITOR
         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "output123.env");
-        SetActiveDefectCreateMode("True");   
-        ViewPanorama("19");
+        SetActiveDefectCreateMode("True");
+        ViewPanoramaTag("1");
 
+        //ViewDefectJson();
         //SetTextureCompressFormat("True");
         //constructor.SetInverse();
         //ViewPano
@@ -320,61 +325,7 @@ fileName = "jar:file://" + fileName;
     public void ViewPanoramaTag(string name)
     {
 
-        print("ViewPanoramaTag Input Value : " + name);
-        print("ViewPanoramaTag Start");
-
-        if (name == "1")
-        {
-            ViewPanorama("30");
-        }
-        else if (name == "2")
-        {
-            ViewPanorama("3");
-        }
-        else if (name == "3")
-        {
-            ViewPanorama("24");
-        }
-        else if (name == "4")
-        {
-            ViewPanorama("13");
-        }
-        else if (name == "5")
-        {
-            ViewPanorama("13");
-        }
-        else if (name == "6")
-        {
-            ViewPanorama("16");
-        }
-        else if (name == "7")
-        {
-            ViewPanorama("6");
-        }
-        else if (name == "8")
-        {
-            ViewPanorama("31");
-        }
-        else if (name == "9")
-        {
-            ViewPanorama("27");
-        }
-        else if (name == "10")
-        {
-            ViewPanorama("27");
-        }
-        else if (name == "11")
-        {
-            ViewPanorama("5");
-        }
-        else if (name == "12")
-        {
-            ViewPanorama("7");
-        }
-        else if (name == "13")
-        {
-            ViewPanorama("11");
-        }
+        StartCoroutine(constructor.InitStageTag(name, OnViewerLoaded));
     }
 
     public void ViewDefectJson(string json)
@@ -469,6 +420,7 @@ fileName = "jar:file://" + fileName;
 
     public void OnViewerClicked(string message)
     {
+        print("OnViewerClicked" + message);
 #if UNITY_ANDROID
         try
         {
@@ -481,10 +433,30 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-       onViewerClicked(message);
+        onViewerClicked(message);
 #elif UNITY_EDITOR
 #endif
-        print("OnViewerClicked" + message);
+      
+    }
+
+    public void OnViewerMoved(string message)
+    {
+#if UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call("onViewerMoved", message);
+        }
+        catch (Exception e)
+        {
+            print(e);
+        }
+#elif UNITY_IOS || UNITY_TVOS
+        onViewerMoved(message);
+#elif UNITY_EDITOR
+#endif
+        print("OnViewerMoved" + message);
     }
 
     public void OnViewerLoaded(string message) 
