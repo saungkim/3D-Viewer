@@ -472,6 +472,7 @@ fileName = "jar:file://" + fileName;
 
     public void OnViewerClicked(string message)
     {
+        print("OnViewerClicked" + message);
 #if UNITY_ANDROID
         try
         {
@@ -484,10 +485,10 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-       onViewerClicked(message);
+        onViewerClicked(message);
 #elif UNITY_EDITOR
 #endif
-        print("OnViewerClicked" + message);
+      
     }
 
     public void OnViewerMoved(string message)
@@ -504,7 +505,7 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-        onViewerClicked(message);
+        onViewerMoved(message);
 #elif UNITY_EDITOR
 #endif
         print("OnViewerMoved" + message);

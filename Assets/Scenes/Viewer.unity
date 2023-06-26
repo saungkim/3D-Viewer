@@ -5743,7 +5743,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1087449795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6652,7 +6652,6 @@ MonoBehaviour:
   measurement: {fileID: 338664071}
   defectConstructor: {fileID: 1239123036}
   minimapMaterial: {fileID: 2100000, guid: 24043f573b5c47a4a847fd28269377a6, type: 2}
-  boundaries: []
 --- !u!114 &1239123038
 MonoBehaviour:
   m_ObjectHideFlags: 0
