@@ -124,11 +124,11 @@ public class DefectConstructor : MonoBehaviour
         {
             if(defect.status == "scheduled")
             {
-                o.transform.GetChild(0).GetComponent<Image>().color = Color.red;
+                //o.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             }
             else if(defect.status == "complete")
             {
-                o.transform.GetChild(0).GetComponent<Image>().color = Color.green;
+                //o.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             }
             else
             {

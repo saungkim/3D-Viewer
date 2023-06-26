@@ -169,6 +169,22 @@ public class PlayerMovement : MonoBehaviour
 
         OnViewerMoved();
     }
+
+    public void InitStage(Vector3 panoramaPos)
+    {
+        if (stage == -1)
+            stage = 0;
+        construction.GetChild(stage).gameObject.SetActive(false);
+
+        poi poi = FindNearPointFrom(panoramaPos);
+
+        construction.GetChild(poi.index).gameObject.SetActive(true);
+        transform.position = construction.GetChild(poi.index).position;
+        stage = poi.index;
+
+        OnViewerMoved();
+    }
+
     public IEnumerator MoveStage()
     {
         poi p = FindNearPointFromMouse();
@@ -258,8 +274,6 @@ public class PlayerMovement : MonoBehaviour
         string positionName = constructor.GetBoundaryName(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z));
         print("OnViewerMoved:" + positionName);
         nativeMessanger.OnViewerMoved(positionName);
-
-
     }
 
     public void MoveStageInstant(Vector3 pos, Vector3 rot, float fov)

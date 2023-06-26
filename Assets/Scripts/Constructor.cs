@@ -13,9 +13,10 @@ using static UnityEngine.UI.Image;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using static DefectConstructor;
-using static UnityEditor.PlayerSettings;
+
 using System.Text;
 using static Constructor;
+
 
 public class Constructor : MonoBehaviour
 {
@@ -542,6 +543,29 @@ public class Constructor : MonoBehaviour
         callBack("Success");
     }
 
+    public IEnumerator InitStageTag(string tag ,Action<string> callBack)
+    {
+        yield return new WaitUntil(() => isLoadDone);
+       // playerMovement.InitStage(stage);
+
+        foreach(PanoramaView panoView in panormaViews.panoramaViews)
+        {
+            print(panoView.tag + ":" + tag);
+            if(panoView.tag == tag)
+            {
+                playerMovement.InitStage(panoView.position);
+                break;
+            }
+        }
+
+        yield return new WaitForFixedUpdate();
+
+        waitForFixedUpdated = true;
+
+        //callBack
+        callBack("Success");
+    }
+
     public bool GetIsLoadDone()
     {
         return isLoadDone;
@@ -685,10 +709,10 @@ public class Constructor : MonoBehaviour
         
         print("boundsLength:" + bounds.bounds.Count);
     }
-
+    PanoramaViews panormaViews;
     public void CreatePanoramaTags(string json)
     {
-        PanoramaViews panormaViews = JsonUtility.FromJson<PanoramaViews>(json);
+        panormaViews = JsonUtility.FromJson<PanoramaViews>(json);
         print("PanoramaViews:" + panormaViews.panoramaViews.Length);
     }
 
