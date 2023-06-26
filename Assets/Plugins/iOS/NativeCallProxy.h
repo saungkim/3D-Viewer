@@ -9,6 +9,7 @@
 - (void) showHostMainWindow:(NSString*)color;
 - (void) onViewerClicked:(NSString*)message;
 - (void) onViewerLoaded:(NSString*)message;
+- (void) onViewerMoved:(NSString*)message;
 // other methods
 @end
 
