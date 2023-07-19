@@ -170,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
         OnViewerMoved();
     }
 
-    public void InitStage(Vector3 panoramaPos)
+    public void InitStage(Vector3 panoramaPos , Vector3 panoramaRot)
     {
         if (stage == -1)
             stage = 0;
@@ -180,6 +180,7 @@ public class PlayerMovement : MonoBehaviour
 
         construction.GetChild(poi.index).gameObject.SetActive(true);
         transform.position = construction.GetChild(poi.index).position;
+        transform.eulerAngles = panoramaRot;
         stage = poi.index;
 
         OnViewerMoved();
@@ -268,14 +269,14 @@ public class PlayerMovement : MonoBehaviour
      
     }
 
+
     public void OnViewerMoved()
     {
         // Camera.main.transform.position
-        string positionName = constructor.GetBoundaryName(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z));
-        print("OnViewerMoved:" + positionName);
-        nativeMessanger.OnViewerMoved(positionName);
+        string positionInfo = JsonUtility.ToJson(constructor.GetBoundary(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z)));
+        print("OnViewerMoved:" + positionInfo);
+        nativeMessanger.OnViewerMoved(positionInfo);
     }
-
     public void MoveStageInstant(Vector3 pos, Vector3 rot, float fov)
     {
         if(stage != -1)

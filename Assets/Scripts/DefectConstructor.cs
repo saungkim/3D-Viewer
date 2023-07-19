@@ -108,7 +108,14 @@ public class DefectConstructor : MonoBehaviour
             //}
 
 
-            defect.name = constructor.GetBoundaryName(new Vector2(pos.x,pos.z));
+            Constructor.RoomPositionInfo info = constructor.GetBoundary(new Vector2(pos.x,pos.z));
+
+            defect.name = info.name;
+            defect.flawPrtbGrpCd = info.flawPrtbGrpCd;
+            defect.detailName = info.detailName;
+            defect.flawPrtbCd = info.flawPrtbCd;
+            
+            //defect.name = bound;
             //nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
         }       
     }
@@ -546,12 +553,15 @@ public class DefectConstructor : MonoBehaviour
         public string id; //하자 ID
         public string status; //하자 상태 
         public string name; //하자가 위치한 방 이름
+        public string flawPrtbGrpCd; //위치명
         public string detailName; //하자 디테일 방 이름
-        public string code; //하자가 위치한 영역코드
+        public string flawPrtbCd; //상세위치명
         public Vector3 position; //하자 위치
         public Vector3 rotation; //하자 각도
         public View view; //카메라 관점
     }
+
+  
 
     public void SetCreateDotRefresh(bool onOff)
     {
@@ -589,6 +599,7 @@ public class DefectConstructor : MonoBehaviour
         public Vector3 rotation; //카메라 각도
         public float fov; //카메라 fov
     }
+
 
 
     

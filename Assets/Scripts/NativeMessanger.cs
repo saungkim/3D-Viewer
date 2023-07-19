@@ -18,8 +18,8 @@ public class NativeMessanger : MonoBehaviour
     public static extern void onViewerClicked(string message);
     [DllImport("__Internal")]
     public static extern void onViewerMoved(string message);
-
 #endif
+
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
 
@@ -53,7 +53,7 @@ public class NativeMessanger : MonoBehaviour
         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
         //ReadRoomViewerFile(Application.streamingAssetsPath + "output123.env");
         SetActiveDefectCreateMode("True");
-        ViewPanoramaTag("1");
+        ViewPanoramaTag("3");
 
         //ViewDefectJson();
         //SetTextureCompressFormat("True");

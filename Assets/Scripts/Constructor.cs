@@ -553,7 +553,7 @@ public class Constructor : MonoBehaviour
             print(panoView.tag + ":" + tag);
             if(panoView.tag == tag)
             {
-                playerMovement.InitStage(panoView.position);
+                playerMovement.InitStage(panoView.position , panoView.rotation);
                 break;
             }
         }
@@ -850,7 +850,7 @@ public class Constructor : MonoBehaviour
        
     }
 
-    public string GetBoundaryName(Vector2 v2)
+    public RoomPositionInfo GetBoundary(Vector2 v2)
     {
         int count = 0;
 
@@ -865,8 +865,12 @@ public class Constructor : MonoBehaviour
 
             if (isInsidePolygon (boundaryV3, new Vector3(v2.x,0, v2.y)))
             {
-                
-               return boundary.name;
+               RoomPositionInfo roomPositionInfo = new RoomPositionInfo();
+                roomPositionInfo.name = boundary.name;
+                roomPositionInfo.flawPrtbGrpCd = boundary.flawPrtbGrpCd;
+                roomPositionInfo.detailName = boundary.detailName;
+                roomPositionInfo.flawPrtbCd = boundary.flawPrtbCd;
+               return roomPositionInfo;
             }
 
             boundaryV3.Clear();
@@ -987,7 +991,18 @@ public class Constructor : MonoBehaviour
     public class bound
     {
         public string name;
+        public string flawPrtbGrpCd;
+        public string detailName;
+        public string flawPrtbCd;
         public List<Vector2> vertices = new List<Vector2>();
+    }
+
+    public class RoomPositionInfo
+    {
+        public string name;
+        public string flawPrtbGrpCd;
+        public string detailName;
+        public string flawPrtbCd;
     }
 
     public void SetInverse()
@@ -1008,4 +1023,6 @@ public class Constructor : MonoBehaviour
         public Vector3 position;
         public Vector3 rotation;
     }
+
+    //public class RoomPositionInf
 }
