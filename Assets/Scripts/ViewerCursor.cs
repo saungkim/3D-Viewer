@@ -84,7 +84,7 @@ public class ViewerCursor : MonoBehaviour
     {
         cursorChild.SetActive(true);
         cursorChild.layer = LayerMask.NameToLayer("Cubemap");
-        cursorChild.transform.localScale = new Vector3(0.04f,0.005f,0.04f);
+        cursorChild.transform.localScale = new Vector3(0.03f,0.005f,0.03f);
     }
 
     public void SetNormalCursorMode()

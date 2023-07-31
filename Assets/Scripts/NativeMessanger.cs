@@ -51,7 +51,9 @@ public class NativeMessanger : MonoBehaviour
 
 #if UNITY_EDITOR
         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "output123.env");
+
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+
         SetActiveDefectCreateMode("True");
         ViewPanoramaTag("3");
 
@@ -60,6 +62,10 @@ public class NativeMessanger : MonoBehaviour
         //constructor.SetInverse();
         //ViewPano
 #endif
+
+        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+        SetActiveDefectCreateMode("True");
+        ViewPanoramaTag("3");
 
         // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
         //  SetActiveDefectCreateMode("True");
@@ -298,6 +304,23 @@ fileName = "jar:file://" + fileName;
             nativeSendErrorMessage("SetCameraFov Error :" + value + " " + "Parse Failed");
         }
     }
+
+    public void SetCameraFovMinMax(string value)
+    {
+        print("SetCameraFov Input Value : " + value);
+
+        string[] values = value.Split(',');
+
+        float minFov;
+        float maxFov;
+
+        if (float.TryParse(values[0], out minFov) && float.TryParse(values[1], out maxFov))
+        {
+            camController.SetFovMinMax(minFov,maxFov);
+        }
+    }
+
+  //  public void SetDefectSize
 
     public void SetMoveTime(string value)
     {
@@ -572,6 +595,16 @@ fileName = "jar:file://" + fileName;
         defectConstructor.SetColliderSize(size);
     }
 
+    public void SetDefectLocalScale(string value)
+    {
+        float localScale;
+
+        if(float.TryParse(value , out localScale))
+        {
+            defectConstructor.SetDefectLocalScale(localScale);
+        }
+    }
+
     public void Quit()
     {
         Application.Quit();
@@ -587,5 +620,7 @@ fileName = "jar:file://" + fileName;
         LoadTextureFromStreamingAsset.textureCompress = true;
        // if(value == "0")
     }
+
+    //public void SetCamera
 
 }

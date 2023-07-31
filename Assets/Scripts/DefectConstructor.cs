@@ -25,9 +25,9 @@ public class DefectConstructor : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-
+        initDefectDotLocalScale = dot.transform.localScale;  
     }
 
     // Update is called once per frame
@@ -522,6 +522,14 @@ public class DefectConstructor : MonoBehaviour
 
         return null;
        
+    }
+
+    Vector3 initDefectDotLocalScale;
+    public void SetDefectLocalScale(float localSale)
+    {
+
+        print("iniDefectDotLocalScale" + initDefectDotLocalScale + ":" + localSale);
+        dot.transform.localScale = initDefectDotLocalScale * localSale;
     }
 
     private DefectArray JsonToDefectArray(string json)

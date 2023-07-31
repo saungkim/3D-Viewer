@@ -68,6 +68,8 @@ public class Constructor : MonoBehaviour
         //string url = Application.dataPath + "/Sources/";
         //StartCoroutine(FileLoadReadByte(url,callback));
         StartCoroutine(FileLoad(url, callback));
+#elif UNITY_WEBGL
+ StartCoroutine(FileLoad(url, callback));
 #endif
 
 

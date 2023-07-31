@@ -92,7 +92,7 @@ public class InputSystem : MonoBehaviour
             return;
         }
 
-         zoomInOutWithWheel();
+        zoomInOutWithWheel();
    
         if (EventSystem.current.IsPointerOverGameObject(pointerID))
         {
@@ -123,9 +123,16 @@ public class InputSystem : MonoBehaviour
     const float zoomSpeed = 2.5f;
     private void zoomInOutWithWheel()
     {
+        if (Input.mouseScrollDelta.y == 0)
+        {
+            return;
+        }
+
         float fov = Camera.main.fieldOfView;
+ 
         fov -= Input.mouseScrollDelta.y * zoomSpeed;  
-        camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
+       
+        camController.SetFovTogetherClamp(fov);
     }
 
     public bool GetCursorOnUI()
@@ -152,6 +159,8 @@ public class InputSystem : MonoBehaviour
         CheckDefectColliderInit();
     }
 
+    float minHoldTime = 0.35f;
+    float maxHoldTime = 0.7f;
     private void MouseButtonHold()
     {
         if (!onClickStart)
@@ -165,7 +174,7 @@ public class InputSystem : MonoBehaviour
             {
                 holdTime += Time.deltaTime;
 
-                if (holdTime > 0.7f)
+                if (holdTime > minHoldTime)
                 {
                     if (!hold)
                     {
@@ -177,18 +186,18 @@ public class InputSystem : MonoBehaviour
 
                 if (controlState == ControlState.Defect || controlState == ControlState.Measure)
                 {
-                    if ((holdTime - 0.7f) / 1f > 1)
+                    if ((holdTime - minHoldTime) / maxHoldTime > maxHoldTime)
                     {
                         StartCoroutine(ImgsFD.DelaySetActive(false));
                     }
                     else
                     {
                         StartCoroutine(ImgsFD.DelaySetActive(true));
-                        ImgsFD.SetValue((holdTime - 0.7f) / 1f, true);
+                        ImgsFD.SetValue((holdTime - minHoldTime) / maxHoldTime, true);
                     }
                 }
 
-                if (holdTime - 0.7f >= 1f)
+                if (holdTime - minHoldTime >= maxHoldTime)
                 {
                     if (!imgsFDDone)
                     {
@@ -349,7 +358,7 @@ public class InputSystem : MonoBehaviour
             float fov = Camera.main.fieldOfView;
             fov -= deltaDistance * zoomSpeed;
            
-            camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
+            camController.SetFovTogetherClamp(fov);
 
             currentPinchDistance = distance;
 
