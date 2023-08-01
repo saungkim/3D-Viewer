@@ -15,7 +15,7 @@ public class ViewerCursor : MonoBehaviour
 
     [SerializeField] private GameObject cursorChild;
 
-    private Vector3 gaugePlusPosition = new Vector3(120,170,0);
+    private Vector3 gaugePlusPosition = new Vector3(0,0, 0);
 
     [SerializeField] private InputSystem inputSystem;
     [SerializeField] private Transform measureRenderUI;
@@ -28,11 +28,15 @@ public class ViewerCursor : MonoBehaviour
        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
 
        layermask = ~( 1 << LayerMask.NameToLayer("Measurement") | 1 << LayerMask.NameToLayer("UI"));
+
+      // gaugePlusPosition = new Vector3(gaugePlusPosition.x * Screen.width / 1920, gaugePlusPosition.y * Screen.height / 1080, 0);
     }
 
     void Update()
     {
         CursorUpdate();
+
+      
     }
 
     public void CursorUpdate()
@@ -72,7 +76,7 @@ public class ViewerCursor : MonoBehaviour
     }
     public void SetScaleFov()
     {
-        cursor.transform.localScale = originScale   * Camera.main.fieldOfView / 60  ;
+        cursor.transform.localScale = originScale * Camera.main.fieldOfView / 60  ;
     }
 
     public void SetActivate(bool onOff)

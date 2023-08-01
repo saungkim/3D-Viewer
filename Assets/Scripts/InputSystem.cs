@@ -193,7 +193,7 @@ public class InputSystem : MonoBehaviour
                     else
                     {
                         StartCoroutine(ImgsFD.DelaySetActive(true));
-                        ImgsFD.SetValue((holdTime - minHoldTime) / maxHoldTime, true);
+                        ImgsFD.SetValue((holdTime - 0.1f) / maxHoldTime, true);
                     }
                 }
 
