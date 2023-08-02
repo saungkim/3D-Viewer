@@ -48,7 +48,7 @@ public class NativeMessanger : MonoBehaviour
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
         constructor.CreateBoundaryTest();
         SetActiveDefectCreateModeRefresh("True");
-        Application.unloading += OnUnload;
+        //Application.unloading += OnUnload;
 
 #if UNITY_EDITOR
 
