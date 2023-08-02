@@ -161,6 +161,27 @@ public class InputSystem : MonoBehaviour
 
     float minHoldTime = 0.35f;
     float maxHoldTime = 0.7f;
+
+    public void SetHoldTime(float scale)
+    {
+        minHoldTime = 0.35f * scale;
+        maxHoldTime = 0.7f * scale;
+    }
+
+    public void SetHoldMinTime(float scale)
+    {
+        minHoldTime = 0.35f * scale;
+    
+    }
+
+
+    public void SetHoldMaxTime(float scale)
+    {
+       
+        maxHoldTime = 0.7f * scale;
+    }
+
+
     private void MouseButtonHold()
     {
         if (!onClickStart)
@@ -186,18 +207,31 @@ public class InputSystem : MonoBehaviour
 
                 if (controlState == ControlState.Defect || controlState == ControlState.Measure)
                 {
-                    if ((holdTime - minHoldTime) / maxHoldTime > maxHoldTime)
-                    {
-                        StartCoroutine(ImgsFD.DelaySetActive(false));
-                    }
-                    else
+                    //if ((holdTime - minHoldTime) / maxHoldTime > maxHoldTime)
+                    //{
+                    //    StartCoroutine(ImgsFD.DelaySetActive(false));
+                    //}
+                    //else
+                    //{
+
+                    //}
+
+                    //else
+                    //{
+                    //    StartCoroutine(ImgsFD.DelaySetActive(true));
+                    //    ImgsFD.SetValue((holdTime - 0.1f) / maxHoldTime, true);
+                    //}
+
+                    if (holdTime > minHoldTime && (holdTime - minHoldTime) / (maxHoldTime - minHoldTime) <= 1f)
                     {
                         StartCoroutine(ImgsFD.DelaySetActive(true));
-                        ImgsFD.SetValue((holdTime - 0.1f) / maxHoldTime, true);
+                        ImgsFD.SetValue((holdTime - minHoldTime) / (maxHoldTime - minHoldTime), true);
                     }
-                }
 
-                if (holdTime - minHoldTime >= maxHoldTime)
+
+                }
+   
+                if ((holdTime - minHoldTime) / (maxHoldTime - minHoldTime) > 1f)
                 {
                     if (!imgsFDDone)
                     {
@@ -209,8 +243,13 @@ public class InputSystem : MonoBehaviour
                         }
                         else if (controlState == ControlState.Measure)
                         {
+                            print("imgsFDDone");
                             measurement.DotCreateMode();
                         }
+
+                        print("imgsFDDone MouseButtonHold");
+
+                        StartCoroutine(ImgsFD.DelaySetActive(false));
                     }
                 }
             }

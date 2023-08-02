@@ -856,6 +856,8 @@ public class Constructor : MonoBehaviour
     {
         int count = 0;
 
+        RoomPositionInfo roomPositionInfo = null;
+
         foreach (bound boundary in bounds.bounds)
         {
             List<Vector3> boundaryV3 = new List<Vector3>();
@@ -867,12 +869,12 @@ public class Constructor : MonoBehaviour
 
             if (isInsidePolygon (boundaryV3, new Vector3(v2.x,0, v2.y)))
             {
-               RoomPositionInfo roomPositionInfo = new RoomPositionInfo();
+                roomPositionInfo = new RoomPositionInfo();
                 roomPositionInfo.name = boundary.name;
                 roomPositionInfo.flawPrtbGrpCd = boundary.flawPrtbGrpCd;
                 roomPositionInfo.detailName = boundary.detailName;
                 roomPositionInfo.flawPrtbCd = boundary.flawPrtbCd;
-               return roomPositionInfo;
+                return roomPositionInfo;
             }
 
             boundaryV3.Clear();
@@ -880,7 +882,70 @@ public class Constructor : MonoBehaviour
             ++count;
        }
 
+        if(roomPositionInfo == null)
+        {
+            return GetBoundary2(v2);
+        }
+
         return null;
+    }
+
+    public RoomPositionInfo GetBoundary2(Vector2 v2)
+    {
+        int count = 0;
+
+        RoomPositionInfo roomPositionInfo = null;
+
+        v2 = GetNearPanoPosition(new Vector3(v2.x,0,v2.y));
+
+        foreach (bound boundary in bounds.bounds)
+        {
+            List<Vector3> boundaryV3 = new List<Vector3>();
+
+            foreach (Vector3 v3 in boundary.vertices)
+            {
+                boundaryV3.Add(new Vector3(v3.x, 0, v3.y));
+            }
+
+            if (isInsidePolygon(boundaryV3, new Vector3(v2.x, 0, v2.y)))
+            {
+                roomPositionInfo = new RoomPositionInfo();
+                roomPositionInfo.name = boundary.name;
+                roomPositionInfo.flawPrtbGrpCd = boundary.flawPrtbGrpCd;
+                roomPositionInfo.detailName = boundary.detailName;
+                roomPositionInfo.flawPrtbCd = boundary.flawPrtbCd;
+                return roomPositionInfo;
+            }
+
+            boundaryV3.Clear();
+
+            ++count;
+        }
+
+        return roomPositionInfo;
+    }
+
+    public Vector2 GetNearPanoPosition(Vector3 input)
+    {
+        float minDis = 9999999;
+        Vector3 minDisPosition = input;
+
+        foreach (Transform tf in camGroup)
+        {
+            float dis = Vector3.Distance(tf.position, input);
+        
+            if(dis < minDis)
+            {
+                minDis = dis;
+                minDisPosition = tf.position;
+
+                print("Min" + tf.name);
+            }
+        }
+
+        print("minDisPosition" + minDisPosition);
+
+        return new Vector2(minDisPosition.x,minDisPosition.z);
     }
 
     public void BoundTest()

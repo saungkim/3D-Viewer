@@ -63,15 +63,24 @@ public class NativeMessanger : MonoBehaviour
         //ViewPano
 #endif
 
-        ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
-        SetActiveDefectCreateMode("True");
-        ViewPanoramaTag("3");
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+        //SetActiveDefectCreateMode("True");
+        //ViewPanoramaTag("3");
 
-        // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
-        //  SetActiveDefectCreateMode("True");
-        //  ViewPanorama("19");
-        // SetActiveDefectCreateMode("True");
-        // ViewPanorama("19");
+        // SetDotCreateTimeScale("20");
+        //SetDefectLocalScale("2");
+        //SetCameraFovMinMax();
+        //SetCameraFov("55");
+        //SetCameraFovMinMax("50,60");
+        //SetDotCreateTimeScale("20");
+
+        //SetDotCreatStartTime("5");
+        //SetDotCreatEndTime("10");
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+        //SetActiveDefectCreateMode("True");
+        //ViewPanorama("19");
+        //SetActiveDefectCreateMode("True");
+        //ViewPanorama("19");
 
     }
 
@@ -317,6 +326,39 @@ fileName = "jar:file://" + fileName;
         if (float.TryParse(values[0], out minFov) && float.TryParse(values[1], out maxFov))
         {
             camController.SetFovMinMax(minFov,maxFov);
+        }
+    }
+
+    public void SetDotCreateTimeScale(string value)
+    {
+        float dotCreateTime;
+
+        if(float.TryParse(value,out dotCreateTime))
+        {
+            //camController.set
+            inputSystem.SetHoldTime(dotCreateTime);
+        }
+    }
+
+    public void SetDotCreatStartTime(string value)
+    {
+        float dotCreateTime;
+
+        if (float.TryParse(value, out dotCreateTime))
+        {
+            //camController.set
+            inputSystem.SetHoldMinTime(dotCreateTime);
+        }
+    }
+
+    public void SetDotCreatEndTime(string value)
+    {
+        float dotCreateTime;
+
+        if (float.TryParse(value, out dotCreateTime))
+        {
+            //camController.set
+            inputSystem.SetHoldMaxTime(dotCreateTime);
         }
     }
 
