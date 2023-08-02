@@ -686,6 +686,9 @@ public class Constructor : MonoBehaviour
     }
     public void Init()
     {
+
+        print("init");
+
         isLoadDone = false;
         int camGroupChildCount = camGroup.childCount - 1;
 
@@ -694,7 +697,18 @@ public class Constructor : MonoBehaviour
             Destroy(camGroup.GetChild(i).gameObject);
         }
 
-        Destroy(modelFrame.GetChild(1).gameObject);
+        //Destroy(modelFrame.GetChild(1).gameObject);
+        
+        for(int i = 1; i < modelFrame.childCount; ++i)
+        {
+           // print("modelframeChild" + modelFrameChild.name);
+            Destroy(modelFrame.GetChild(i).gameObject);
+        }
+
+        foreach(Transform modelFrameChild in modelFrame)
+        {
+        
+        }
 
         defectConstructor.Init();
         measurement.Init();

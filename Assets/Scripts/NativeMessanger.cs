@@ -48,15 +48,18 @@ public class NativeMessanger : MonoBehaviour
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
         constructor.CreateBoundaryTest();
         SetActiveDefectCreateModeRefresh("True");
+        Application.unloading += OnUnload;
 
 #if UNITY_EDITOR
+
         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
-
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
-
+   
         SetActiveDefectCreateMode("True");
         ViewPanoramaTag("3");
 
+       
+
+        //Invoke("Test",3);
         //ViewDefectJson();
         //SetTextureCompressFormat("True");
         //constructor.SetInverse();
@@ -84,6 +87,16 @@ public class NativeMessanger : MonoBehaviour
 
     }
 
+    public void Test()
+    {
+        InitConstructor();
+        //Unload();
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
+
+        ViewPanoramaTag("3");
+
+        Invoke("Test", 3);
+    }
 
     private void Update()
     {
@@ -561,11 +574,6 @@ fileName = "jar:file://" + fileName;
         constructor.SetMiniMap();
     }
 
-    public void Unload()
-    {
-        Application.Unload();
-    }
-
     public void SetClassName(string value)
     {
         className = value;
@@ -662,6 +670,23 @@ fileName = "jar:file://" + fileName;
         LoadTextureFromStreamingAsset.textureCompress = true;
        // if(value == "0")
     }
+
+    static void Unload()
+    {
+        Application.Unload();
+    }
+
+    static void OnUnload()
+    {
+        Debug.Log("Unloading the Player");
+    }
+
+    public void InitConstructor()
+    {
+        constructor.Init();
+    }
+
+
 
     //public void SetCamera
 
