@@ -52,10 +52,10 @@ public class NativeMessanger : MonoBehaviour
 
 #if UNITY_EDITOR
 
-        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
+       // ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
    
-        SetActiveDefectCreateMode("True");
-        ViewPanoramaTag("3");
+       // SetActiveDefectCreateMode("True");
+       // ViewPanoramaTag("3");
 
        
 
