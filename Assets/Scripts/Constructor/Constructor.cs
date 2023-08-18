@@ -924,10 +924,6 @@ public class Constructor : MonoBehaviour
             Destroy(modelFrame.GetChild(i).gameObject);
         }
 
-        foreach(Transform modelFrameChild in modelFrame)
-        {
-        
-        }
 
         defectConstructor.Init();
         measurement.Init();

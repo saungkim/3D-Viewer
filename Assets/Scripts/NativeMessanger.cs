@@ -62,6 +62,13 @@ public class NativeMessanger : MonoBehaviour
         //SetActiveDefectCreateMode("False");
         //ViewPanoramaTag("3");
         ViewPanoramaInit();
+
+       // ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
+   
+       // SetActiveDefectCreateMode("True");
+       // ViewPanoramaTag("3");
+
+       
         //Invoke("Test",3);
         //ViewDefectJson();
         //SetTextureCompressFormat("True");
