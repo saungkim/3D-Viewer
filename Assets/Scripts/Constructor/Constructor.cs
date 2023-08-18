@@ -924,7 +924,7 @@ public class Constructor : MonoBehaviour
             Destroy(modelFrame.GetChild(i).gameObject);
         }
 
-
+        
         defectConstructor.Init();
         measurement.Init();
 
