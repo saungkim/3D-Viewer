@@ -12,12 +12,16 @@ using ColorUtility = UnityEngine.ColorUtility;
 public class NativeMessanger : MonoBehaviour
 {
 #if UNITY_IOS
-     [DllImport("__Internal")]
+    [DllImport("__Internal")]
     public static extern void onViewerLoaded(string message);
-     [DllImport("__Internal")]
+    [DllImport("__Internal")]
     public static extern void onViewerClicked(string message);
     [DllImport("__Internal")]
     public static extern void onViewerMoved(string message);
+    [DllImport("__Internal")]
+    public static extern void onViewerDefectCreated(string message);
+    [DllImport("__Internal")]
+    public static extern void onViewerMessageReceived(string message);
 #endif
 
     [SerializeField] private Constructor constructor;
@@ -40,7 +44,8 @@ public class NativeMessanger : MonoBehaviour
 
     private string className = "com.parallel.viewer3d.RoomViewerActivity";
     private string funcName = "RoomViewerReceiveMessage";
- 
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -53,12 +58,10 @@ public class NativeMessanger : MonoBehaviour
 #if UNITY_EDITOR
 
         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
-   
         SetActiveDefectCreateMode("True");
-        ViewPanoramaTag("3");
-
-       
-
+        //SetActiveDefectCreateMode("False");
+        //ViewPanoramaTag("3");
+        ViewPanoramaInit();
         //Invoke("Test",3);
         //ViewDefectJson();
         //SetTextureCompressFormat("True");
@@ -70,7 +73,7 @@ public class NativeMessanger : MonoBehaviour
         //SetActiveDefectCreateMode("True");
         //ViewPanoramaTag("3");
 
-        // SetDotCreateTimeScale("20");
+        //SetDotCreateTimeScale("20");
         //SetDefectLocalScale("2");
         //SetCameraFovMinMax();
         //SetCameraFov("55");
@@ -101,7 +104,7 @@ public class NativeMessanger : MonoBehaviour
     private void Update()
     {
 #if UNITY_ANDROID
-      
+
 #endif
     }
 
@@ -241,7 +244,7 @@ fileName = "jar:file://" + fileName;
     {
         print("GetAllDefects");
 
-        defectConstructor.GetAllDefects();
+        print(defectConstructor.GetAllDefects());
     }
 
     public void GetDefect(string value)
@@ -249,6 +252,20 @@ fileName = "jar:file://" + fileName;
         print("GetDefect Input Value : " + value);
 
         defectConstructor.GetDefect(value);
+    }
+
+    public void GetDefectByIndex(string value)
+    {
+        int index;
+
+        if (int.TryParse(value, out index))
+        {
+            OnViewerMessageReceived(defectConstructor.GetDefectByIndex(index));
+        }
+        else
+        {
+            nativeSendErrorMessage("GetDefectByIndex :" + value + " " + "Parse Failed");
+        }
     }
 
     public void SetCameraSensitivity(string value)
@@ -406,6 +423,13 @@ fileName = "jar:file://" + fileName;
         StartCoroutine(constructor.InitStageTag(name, OnViewerLoaded));
     }
 
+    //public void ViewPanorama
+
+    public void ViewPanoramaInit()
+    {
+        StartCoroutine(constructor.InitStageHome(OnViewerLoaded));
+    }
+
     public void ViewDefectJson(string json)
     {
         print("VIewDefectJson Input Value:" + json);
@@ -557,7 +581,49 @@ fileName = "jar:file://" + fileName;
 #endif
         print("OnViewerLoaded" + message);
     }
-    
+
+    public void OnViewerDefectCreated(string message)
+    {
+#if UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call("onViewerDefectCreated", message);
+        }
+        catch (Exception e)
+        {
+            print(e);
+        }
+#elif UNITY_IOS || UNITY_TVOS
+       onViewerDefectCreated(message);
+       // NativeAPI.showHostMainWindow(lastStringColor);
+#elif UNITY_EDITOR
+#endif
+        print("onViewerDefectCreated" + message);
+    }
+
+    public void OnViewerMessageReceived(string message)
+    {
+#if UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call("onViewerMessageReceived", message);
+        }
+        catch (Exception e)
+        {
+            print(e);
+        }
+#elif UNITY_IOS || UNITY_TVOS
+       onViewerMessageReceived(message);
+       // NativeAPI.showHostMainWindow(lastStringColor);
+#elif UNITY_EDITOR
+#endif
+        print("onViewerMessageReceived" + message);
+    }
+
     public void nativeSendErrorMessage(string message)
     {
         print(message);
@@ -686,7 +752,10 @@ fileName = "jar:file://" + fileName;
         constructor.Init();
     }
 
+    //public void GetDefect()
+    //{
 
+    //}
 
     //public void SetCamera
 

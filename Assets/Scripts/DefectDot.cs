@@ -10,10 +10,10 @@ public class DefectDot : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
 
     private Vector3 initScale;
-    public float minDistance = 2f; // ÃÖ¼Ò °Å¸®
-    public float maxDistance = 10f; // ÃÖ´ë °Å¸®
-    public float minSize = 1f; // ÃÖ¼Ò Å©±â
-    public float maxSize = 5f; // ÃÖ´ë Å©±â
+    public float minDistance = 2f; // ï¿½Ö¼ï¿½ ï¿½Å¸ï¿½
+    public float maxDistance = 10f; // ï¿½Ö´ï¿½ ï¿½Å¸ï¿½
+    public float minSize = 1f; // ï¿½Ö¼ï¿½ Å©ï¿½ï¿½
+    public float maxSize = 5f; // ï¿½Ö´ï¿½ Å©ï¿½ï¿½
 
     [SerializeField] private Material material;
     // Start is called before the first frame update
@@ -37,12 +37,12 @@ public class DefectDot : MonoBehaviour
 
         //float distance = Vector3.Distance(transform.position, Camera.main.transform.position);
 
-        // °Å¸®¿¡ µû¶ó Å©±â¸¦ º¸°£(interpolate)ÇÏ¿© °è»ê
+        // ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½(interpolate)ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½
         //float normalizedDistance = Mathf.Clamp01((distance - minDistance) / (maxDistance - minDistance));
         //float targetSize = Mathf.Lerp(minSize, maxSize, normalizedDistance);
 
 
-        // ¿ÀºêÁ§Æ®ÀÇ ½ºÄÉÀÏ Á¶Á¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //transform.localScale = initScale * targetSize;
     }
 
@@ -65,7 +65,7 @@ public class DefectDot : MonoBehaviour
             {
                 material.renderQueue = 3000;
 
-                print("Detected Wall");
+               // print("Detected Wall");
             }
         }
     }

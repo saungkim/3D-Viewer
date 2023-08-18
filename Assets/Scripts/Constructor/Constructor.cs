@@ -41,6 +41,8 @@ public class Constructor : MonoBehaviour
     [SerializeField] private DefectConstructor defectConstructor;
 
     List<byte[]> textures;
+
+    [SerializeField] private HomeTourConstructor homeTourConstructor;
     // Start is called before the first frame update
 
     private bool waitForFixedUpdated = false;
@@ -59,8 +61,9 @@ public class Constructor : MonoBehaviour
 
     public void FileOpen(string url, Action<string> callback)
     {
-
-#if UNITY_EDITOR
+#if UNITY_EDITOR_OSX
+        StartCoroutine(FileLoadReadByte(url, callback));
+#elif UNITY_EDITOR 
         StartCoroutine(FileLoad(url, callback));
 #elif UNITY_IOS
         StartCoroutine(FileLoadReadByte(url, callback));
@@ -79,6 +82,15 @@ public class Constructor : MonoBehaviour
     IEnumerator FileLoad(string url, Action<string> callback)
     {
         print("StartCoruoutine FileLoad");
+
+        if (File.Exists(url))
+        {
+            print("File Exist");
+        }
+        else
+        {
+            print("File Doesn't Exist");
+        }
 
         float loadTime = 0;
 
@@ -303,7 +315,178 @@ public class Constructor : MonoBehaviour
         //    meshesScales[i] = new Vector3(meshesTransform[byteLenngth + 6], meshesTransform[byteLenngth + 7], meshesTransform[byteLenngth + 8]);
         //}
 
-   
+
+
+        //int[] info = new int[4];
+        //int index = 16;
+        //float version;
+        //int modelType;
+        //int boundBytesLength;
+        //int panoramaTagLength;
+
+        //for (int i = 0; i < index; i = i + 4)
+        //{
+        //    info[i / 4] = BitConverter.ToInt32(content, i);
+        //}
+
+        //version = BitConverter.ToSingle(content, index);
+        //index += 4;
+        //print("Version" + version);
+
+        //modelType = BitConverter.ToInt32(content, index);
+        //index += 4;
+
+        //boundBytesLength = BitConverter.ToInt32(content, index);
+        //index += 4;
+        //print("bounBytesLength" + boundBytesLength);
+
+        //panoramaTagLength = BitConverter.ToInt32(content, index);
+        //index += 4;
+        //print("panoramaTagLength" + panoramaTagLength);
+
+        //int[] verticeLengths = new int[info[2]];
+        //int iterCount = info[2] * 4;
+        //for (int i = 0; i < iterCount; i = i + 4)
+        //{
+        //    verticeLengths[i / 4] = BitConverter.ToInt32(content, index + i);
+        //}
+
+        //index += iterCount;
+        //int[] indiciesLengths = new int[info[2]];
+        //iterCount = info[2] * 4;
+
+        //for (int i = 0; i < iterCount; i = i + 4)
+        //{
+        //    indiciesLengths[i / 4] = BitConverter.ToInt32(content, index + i);
+        //}
+
+        //index += iterCount;
+        //int[] textureLengths = new int[info[3]];
+
+        //print("info[3] :" + info[3]);
+
+        //iterCount = info[3] * 4;
+        //for (int i = 0; i < iterCount; i = i + 4)
+        //{
+        //    textureLengths[i / 4] = BitConverter.ToInt32(content, index + i);
+        //}
+
+        //index += iterCount;
+        //Vector3[] panoramaPosition = new Vector3[info[1]];
+        //Vector3[] panoramaRotation = new Vector3[info[1]];
+        //iterCount = info[1] * 12;
+        //for (int i = 0; i < iterCount; i = i + 12)
+        //{
+        //    panoramaPosition[i / 12] = new Vector3(BitConverter.ToSingle(content, index + i), BitConverter.ToSingle(content, index + i + 4), BitConverter.ToSingle(content, index + i + 8));
+        //}
+
+        //index += iterCount;
+        //iterCount = info[1] * 12;
+        //for (int i = 0; i < iterCount; i = i + 12)
+        //{
+        //    panoramaRotation[i / 12] = new Vector3(BitConverter.ToSingle(content, index + i), BitConverter.ToSingle(content, index + i + 4), BitConverter.ToSingle(content, index + i + 8));
+        //}
+
+        //textures = new List<byte[]>();
+        //List<byte[]> indiciesList = new List<byte[]>();
+        //List<byte[]> verticiesList = new List<byte[]>();
+
+        //float[] meshesTransform = new float[info[2] * 9];
+        //string panoramaTagJson = null;
+        //string boundaryJson = null;
+
+        //index += iterCount;
+
+        //foreach (int length in textureLengths)
+        //{
+        //    byte[] bytes = new byte[length];
+        //    Array.Copy(content, index, bytes, 0, length);
+        //    index += length;
+
+        //    textures.Add(bytes);
+        //}
+
+        //foreach (int length in verticeLengths)
+        //{
+        //    byte[] bytes = new byte[length];
+        //    Array.Copy(content, index, bytes, 0, length);
+        //    index += length;
+
+        //    verticiesList.Add(bytes);
+        //}
+
+        //foreach (int length in indiciesLengths)
+        //{
+        //    byte[] bytes = new byte[length];
+        //    Array.Copy(content, index, bytes, 0, length);
+        //    index += length;
+
+        //    indiciesList.Add(bytes);
+        //}
+
+        //for (int i = 0; i < info[2]; ++i)
+        //{
+        //    for (int j = 0; j < 9; ++j)
+        //    {
+        //        byte[] bytes = new byte[4];
+        //        Array.Copy(content, index, bytes, 0, 4);
+        //        index += 4;
+
+        //        meshesTransform[i * 9 + j] = BitConverter.ToSingle(bytes,0);
+        //    }
+        //}
+
+        //byte[] boundBytes = new byte[boundBytesLength];
+        //Array.Copy(content, index, boundBytes, 0, boundBytesLength);
+        //index += boundBytesLength;
+
+        //byte[] panoramaTagBytes = new byte[panoramaTagLength];
+        //Array.Copy(content, index, panoramaTagBytes, 0, panoramaTagLength);
+        //index += panoramaTagLength;
+
+
+        //List<Vector3[]> verticies = new List<Vector3[]>();
+        //List<int[]> indicies = new List<int[]>();
+
+        //Vector3[] meshesPositions = new Vector3[info[2]];
+        //Vector3[] meshesRotations = new Vector3[info[2]];
+        //Vector3[] meshesScales = new Vector3[info[2]];
+
+        //foreach (byte[] verticesBytes in verticiesList)
+        //{
+        //    int byteLength = verticesBytes.Length;
+
+        //    Vector3[] localVertices = new Vector3[byteLength / 12];
+        //    for (int i = 0; i < byteLength; i = i + 12)
+        //    {
+        //        localVertices[i / 12] = new Vector3(BitConverter.ToSingle(verticesBytes, i), BitConverter.ToSingle(verticesBytes, i + 4), BitConverter.ToSingle(verticesBytes, i + 8));
+        //    }
+        //    verticies.Add(localVertices);
+
+        //}
+
+        //foreach (byte[] indiciesBytes in indiciesList)
+        //{
+        //    int byteLength = indiciesBytes.Length;
+        //    int[] localIndicies = new int[byteLength / 4];
+        //    for (int i = 0; i < byteLength; i = i + 4)
+        //    {
+        //        localIndicies[i / 4] = BitConverter.ToInt32(indiciesBytes, i);
+        //    }
+        //    indicies.Add(localIndicies);
+        //}
+
+        //for (int i = 0; i < info[2]; ++i)
+        //{
+        //    int byteLenngth = i * 9;
+
+        //    meshesPositions[i] = new Vector3(meshesTransform[byteLenngth], meshesTransform[byteLenngth + 1], meshesTransform[byteLenngth + 2]);
+        //    meshesRotations[i] = new Vector3(meshesTransform[byteLenngth + 3], meshesTransform[byteLenngth + 4], meshesTransform[byteLenngth + 5]);
+        //    meshesScales[i] = new Vector3(meshesTransform[byteLenngth + 6], meshesTransform[byteLenngth + 7], meshesTransform[byteLenngth + 8]);
+        //}
+
+        //panoramaTagJson = UTF8Encoding.UTF8.GetString(panoramaTagBytes);
+        //boundaryJson = UTF8Encoding.UTF8.GetString(boundBytes);
 
         int[] info = new int[4];
         int index = 16;
@@ -311,6 +494,7 @@ public class Constructor : MonoBehaviour
         int modelType;
         int boundBytesLength;
         int panoramaTagLength;
+        int homeTourLength;
 
         for (int i = 0; i < index; i = i + 4)
         {
@@ -331,6 +515,9 @@ public class Constructor : MonoBehaviour
         panoramaTagLength = BitConverter.ToInt32(content, index);
         index += 4;
         print("panoramaTagLength" + panoramaTagLength);
+
+        homeTourLength = BitConverter.ToInt32(content, index);
+        index += 4;
 
         int[] verticeLengths = new int[info[2]];
         int iterCount = info[2] * 4;
@@ -380,8 +567,10 @@ public class Constructor : MonoBehaviour
         List<byte[]> verticiesList = new List<byte[]>();
 
         float[] meshesTransform = new float[info[2] * 9];
+
         string panoramaTagJson = null;
         string boundaryJson = null;
+        string homeTourJson = null;
 
         index += iterCount;
 
@@ -432,6 +621,12 @@ public class Constructor : MonoBehaviour
         Array.Copy(content, index, panoramaTagBytes, 0, panoramaTagLength);
         index += panoramaTagLength;
 
+        byte[] homeTourBytes = new byte[homeTourLength];
+        Array.Copy(content, index, homeTourBytes, 0, homeTourLength);
+        index += homeTourLength;
+
+        //byte[] hometourJson = new byte[hometourjson]
+
 
         List<Vector3[]> verticies = new List<Vector3[]>();
         List<int[]> indicies = new List<int[]>();
@@ -475,7 +670,7 @@ public class Constructor : MonoBehaviour
 
         panoramaTagJson = UTF8Encoding.UTF8.GetString(panoramaTagBytes);
         boundaryJson = UTF8Encoding.UTF8.GetString(boundBytes);
-
+        homeTourJson = UTF8Encoding.UTF8.GetString(homeTourBytes);
 
         /////////////////////////////////////////////////////////////////////////////////////Above Same OutPutModelExporter
 
@@ -526,10 +721,16 @@ public class Constructor : MonoBehaviour
 
         playerMovement.Init();
         inputSystem.enabled = true;
+
         isLoadDone = true;
 
         CreateBounds(boundaryJson);
+        
         CreatePanoramaTags(panoramaTagJson);
+
+        homeTourConstructor.InitHomeTourData(homeTourJson);
+
+
     }
 
     public IEnumerator InitStage(int stage , Action<string> callBack)
@@ -568,10 +769,28 @@ public class Constructor : MonoBehaviour
         callBack("Success");
     }
 
+    public IEnumerator InitStageHome(Action<string> callBack)
+    {
+        yield return new WaitUntil(() => isLoadDone);
+
+        HomeTourConstructor.Root root = homeTourConstructor.GetRoot();
+
+
+        if(root != null)
+        {
+            playerMovement.InitStage(root.initHomePosition.position, root.initHomePosition.rotation);
+        }
+
+        yield return new WaitForFixedUpdate();
+
+        waitForFixedUpdated = true;
+
+        callBack("Success");
+    }
+
     public bool GetIsLoadDone()
     {
         return isLoadDone;
-
     }
 
     private float GetMeshVerticesMaxDistance()

@@ -116,7 +116,7 @@ public class DefectConstructor : MonoBehaviour
             defect.flawPrtbCd = info.flawPrtbCd;
             
             //defect.name = bound;
-            //nativeMessanger.NativeSendMessage("CreateDot," + JsonUtility.ToJson(defect));
+            nativeMessanger.OnViewerDefectCreated(JsonUtility.ToJson(defect));
         }       
     }
 
@@ -507,7 +507,21 @@ public class DefectConstructor : MonoBehaviour
     }
 
     public string GetAllDefects() {
+        //print(defectList.Count);
         return JsonUtility.ToJson(defectList);
+    }
+
+    public string GetDefectByIndex(int index)
+    {
+        if(defectList.Count > index)
+        {
+            //print(JsonUtility.ToJson(defectList[index]));
+            return JsonUtility.ToJson(defectList[index]);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public string GetDefect(string defectID)
@@ -558,15 +572,15 @@ public class DefectConstructor : MonoBehaviour
     [Serializable]
     public class Defect
     {
-        public string id; //ÇÏÀÚ ID
-        public string status; //ÇÏÀÚ »óÅÂ 
-        public string name; //ÇÏÀÚ°¡ À§Ä¡ÇÑ ¹æ ÀÌ¸§
-        public string flawPrtbGrpCd; //À§Ä¡¸í
-        public string detailName; //ÇÏÀÚ µðÅ×ÀÏ ¹æ ÀÌ¸§
-        public string flawPrtbCd; //»ó¼¼À§Ä¡¸í
-        public Vector3 position; //ÇÏÀÚ À§Ä¡
-        public Vector3 rotation; //ÇÏÀÚ °¢µµ
-        public View view; //Ä«¸Þ¶ó °üÁ¡
+        public string id; //ï¿½ï¿½ï¿½ï¿½ ID
+        public string status; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+        public string name; //ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¸ï¿½
+        public string flawPrtbGrpCd; //ï¿½ï¿½Ä¡ï¿½ï¿½
+        public string detailName; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¸ï¿½
+        public string flawPrtbCd; //ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½
+        public Vector3 position; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+        public Vector3 rotation; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        public View view; //Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
   
@@ -597,15 +611,15 @@ public class DefectConstructor : MonoBehaviour
     [Serializable]
     public class DefectArray
     {
-        public Defect[] defect; //ÇÏÀÚ ¹è¿­
+        public Defect[] defect; //ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­
     }
 
     [Serializable]
-    public class View // Ä«¸Þ¶ó °üÁ¡
+    public class View // Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½
     {
-        public Vector3 position; //Ä«¸Þ¶ó À§Ä¡
-        public Vector3 rotation; //Ä«¸Þ¶ó °¢µµ
-        public float fov; //Ä«¸Þ¶ó fov
+        public Vector3 position; //Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡
+        public Vector3 rotation; //Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½
+        public float fov; //Ä«ï¿½Þ¶ï¿½ fov
     }
 
 
