@@ -92,7 +92,7 @@ public class InputSystem : MonoBehaviour
             return;
         }
 
-         zoomInOutWithWheel();
+        zoomInOutWithWheel();
    
         if (EventSystem.current.IsPointerOverGameObject(pointerID))
         {
@@ -123,9 +123,16 @@ public class InputSystem : MonoBehaviour
     const float zoomSpeed = 2.5f;
     private void zoomInOutWithWheel()
     {
+        if (Input.mouseScrollDelta.y == 0)
+        {
+            return;
+        }
+
         float fov = Camera.main.fieldOfView;
+ 
         fov -= Input.mouseScrollDelta.y * zoomSpeed;  
-        camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
+       
+        camController.SetFovTogetherClamp(fov);
     }
 
     public bool GetCursorOnUI()
@@ -152,6 +159,29 @@ public class InputSystem : MonoBehaviour
         CheckDefectColliderInit();
     }
 
+    float minHoldTime = 0.35f;
+    float maxHoldTime = 0.7f;
+
+    public void SetHoldTime(float scale)
+    {
+        minHoldTime = 0.35f * scale;
+        maxHoldTime = 0.7f * scale;
+    }
+
+    public void SetHoldMinTime(float scale)
+    {
+        minHoldTime = 0.35f * scale;
+    
+    }
+
+
+    public void SetHoldMaxTime(float scale)
+    {
+       
+        maxHoldTime = 0.7f * scale;
+    }
+
+
     private void MouseButtonHold()
     {
         if (!onClickStart)
@@ -165,7 +195,7 @@ public class InputSystem : MonoBehaviour
             {
                 holdTime += Time.deltaTime;
 
-                if (holdTime > 0.7f)
+                if (holdTime > minHoldTime)
                 {
                     if (!hold)
                     {
@@ -177,18 +207,31 @@ public class InputSystem : MonoBehaviour
 
                 if (controlState == ControlState.Defect || controlState == ControlState.Measure)
                 {
-                    if ((holdTime - 0.7f) / 1f > 1)
-                    {
-                        StartCoroutine(ImgsFD.DelaySetActive(false));
-                    }
-                    else
+                    //if ((holdTime - minHoldTime) / maxHoldTime > maxHoldTime)
+                    //{
+                    //    StartCoroutine(ImgsFD.DelaySetActive(false));
+                    //}
+                    //else
+                    //{
+
+                    //}
+
+                    //else
+                    //{
+                    //    StartCoroutine(ImgsFD.DelaySetActive(true));
+                    //    ImgsFD.SetValue((holdTime - 0.1f) / maxHoldTime, true);
+                    //}
+
+                    if (holdTime > minHoldTime && (holdTime - minHoldTime) / (maxHoldTime - minHoldTime) <= 1f)
                     {
                         StartCoroutine(ImgsFD.DelaySetActive(true));
-                        ImgsFD.SetValue((holdTime - 0.7f) / 1f, true);
+                        ImgsFD.SetValue((holdTime - minHoldTime) / (maxHoldTime - minHoldTime), true);
                     }
-                }
 
-                if (holdTime - 0.7f >= 1f)
+
+                }
+   
+                if ((holdTime - minHoldTime) / (maxHoldTime - minHoldTime) > 1f)
                 {
                     if (!imgsFDDone)
                     {
@@ -200,8 +243,13 @@ public class InputSystem : MonoBehaviour
                         }
                         else if (controlState == ControlState.Measure)
                         {
+                            print("imgsFDDone");
                             measurement.DotCreateMode();
                         }
+
+                        print("imgsFDDone MouseButtonHold");
+
+                        StartCoroutine(ImgsFD.DelaySetActive(false));
                     }
                 }
             }
@@ -349,7 +397,7 @@ public class InputSystem : MonoBehaviour
             float fov = Camera.main.fieldOfView;
             fov -= deltaDistance * zoomSpeed;
            
-            camController.SetFovTogether(Mathf.Clamp(fov, 20, 70));
+            camController.SetFovTogetherClamp(fov);
 
             currentPinchDistance = distance;
 

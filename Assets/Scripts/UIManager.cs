@@ -44,10 +44,7 @@ public class UIManager : MonoBehaviour
         
     }
 
-    public void Unload()
-    {
-        Application.Unload();
-    }
+
 
     public void ActivateMiniMap(bool onOff) 
     {

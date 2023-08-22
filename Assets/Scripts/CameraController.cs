@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -27,6 +28,10 @@ public class CameraController : MonoBehaviour
 
     private float directionX = -1;
     private float directionY = -1;
+
+    private float minFov = 30;
+    private float maxFov = 120;
+   
 
     private void Start()
     {
@@ -97,6 +102,13 @@ public class CameraController : MonoBehaviour
         transform.eulerAngles = rot;
         //Camera.main.fieldOfView = fov;
         SetFovTogether(fov);
+        //WrapAngle(fov);
+        //float pitch = Mathf.Clamp(transform.rotation.eulerAngles.y, minPitch, maxPitch);
+
+        //print("Pitch :" + pitch);
+        //      Quaternion targetRotation = Quaternion.Euler(pitch, dragStartRotation.eulerAngles.y , 0);
+        //        transform.rotation = targetRotation;
+
     }
 
     public bool GetCameraOnMove()
@@ -211,6 +223,41 @@ public class CameraController : MonoBehaviour
     {
         uiCamera.fieldOfView = fov;
         Camera.main.fieldOfView = fov;
+
+        //UpdateRotation();
+    }
+
+    public void SetFovTogetherClamp(float fov)
+    {
+        uiCamera.fieldOfView = Mathf.Clamp(fov,minFov,maxFov);
+        Camera.main.fieldOfView = Mathf.Clamp(fov,minFov,maxFov);
+
+        SetPitch(Mathf.Lerp(-45,0,(fov - 30)/90), Mathf.Lerp(45, 0,  (fov - 30)/90));
+
+        WrapAngle(transform.eulerAngles.x);
+       
+    
+        //float pitch = Mathf.Clamp(angleX - mouseDelta.y * dragSpeed, minPitch, maxPitch);
+
+        //print("Pitch :" + pitch);
+        //Quaternion targetRotation = Quaternion.Euler(pitch, dragStartRotation.eulerAngles.y + mouseDelta.x * dragSpeed, 0);
+        //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, lerpSpeed * Time.deltaTime);
+
+        transform.eulerAngles = new Vector3(Mathf.Clamp(WrapAngle(transform.eulerAngles.x), minPitch, maxPitch), transform.eulerAngles.y, 0);
+
+        //print("SetFovTogetherClamp" + transform.eulerAngles.x + "Mathf.Clamp" + Mathf.Clamp( WrapAngle(transform.eulerAngles.x), minPitch, maxPitch) + "minPitch" + minPitch +"maxPitch" +maxPitch);
+    }
+
+    public void SetFovMinMax(float minFov , float maxFov)
+    {
+        this.minFov = minFov;
+        this.maxFov = maxFov;
+    }
+
+    public void SetPitch(float minPitch , float maxPitch)
+    {
+        this.minPitch = minPitch;
+        this.maxPitch = maxPitch;
     }
 
     public IEnumerator LinearLookAt(Vector3 pos , float iterTime)
@@ -228,5 +275,14 @@ public class CameraController : MonoBehaviour
           
             yield return null;
         }
+    }
+
+    private static float WrapAngle(float angle)
+    {
+        angle %= 360;
+        if (angle > 180)
+            return angle - 360;
+
+        return angle;
     }
 }

@@ -10,6 +10,8 @@
 - (void) onViewerClicked:(NSString*)message;
 - (void) onViewerLoaded:(NSString*)message;
 - (void) onViewerMoved:(NSString*)message;
+- (void) onViewerDefectCreated:(NSString*)message;
+- (void) onViewerMessageReceived:(NSString*)message;
 // other methods
 @end
 

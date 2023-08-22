@@ -12,14 +12,18 @@ using ColorUtility = UnityEngine.ColorUtility;
 public class NativeMessanger : MonoBehaviour
 {
 #if UNITY_IOS
-     [DllImport("__Internal")]
+    [DllImport("__Internal")]
     public static extern void onViewerLoaded(string message);
-     [DllImport("__Internal")]
+    [DllImport("__Internal")]
     public static extern void onViewerClicked(string message);
     [DllImport("__Internal")]
     public static extern void onViewerMoved(string message);
-
+    [DllImport("__Internal")]
+    public static extern void onViewerDefectCreated(string message);
+    [DllImport("__Internal")]
+    public static extern void onViewerMessageReceived(string message);
 #endif
+
     [SerializeField] private Constructor constructor;
     [SerializeField] private DefectConstructor defectConstructor;
 
@@ -40,7 +44,8 @@ public class NativeMessanger : MonoBehaviour
 
     private string className = "com.parallel.viewer3d.RoomViewerActivity";
     private string funcName = "RoomViewerReceiveMessage";
- 
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -48,32 +53,65 @@ public class NativeMessanger : MonoBehaviour
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
         constructor.CreateBoundaryTest();
         SetActiveDefectCreateModeRefresh("True");
+        //Application.unloading += OnUnload;
 
 #if UNITY_EDITOR
-        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "output123.env");
-        SetActiveDefectCreateMode("True");
-        ViewPanoramaTag("1");
 
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
+        SetActiveDefectCreateMode("True");
+        //SetActiveDefectCreateMode("False");
+        //ViewPanoramaTag("3");
+        ViewPanoramaInit();
+
+       // ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
+   
+       // SetActiveDefectCreateMode("True");
+       // ViewPanoramaTag("3");
+
+       
+        //Invoke("Test",3);
         //ViewDefectJson();
         //SetTextureCompressFormat("True");
         //constructor.SetInverse();
         //ViewPano
 #endif
 
-        // ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
-        //  SetActiveDefectCreateMode("True");
-        //  ViewPanorama("19");
-        // SetActiveDefectCreateMode("True");
-        // ViewPanorama("19");
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+        //SetActiveDefectCreateMode("True");
+        //ViewPanoramaTag("3");
+
+        //SetDotCreateTimeScale("20");
+        //SetDefectLocalScale("2");
+        //SetCameraFovMinMax();
+        //SetCameraFov("55");
+        //SetCameraFovMinMax("50,60");
+        //SetDotCreateTimeScale("20");
+
+        //SetDotCreatStartTime("5");
+        //SetDotCreatEndTime("10");
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
+        //SetActiveDefectCreateMode("True");
+        //ViewPanorama("19");
+        //SetActiveDefectCreateMode("True");
+        //ViewPanorama("19");
 
     }
 
+    public void Test()
+    {
+        InitConstructor();
+        //Unload();
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
+
+        ViewPanoramaTag("3");
+
+        Invoke("Test", 3);
+    }
 
     private void Update()
     {
 #if UNITY_ANDROID
-      
+
 #endif
     }
 
@@ -213,7 +251,7 @@ fileName = "jar:file://" + fileName;
     {
         print("GetAllDefects");
 
-        defectConstructor.GetAllDefects();
+        print(defectConstructor.GetAllDefects());
     }
 
     public void GetDefect(string value)
@@ -221,6 +259,20 @@ fileName = "jar:file://" + fileName;
         print("GetDefect Input Value : " + value);
 
         defectConstructor.GetDefect(value);
+    }
+
+    public void GetDefectByIndex(string value)
+    {
+        int index;
+
+        if (int.TryParse(value, out index))
+        {
+            OnViewerMessageReceived(defectConstructor.GetDefectByIndex(index));
+        }
+        else
+        {
+            nativeSendErrorMessage("GetDefectByIndex :" + value + " " + "Parse Failed");
+        }
     }
 
     public void SetCameraSensitivity(string value)
@@ -299,6 +351,56 @@ fileName = "jar:file://" + fileName;
         }
     }
 
+    public void SetCameraFovMinMax(string value)
+    {
+        print("SetCameraFov Input Value : " + value);
+
+        string[] values = value.Split(',');
+
+        float minFov;
+        float maxFov;
+
+        if (float.TryParse(values[0], out minFov) && float.TryParse(values[1], out maxFov))
+        {
+            camController.SetFovMinMax(minFov,maxFov);
+        }
+    }
+
+    public void SetDotCreateTimeScale(string value)
+    {
+        float dotCreateTime;
+
+        if(float.TryParse(value,out dotCreateTime))
+        {
+            //camController.set
+            inputSystem.SetHoldTime(dotCreateTime);
+        }
+    }
+
+    public void SetDotCreatStartTime(string value)
+    {
+        float dotCreateTime;
+
+        if (float.TryParse(value, out dotCreateTime))
+        {
+            //camController.set
+            inputSystem.SetHoldMinTime(dotCreateTime);
+        }
+    }
+
+    public void SetDotCreatEndTime(string value)
+    {
+        float dotCreateTime;
+
+        if (float.TryParse(value, out dotCreateTime))
+        {
+            //camController.set
+            inputSystem.SetHoldMaxTime(dotCreateTime);
+        }
+    }
+
+  //  public void SetDefectSize
+
     public void SetMoveTime(string value)
     {
         print("SetMoveTime Input Value : " + value);
@@ -326,6 +428,13 @@ fileName = "jar:file://" + fileName;
     {
 
         StartCoroutine(constructor.InitStageTag(name, OnViewerLoaded));
+    }
+
+    //public void ViewPanorama
+
+    public void ViewPanoramaInit()
+    {
+        StartCoroutine(constructor.InitStageHome(OnViewerLoaded));
     }
 
     public void ViewDefectJson(string json)
@@ -479,7 +588,49 @@ fileName = "jar:file://" + fileName;
 #endif
         print("OnViewerLoaded" + message);
     }
-    
+
+    public void OnViewerDefectCreated(string message)
+    {
+#if UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call("onViewerDefectCreated", message);
+        }
+        catch (Exception e)
+        {
+            print(e);
+        }
+#elif UNITY_IOS || UNITY_TVOS
+       onViewerDefectCreated(message);
+       // NativeAPI.showHostMainWindow(lastStringColor);
+#elif UNITY_EDITOR
+#endif
+        print("onViewerDefectCreated" + message);
+    }
+
+    public void OnViewerMessageReceived(string message)
+    {
+#if UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass jc = new AndroidJavaClass(className);
+            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
+            overrideActivity.Call("onViewerMessageReceived", message);
+        }
+        catch (Exception e)
+        {
+            print(e);
+        }
+#elif UNITY_IOS || UNITY_TVOS
+       onViewerMessageReceived(message);
+       // NativeAPI.showHostMainWindow(lastStringColor);
+#elif UNITY_EDITOR
+#endif
+        print("onViewerMessageReceived" + message);
+    }
+
     public void nativeSendErrorMessage(string message)
     {
         print(message);
@@ -494,11 +645,6 @@ fileName = "jar:file://" + fileName;
     public void SetActiveMinimap()
     {
         constructor.SetMiniMap();
-    }
-
-    public void Unload()
-    {
-        Application.Unload();
     }
 
     public void SetClassName(string value)
@@ -572,6 +718,16 @@ fileName = "jar:file://" + fileName;
         defectConstructor.SetColliderSize(size);
     }
 
+    public void SetDefectLocalScale(string value)
+    {
+        float localScale;
+
+        if(float.TryParse(value , out localScale))
+        {
+            defectConstructor.SetDefectLocalScale(localScale);
+        }
+    }
+
     public void Quit()
     {
         Application.Quit();
@@ -587,5 +743,27 @@ fileName = "jar:file://" + fileName;
         LoadTextureFromStreamingAsset.textureCompress = true;
        // if(value == "0")
     }
+
+    static void Unload()
+    {
+        Application.Unload();
+    }
+
+    static void OnUnload()
+    {
+        Debug.Log("Unloading the Player");
+    }
+
+    public void InitConstructor()
+    {
+        constructor.Init();
+    }
+
+    //public void GetDefect()
+    //{
+
+    //}
+
+    //public void SetCamera
 
 }

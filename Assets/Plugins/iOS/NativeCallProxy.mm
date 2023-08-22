@@ -37,6 +37,20 @@ extern "C"
         return [api onViewerMoved:[NSString stringWithUTF8String:message]];
     }
 }
+extern "C"
+{
+    void onViewerDefectCreated(const char* message)
+    {
+        return [api onViewerDefectCreated:[NSString stringWithUTF8String:message]];
+    }
+}
+extern "C"
+{
+    void onViewerMessageReceived(const char* message)
+    {
+        return [api onViewerMessageReceived:[NSString stringWithUTF8String:message]];
+    }
+}
 
 
 
