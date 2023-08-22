@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using static UnityEngine.GraphicsBuffer;
+using Unity.VisualScripting;
 
 public class DefectDot : MonoBehaviour
 {
@@ -20,30 +21,25 @@ public class DefectDot : MonoBehaviour
     void Start()
     {
         initScale = transform.localScale;
-        //material = GetComponent<Material>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
         CheckCameraOnView();
-        //print( "" + Camera.main.transform.position);
 
-        //if(initScale)
+        Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
 
-        // transform.localScale = initScale * (Camera.main.transform.position - transform.position).magnitude ;
-        //(Camera.main.transform.position -  transform.position);
+        Vector2 scaler = Vector2.one - new Vector2(Mathf.Abs(screenPosition.x - Screen.width / 2) / Screen.width, Mathf.Abs(screenPosition.y - Screen.height / 2) / Screen.height);
 
-        //float distance = Vector3.Distance(transform.position, Camera.main.transform.position);
+        if(Mathf.Abs(scaler.x) > 1 || Mathf.Abs(scaler.y) > 1)
+        {
+            print("Scaler Worng" + scaler.magnitude);
+            return;
+        }
 
-        // �Ÿ��� ���� ũ�⸦ ����(interpolate)�Ͽ� ���
-        //float normalizedDistance = Mathf.Clamp01((distance - minDistance) / (maxDistance - minDistance));
-        //float targetSize = Mathf.Lerp(minSize, maxSize, normalizedDistance);
-
-
-        // ������Ʈ�� ������ ����
-        //transform.localScale = initScale * targetSize;
+        transform.localScale = initScale * Vector3.Distance(Camera.main.transform.position, transform.position) * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad)
+            * scaler;    
     }
 
     public void CreateToServer(Vector3 pos, Vector3 rot)

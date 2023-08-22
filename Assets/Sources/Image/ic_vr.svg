@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0.25;fill:#FFFFFF;enable-background:new    ;}
+	.st1{filter:url(#타원_294);}
+	.st2{fill:#FFFFFF;}
+	.st3{fill:#009EA1;}
+	.st4{filter:url(#타원_295);}
+</style>
+<filter  filterUnits="userSpaceOnUse" height="6" id="타원_295" width="6" x="5" y="5">
+	<feOffset  dx="1" input="SourceAlpha"></feOffset>
+	<feGaussianBlur  result="blur-2" stdDeviation="0.5"></feGaussianBlur>
+	<feFlood  flood-opacity="0.251" result="color"></feFlood>
+	<feComposite  in="SourceGraphic" in2="blur-2" operator="out"></feComposite>
+	<feComposite  in="color" operator="in"></feComposite>
+	<feComposite  in2="SourceGraphic" operator="in"></feComposite>
+</filter>
+<filter  filterUnits="userSpaceOnUse" height="13" id="타원_294" width="13" x="1.5" y="2.5">
+	<feOffset  dy="1" input="SourceAlpha"></feOffset>
+	<feGaussianBlur  result="blur" stdDeviation="0.5"></feGaussianBlur>
+	<feFlood  flood-opacity="0.31"></feFlood>
+	<feComposite  in2="blur" operator="in"></feComposite>
+	<feComposite  in="SourceGraphic" operator="over"></feComposite>
+</filter>
+<g id="ic_vr01" transform="translate(-737 -379)">
+	<circle id="타원_293" class="st0" cx="745" cy="387" r="8"/>
+	<g transform="matrix(1, 0, 0, 1, 737, 379)" class="st1">
+		<circle id="타원_294-2_00000163778846770134639240000004644765205230021034_" class="st2" cx="8" cy="8" r="5"/>
+	</g>
+	<g>
+		<circle id="타원_295-2" class="st3" cx="745" cy="387" r="3"/>
+		<g transform="matrix(1, 0, 0, 1, 737, 379)" class="st4">
+			<circle id="타원_295-3_00000169532189741519816190000004456431476136282249_" class="st3" cx="8" cy="8" r="3"/>
+		</g>
+	</g>
+</g>
+</svg>

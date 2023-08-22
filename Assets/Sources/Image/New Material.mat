@@ -7,13 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DefectDotDefault
-  m_Shader: {fileID: 4800000, guid: 832980ba13231854d88a322b288f3685, type: 3}
+  m_Name: New Material
+  m_Shader: {fileID: 4800000, guid: 37dcb9817fd5d704a94e096556e42e0f, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a56f5ade309c6da41948203e5633d2da, type: 3}
+        m_Texture: {fileID: 6192944022281365145, guid: 702a1a027fc5849b28d1973948da5f4a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -84,7 +84,6 @@ Material:
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _UVSec: 0
-    - _UseUIAlphaClip: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
