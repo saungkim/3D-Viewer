@@ -62,6 +62,7 @@ public class DefectConstructor : MonoBehaviour
         if (createDotRefresh)
             DestroyAllDefects();
 
+        Handheld.Vibrate();
 
         GameObject o = Instantiate(dot, pos, Quaternion.Euler(rot), defectDot);
         o.SetActive(true);

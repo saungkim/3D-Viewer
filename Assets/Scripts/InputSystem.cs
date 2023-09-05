@@ -53,6 +53,10 @@ public class InputSystem : MonoBehaviour
 #elif UNITY_IOS || UNITY_IPHONE || UNITY_ANDROID
         pointerID = 0;  // 휴대폰이나 이외에서 터치 상에서는 0 
 #endif
+
+
+        float fov = Camera.main.fieldOfView;
+        camController.SetFovTogetherClamp(fov);
     }
 
     public void Init()

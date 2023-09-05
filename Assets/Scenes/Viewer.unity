@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311915, g: 0.3807396, b: 0.35872662, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3151,7 +3151,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 100
+  field of view: 130
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -3176,7 +3176,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477369666}
-  m_LocalRotation: {x: 0.015200353, y: 0.8737905, z: -0.027368834, w: 0.48529375}
+  m_LocalRotation: {x: 0, y: 0.8742175, z: 0, w: 0.48553458}
   m_LocalPosition: {x: 8.765143, y: 10, z: 1.3770461}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3186,7 +3186,7 @@ Transform:
   - {fileID: 128626020}
   m_Father: {fileID: 114078818}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 121.905, z: 0}
 --- !u!114 &477369671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5617,7 +5617,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &1039024584
 Canvas:
   m_ObjectHideFlags: 0

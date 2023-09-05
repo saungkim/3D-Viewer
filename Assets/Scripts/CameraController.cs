@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
     private float directionY = -1;
 
     private float minFov = 30;
-    private float maxFov = 120;
+    private float maxFov = 130;
    
 
     private void Start()

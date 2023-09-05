@@ -34,11 +34,17 @@ public class DefectDot : MonoBehaviour
 
         if(Mathf.Abs(scaler.x) > 1 || Mathf.Abs(scaler.y) > 1)
         {
-            print("Scaler Worng" + scaler.magnitude);
+            //print("Scaler Worng" + scaler.magnitude);
             return;
         }
 
-        transform.localScale = initScale * Vector3.Distance(Camera.main.transform.position, transform.position) * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad)
+        float fov = Camera.main.fieldOfView;
+        if(fov > 100)
+        {
+            fov = 100;
+        }
+            
+        transform.localScale = initScale * Vector3.Distance(Camera.main.transform.position, transform.position) * Mathf.Tan(fov * 0.5f * Mathf.Deg2Rad)
             * scaler;    
     }
 
