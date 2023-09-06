@@ -3218,8 +3218,8 @@ MonoBehaviour:
   measureCamera: {fileID: 128626019}
   inputSystem: {fileID: 338664070}
   dragSpeed: 0.2
-  minPitch: -15
-  maxPitch: 15
+  minPitch: -45
+  maxPitch: 45
   lerpSpeed: 13
   startImageTransTime: 1
   endImageTransTime: 0.15

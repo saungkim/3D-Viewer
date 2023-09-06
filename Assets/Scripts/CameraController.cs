@@ -232,7 +232,7 @@ public class CameraController : MonoBehaviour
         uiCamera.fieldOfView = Mathf.Clamp(fov,minFov,maxFov);
         Camera.main.fieldOfView = Mathf.Clamp(fov,minFov,maxFov);
 
-        SetPitch(Mathf.Lerp(-45,0,(fov - 30)/90), Mathf.Lerp(45, 0,  (fov - 30)/90));
+        //SetPitch(Mathf.Lerp(-45,0,(fov - 30)/90), Mathf.Lerp(45, 0,  (fov - 30)/90));
 
         WrapAngle(transform.eulerAngles.x);
        
