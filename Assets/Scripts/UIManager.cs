@@ -28,6 +28,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject safeArea;
 
+    [SerializeField] private GameObject infoPopUp;
+    [SerializeField] private GameObject measurementUI;
 
     Action<Image> controlAction;
     Image selectedImage;
@@ -41,7 +43,12 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            MeasurementDestroySelectedMeasureUnit();
+        }
+#endif
     }
 
 
@@ -148,27 +155,41 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void InverseMeasureMode(Image img)
+    public void SetActiveInfoPopUp(bool onOff)
     {
-        if (controlAction == null)
-        {
-            controlAction = (Image img) => { InverseMeasureMode(img); };
-            selectedImage = img;
-        }
-        else if (selectedImage == img)
-        {
-            controlAction = null;
-            selectedImage = img;
-        }
-        else if (selectedImage != null)
-        {
-            Image localselectedImg = selectedImage;
-            selectedImage = null;
-            controlAction.Invoke(localselectedImg);
-          
-            controlAction = (Image img) => { InverseMeasureMode(img); };
-            selectedImage = img;
-        }
+        infoPopUp.SetActive(onOff);
+    }
+
+    public void SetActiveMeasurementUI(bool onOff)
+    {
+        measurementUI.SetActive(onOff);
+    }
+
+    public void InverseMeasureMode( )
+    {
+        //if(img != null)
+        //{
+        //    if (controlAction == null)
+        //    {
+        //        controlAction = (Image img) => { InverseMeasureMode(img); };
+        //        selectedImage = img;
+        //    }
+        //    else if (selectedImage == img)
+        //    {
+        //        controlAction = null;
+        //        selectedImage = img;
+        //    }
+        //    else if (selectedImage != null)
+        //    {
+        //        Image localselectedImg = selectedImage;
+        //        selectedImage = null;
+        //        controlAction.Invoke(localselectedImg);
+
+        //        controlAction = (Image img) => { InverseMeasureMode(img); };
+        //        selectedImage = img;
+        //    }
+        //}
+    
 
         bool onOff;
 
@@ -182,10 +203,14 @@ public class UIManager : MonoBehaviour
         {
             onOff = false;
             measrueMentButton.SetActive(onOff);
-            inputSystem.SetControlState(InputSystem.ControlState.None);
+            inputSystem.SetControlState(InputSystem.ControlState.Defect);
             measureMent.ActivateMeasurement(onOff);
+
+            print("Control State None");
         }
-        SetColorSelected(onOff, img);
+
+        //if(img != null)
+        //SetColorSelected(onOff, img);
     }
 
     public void InverseMeasureFixMode()
@@ -318,5 +343,10 @@ public class UIManager : MonoBehaviour
         }
 
         //safeArea.SetActive(onOff);
+    }
+
+    public void ReverseToggleActive(Toggle toggle)
+    {
+        toggle.isOn = !toggle.isOn;
     }
 }

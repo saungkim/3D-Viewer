@@ -49,9 +49,9 @@ public class InputSystem : MonoBehaviour
     void Start()
     {
 #if UNITY_EDITOR
-        pointerID = -1; //PC³ª À¯´ÏÆ¼ »ó¿¡¼­´Â -1
+        pointerID = -1; //PCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½ó¿¡¼ï¿½ï¿½ï¿½ -1
 #elif UNITY_IOS || UNITY_IPHONE || UNITY_ANDROID
-        pointerID = 0;  // ÈÞ´ëÆùÀÌ³ª ÀÌ¿Ü¿¡¼­ ÅÍÄ¡ »ó¿¡¼­´Â 0 
+        pointerID = 0;  // ï¿½Þ´ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½Ì¿Ü¿ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ó¿¡¼ï¿½ï¿½ï¿½ 0 
 #endif
 
 
@@ -158,6 +158,8 @@ public class InputSystem : MonoBehaviour
         imgsFDDone = false;
 
         camController.StartDrag();
+
+        
         measurement.StartDrag();
 
         CheckDefectColliderInit();
@@ -209,7 +211,7 @@ public class InputSystem : MonoBehaviour
                     hold = true;             
                 }
 
-                if (controlState == ControlState.Defect || controlState == ControlState.Measure)
+                if (controlState == ControlState.Defect ||( controlState == ControlState.Measure && measurement.measureMentState != Measurement.MeasurementState.DotCreating))
                 {
                     //if ((holdTime - minHoldTime) / maxHoldTime > maxHoldTime)
                     //{
@@ -230,10 +232,10 @@ public class InputSystem : MonoBehaviour
                     {
                         StartCoroutine(ImgsFD.DelaySetActive(true));
                         ImgsFD.SetValue((holdTime - minHoldTime) / (maxHoldTime - minHoldTime), true);
+
                     }
-
-
                 }
+
    
                 if ((holdTime - minHoldTime) / (maxHoldTime - minHoldTime) > 1f)
                 {
@@ -241,19 +243,23 @@ public class InputSystem : MonoBehaviour
                     {
                         imgsFDDone = true;
 
-                        if(controlState == ControlState.Defect)
-                        {
+                        if (controlState == ControlState.Defect)
+                        {  
                             defectConstructor.CreateDot(firstCursorPos, cursor.cursor.eulerAngles, true);
                         }
                         else if (controlState == ControlState.Measure)
                         {
-                            print("imgsFDDone");
+                           // print("imgsFDDone");
                             measurement.DotCreateMode();
                         }
 
-                        print("imgsFDDone MouseButtonHold");
+                        //print("imgsFDDone MouseButtonHold");
 
                         StartCoroutine(ImgsFD.DelaySetActive(false));
+                    }
+                    else
+                    {
+                        ImgsFD.SetActive(false);
                     }
                 }
             }
@@ -276,10 +282,15 @@ public class InputSystem : MonoBehaviour
                 }
                 else
                 {
-                    measurement.Drag();
+                   
                 }
             }
-        }
+
+            if (controlState == ControlState.MeasureDot)
+            {
+                measurement.Drag();
+            }
+            }
         else
         {
             isDragging = true;
@@ -297,11 +308,18 @@ public class InputSystem : MonoBehaviour
             if (controlState == ControlState.Defect && CheckDefectCollider())
                 return;
 
-            if (controlState == ControlState.Measure && CheckMeasurementCollider())
+            if (controlState == ControlState.Measure && CheckMeasurementCollider() && measurement.measureMentState != Measurement.MeasurementState.LineCreating)
+            {
+                print("CheckMeasurementCollider" + measurement.measureMentState);
                 return;
+            }
+               
         }
 
+
         measurement.DragUp();
+
+
 
         if (isDragging)
         {
@@ -309,7 +327,7 @@ public class InputSystem : MonoBehaviour
             StartCoroutine(DelayCall(delayCall));
         }
 
-        if (Vector3.Distance(firstMousePos, Input.mousePosition) < 10 && dragTime < 0.5f && controlState != ControlState.MeasureDot)
+        if (Vector3.Distance(firstMousePos, Input.mousePosition) < 10 && dragTime < 0.5f && controlState != ControlState.MeasureDot && !CheckMeasurementCollider() )
         {
             if (!camController.GetCameraOnMove())
             {

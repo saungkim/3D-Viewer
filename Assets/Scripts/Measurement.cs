@@ -24,13 +24,16 @@ public class Measurement : MonoBehaviour
     public MeasurementState measureMentState = MeasurementState.None;
 
     private Vector3 measurePlusPos = new Vector3(0, 330, 0);
+    private Vector2 fixedMeasurePlusPos = new Vector2(330, 330);
     private MeasurementUnit preMeasureUnit;
     private int selectedDotIndex;
 
     // Start is called before the first frame updates
     void Start()
     {
-      
+        fixedMeasurePlusPos = new Vector3((float)Screen.width / 1080 * 330 , (float)Screen.height / 1920 * 330 , 0);
+        //print(Screen.width+"fixedMeasurePlusPos"+fixedMeasurePlusPos + ":" + Screen.height);
+        measurePlusPos = new Vector3(0, fixedMeasurePlusPos.y, 0);
     }
 
     // Update is called once per frame
@@ -48,7 +51,7 @@ public class Measurement : MonoBehaviour
             preMeasureUnit.GetPrevLine().SetLineEndPosition(cursorTransform.position);
         }
 
-        if(preMeasureUnit != null)
+        if(preMeasureUnit != null && measureMentState != MeasurementState.DotFixing)
         {
             removeUI.SetActive(true);
         }
@@ -115,22 +118,22 @@ public class Measurement : MonoBehaviour
       
         if (pos.x < 200)
         {
-            pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3 (measurePlusPos.y,0,0);
+            pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3 (fixedMeasurePlusPos.x,0,0);
         }
         else if (pos.x > Screen.width - 200)
         {
-            pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(- measurePlusPos.y, 0, 0);
+            pos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(-fixedMeasurePlusPos.x, 0, 0);
         }
         
         if (pos.y > Screen.height - 200)
         {
            
-           Vector3 heightPos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(0, - measurePlusPos.y, 0);
+           Vector3 heightPos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(0, -fixedMeasurePlusPos.y, 0);
             pos.y = heightPos.y; 
         }
         else if (pos.y < 200)
         {
-            Vector3 heightPos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(0, + measurePlusPos.y, 0);
+            Vector3 heightPos = Camera.main.WorldToScreenPoint(cursorTransform.position) + new Vector3(0, +fixedMeasurePlusPos.y, 0);
             pos.y = heightPos.y;
         }
 
@@ -206,10 +209,18 @@ public class Measurement : MonoBehaviour
 
     public void StartDrag()
     {
-        if (measureMentState != MeasurementState.None)
+        if (inputSystem.GetControlState() != InputSystem.ControlState.Measure)
             return;
+       
+        if (measureMentState != MeasurementState.None)
+        { 
+            return;
+        }
+           
             
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -249,6 +260,9 @@ public class Measurement : MonoBehaviour
 
     public void Drag()
     {
+
+
+        print("Drag");
         if(measureMentState == MeasurementState.DotFixing)
         {
             preMeasureUnit.FixDot(selectedDotIndex, cursorTransform.position , cursorTransform.eulerAngles);
@@ -275,6 +289,8 @@ public class Measurement : MonoBehaviour
 
     public void DragUp()
     {
+        print("Measurement DragUp");
+
         SetActiveMeasureUI(false);
 
         if (measureMentState == MeasurementState.DotCreating)
@@ -364,6 +380,7 @@ public class Measurement : MonoBehaviour
     {
         addUI.SetActive(false);
         removeUI.SetActive(false);
+        measureRenderUI.gameObject.SetActive(false);
 
         if (preMeasureUnit == null)
             return;
@@ -379,6 +396,7 @@ public class Measurement : MonoBehaviour
     {
         addUI.SetActive(false);
         removeUI.SetActive(false);
+
 
         if(measureMentState == MeasurementState.DotCreateEnd)
         {

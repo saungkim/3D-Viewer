@@ -90,10 +90,6 @@ public class LoadTextureFromStreamingAsset : MonoBehaviour
 
         byte[] imgData = constructor.GetTexture(parentIndex * 6 + childIndex);
         Texture2D tex = new Texture2D(2, 2);
-
-     
- 
-
         textures[childIndex] = tex;
    
         tex.wrapMode = TextureWrapMode.Clamp;

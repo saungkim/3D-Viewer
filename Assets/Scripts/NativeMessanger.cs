@@ -50,33 +50,42 @@ public class NativeMessanger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         Action<string> nativeErrorMessanger = (string value) => { nativeSendErrorMessage(value); };
         constructor.CreateBoundaryTest();
         SetActiveDefectCreateModeRefresh("True");
         //Application.unloading += OnUnload;
 
 #if UNITY_EDITOR
-
-        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/19A1_133C.pssw");
+        //SetModelFrameReverse();
+        PlayerPrefs.DeleteAll();
+        ReadRoomViewerFile(Application.dataPath + "/Sources/Models/output.pssw");
         SetActiveDefectCreateMode("True");
-        //SetActiveDefectCreateMode("False");
-        //ViewPanoramaTag("3");
-        ViewPanoramaInit();
-     
+        //ViewPanoramaInit();
+
+        ////SetActiveDefectCreateMode("False");
+        ViewPanoramaTag("CV6030401");
+
+
         //ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
-   
+
         //SetActiveDefectCreateMode("True");
         //ViewPanoramaTag("3");
 
-       
         //Invoke("Test",3);
         //ViewDefectJson();
         //SetTextureCompressFormat("True");
         //constructor.SetInverse();
         //ViewPano
 #endif
+        //ReadRoomViewerFile(Application.streamingAssetsPath + "/output.pssw");
+        //SetActiveDefectCreateMode("True");
+        //ViewPanoramaTag()
+        //ViewPanoramaInit();
+        ////SetActiveDefectCreateMode("False");
+        //ViewPanoramaTag("CV6030401");
+        //ViewPanoramaTag("1");
 
-        //ReadRoomViewerFile(Application.streamingAssetsPath + "/input.pssw");
         //SetActiveDefectCreateMode("True");
         //ViewPanoramaTag("3");
 
@@ -94,13 +103,12 @@ public class NativeMessanger : MonoBehaviour
         //ViewPanorama("19");
         //SetActiveDefectCreateMode("True");
         //ViewPanorama("19");
-
     }
 
     public void Test()
     {
         InitConstructor();
-        //Unload();
+  
         ReadRoomViewerFile(Application.dataPath + "/Sources/Models/input.pssw");
 
         ViewPanoramaTag("3");
@@ -110,6 +118,8 @@ public class NativeMessanger : MonoBehaviour
 
     private void Update()
     {
+
+       
 #if UNITY_ANDROID
 
 #endif
@@ -426,7 +436,6 @@ fileName = "jar:file://" + fileName;
 
     public void ViewPanoramaTag(string name)
     {
-
         StartCoroutine(constructor.InitStageTag(name, OnViewerLoaded));
     }
 
@@ -434,6 +443,8 @@ fileName = "jar:file://" + fileName;
 
     public void ViewPanoramaInit()
     {
+        uiManager.SetActiveInfoPopUp(false);
+        uiManager.SetActiveMeasurementUI(true);
         StartCoroutine(constructor.InitStageHome(OnViewerLoaded));
     }
 
@@ -561,16 +572,19 @@ fileName = "jar:file://" + fileName;
         {
             print(e);
         }
+#elif UNITY_EDITOR
+
 #elif UNITY_IOS || UNITY_TVOS
         onViewerMoved(message);
-#elif UNITY_EDITOR
 #endif
         print("OnViewerMoved" + message);
     }
 
     public void OnViewerLoaded(string message) 
     {
+
 #if UNITY_ANDROID
+        print("OnViewerLoaded Unity Execute");
         try
         {
             AndroidJavaClass jc = new AndroidJavaClass(className);
@@ -581,17 +595,20 @@ fileName = "jar:file://" + fileName;
         {
             print(e);
         }
-#elif UNITY_IOS || UNITY_TVOS
-       onViewerLoaded(message);
-       // NativeAPI.showHostMainWindow(lastStringColor);
 #elif UNITY_EDITOR
+
+        // NativeAPI.showHostMainWindow(lastStringColor);
+#elif UNITY_IOS || UNITY_TVOS
+           onViewerLoaded(message);
 #endif
-        print("OnViewerLoaded" + message);
+        // print("OnViewerLoaded" + message);
     }
 
     public void OnViewerDefectCreated(string message)
     {
-#if UNITY_ANDROID
+        print("OnViewerDefectCreated" + message);
+#if UNITY_EDITOR             
+#elif UNITY_ANDROID
         try
         {
             AndroidJavaClass jc = new AndroidJavaClass(className);
@@ -603,11 +620,11 @@ fileName = "jar:file://" + fileName;
             print(e);
         }
 #elif UNITY_IOS || UNITY_TVOS
-       onViewerDefectCreated(message);
+        onViewerDefectCreated(message);
        // NativeAPI.showHostMainWindow(lastStringColor);
-#elif UNITY_EDITOR
+
 #endif
-        print("onViewerDefectCreated" + message);
+     //   print("onViewerDefectCreated" + message);
     }
 
     public void OnViewerMessageReceived(string message)
@@ -757,6 +774,11 @@ fileName = "jar:file://" + fileName;
     public void InitConstructor()
     {
         constructor.Init();
+    }
+
+    public void SetModelFrameReverse(){
+        
+        constructor.ReverseModelFrame();
     }
 
     //public void GetDefect()

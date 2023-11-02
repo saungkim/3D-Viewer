@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform construction;
     [SerializeField] private Constructor constructor;
     [SerializeField] private NativeMessanger nativeMessanger;    
-    [SerializeField] private Vector3[] movePoints;
+    [SerializeField] public Vector3[] movePoints;
 
     [SerializeField] private ViewerCursor cursor;
 
@@ -39,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //GetMovePoints();
         //if (Input.GetKeyDown(KeyCode.Space))
         //{
         //    StartCoroutine(AutoTour(0,19));
@@ -149,19 +151,22 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetMovePoints()
     {
-        movePoints = new Vector3[construction.childCount - 1];
+        movePoints = new Vector3[construction.childCount ];
 
-        int childCount = construction.childCount - 1;
+        int childCount = construction.childCount;
 
         for (int i = 0; i < childCount; ++i)
         {
             movePoints[i] = construction.GetChild(i).position;
+
+            print(movePoints[i] + ":" + i + "movepoint:" + construction.GetChild(i).name);
         }
     }
     public void InitStage(int panoramaID)
     {
         if (stage == -1)
             stage = 0;
+
         construction.GetChild(stage).gameObject.SetActive(false);
         construction.GetChild(panoramaID).gameObject.SetActive(true);
         transform.position = construction.GetChild(panoramaID).position;

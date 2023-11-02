@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
     private float directionY = -1;
 
     private float minFov = 30;
-    private float maxFov = 130;
+    private float maxFov = 150;
    
 
     private void Start()
@@ -116,7 +116,7 @@ public class CameraController : MonoBehaviour
         return cameraOnMove;
     }
 
-    float moveTime = 1f;    // ÀÌµ¿ ½Ã°£
+    float moveTime = 1f;    // ï¿½Ìµï¿½ ï¿½Ã°ï¿½
     float imageTransTime = 1f;
     [SerializeField] float startImageTransTime = 1f;
     [SerializeField]float endImageTransTime = 0.15f;

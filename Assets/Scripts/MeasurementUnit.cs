@@ -19,7 +19,8 @@ public class MeasurementUnit : MonoBehaviour
     private MeasurementLine prevLine;
 
     private bool selected = false;
-  
+
+ 
     public void AddDot(Vector3 position,Vector3 rot)
     {
         GameObject o = null;
@@ -112,6 +113,8 @@ public class MeasurementUnit : MonoBehaviour
     }
     public void FixDot(int index , Vector3 position , Vector3 rot)
     {
+        print("Fix Dot");
+
         dots[index].transform.position = position;
         dots[index].transform.eulerAngles = rot;
 
@@ -192,4 +195,5 @@ public class MeasurementUnit : MonoBehaviour
         return index;
     }
 
+  
 }

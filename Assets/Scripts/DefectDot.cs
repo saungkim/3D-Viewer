@@ -59,7 +59,7 @@ public class DefectDot : MonoBehaviour
         Vector3 direction = Camera.main.transform.position - transform.position;
         RaycastHit hit;
 
-        material.renderQueue = 2000;
+        material.renderQueue = 2001;
 
         if (Physics.Raycast(transform.position, direction, out hit, Vector3.Distance(Camera.main.transform.position, transform.position)))
         {

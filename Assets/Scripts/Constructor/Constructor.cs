@@ -5,17 +5,11 @@ using UnityEngine;
 
 
 using TMPro;
-using UnityEngine.AI;
-using Unity.VisualScripting;
 using System.IO;
 using System.Linq;
-using static UnityEngine.UI.Image;
+using UnityEngine.UI;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
-using static DefectConstructor;
-
 using System.Text;
-using static Constructor;
 
 
 public class Constructor : MonoBehaviour
@@ -49,9 +43,11 @@ public class Constructor : MonoBehaviour
 
     private int inverse = 1;
 
+    private bool staged = false;
+
     void Start()
     {
-        BoundTest();
+        //BoundTest();
 
 #if UNITY_EDITOR
         //string url = Application.dataPath + "/Sources/";
@@ -698,6 +694,7 @@ public class Constructor : MonoBehaviour
             o.AddComponent<MeshRenderer>().sharedMaterial = meshMaterial;
             o.AddComponent<MeshCollider>().sharedMesh = mesh;
             o.transform.parent = modelFrame;
+            o.layer = LayerMask.NameToLayer("Construction");
 
             o.transform.position = meshesPositions[i];
             o.transform.eulerAngles = meshesRotations[i];
@@ -713,11 +710,12 @@ public class Constructor : MonoBehaviour
             o.transform.name = i.ToString();
 
             o.GetComponent<CubeMap>().SetMaterial(Instantiate(cubeMapMaterial));
-
-
         }
 
-        modelFrame.localScale = new Vector3(-1, -1, -1 * inverse);
+        print("reverseModelFrame" + reverseModelFrame);
+
+
+        modelFrame.localScale = new Vector3(-1 * reverseModelFrame, -1, -1 * inverse);
 
         playerMovement.Init();
         inputSystem.enabled = true;
@@ -729,9 +727,9 @@ public class Constructor : MonoBehaviour
         CreatePanoramaTags(panoramaTagJson);
 
         homeTourConstructor.InitHomeTourData(homeTourJson);
-
-
     }
+
+    
 
     public IEnumerator InitStage(int stage , Action<string> callBack)
     {
@@ -742,9 +740,12 @@ public class Constructor : MonoBehaviour
 
         waitForFixedUpdated = true;
 
+        staged = true;
         //callBack
         callBack("Success");
     }
+
+    
 
     public IEnumerator InitStageTag(string tag ,Action<string> callBack)
     {
@@ -753,10 +754,21 @@ public class Constructor : MonoBehaviour
 
         foreach(PanoramaView panoView in panormaViews.panoramaViews)
         {
-            print(panoView.tag + ":" + tag);
+            //print(panoView.tag + ":" + tag);
             if(panoView.tag == tag)
             {
-                playerMovement.InitStage(panoView.position , panoView.rotation);
+                Transform tf = ReversePanoViewTransform(panoView.position,panoView.rotation);
+
+                if (tf == null)
+                {
+                    playerMovement.InitStage(panoView.position, panoView.rotation);
+                    //print("???????");
+                }
+                else
+                {
+                    playerMovement.InitStage(tf.position,tf.eulerAngles);
+                }
+           
                 break;
             }
         }
@@ -765,8 +777,51 @@ public class Constructor : MonoBehaviour
 
         waitForFixedUpdated = true;
 
+        staged = true;
         //callBack
         callBack("Success");
+    }
+
+    Vector3 reversePosition;
+    Vector3 reverseRotation;
+
+    public Transform ReversePanoViewTransform(Vector3 position , Vector3 rotation)
+    {
+        if (reverseModelFrame == -1)
+        {
+       
+
+            modelFrame.localScale = new Vector3(-modelFrame.localScale.x, modelFrame.localScale.y, modelFrame.localScale.z);
+
+            GameObject o = new GameObject();
+
+            o.transform.position = position;
+            o.transform.eulerAngles = rotation;
+            print("everseModelFrame == -1");
+
+            o.transform.SetParent(modelFrame);
+
+            foreach (Transform tf in modelFrame.GetChild(0))
+            {
+                print("ModelFrameTf");
+                 if(Vector3.Distance(position , tf.position) < 0.01f)
+                {
+                 
+                    modelFrame.localScale = new Vector3( -modelFrame.localScale.x , modelFrame.localScale.y, modelFrame.localScale.z);
+
+                    //o.transform.position = tf.position;
+                    //print("ReverseTransform"+tf.position);
+                    //print("");
+                    return o.transform;
+                }
+            }
+
+            return null;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public IEnumerator InitStageHome(Action<string> callBack)
@@ -784,6 +839,8 @@ public class Constructor : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         waitForFixedUpdated = true;
+
+        staged = true;
 
         callBack("Success");
     }
@@ -1263,7 +1320,6 @@ public class Constructor : MonoBehaviour
         return (crossCount % 2) == 1; // 홀수면 inside
     }
 
-
     //[Serializable]
     //public class BoundaryArray
     //{
@@ -1320,5 +1376,23 @@ public class Constructor : MonoBehaviour
         public Vector3 rotation;
     }
 
-    //public class RoomPositionInf
+    int reverseModelFrame = 1;
+
+    public void ReverseModelFrame()
+    {
+        //StartCoroutine(CoReverseModelFrame());
+        reverseModelFrame = -1;
+
+        print("reverseModelFrame" + reverseModelFrame);
+        //modelFrame.localScale = new Vector3(-modelFrame.localScale.x, modelFrame.localScale.y, modelFrame.localScale.z);
+        //playerMovement.Init();
+    }
+
+    private IEnumerator CoReverseModelFrame()
+    {
+        yield return new WaitUntil(() => staged);
+        modelFrame.localScale = new Vector3(-modelFrame.localScale.x, modelFrame.localScale.y, modelFrame.localScale.z);
+        //playerMovement.Init();
+    }
+
 }

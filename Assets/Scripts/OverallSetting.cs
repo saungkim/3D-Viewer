@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class OverallSetting : MonoBehaviour
 {
     private bool zoomInit = false;
@@ -18,14 +18,19 @@ public class OverallSetting : MonoBehaviour
     [SerializeField] Constructor constructor;
     // Start is called before the first frame update
 
-
+    [SerializeField] Toggle neverSeenTutorialToggle;
+    [SerializeField] GameObject TutorialPanel;
 
     bool initMiniMap = false;
 
 
-    void Start()
+    void Awake()
     {
         Application.targetFrameRate = 60;
+
+        TutorialPanel.SetActive(PlayerPrefs.GetInt("Pspace3DViewer_NeverSeenTutorialToggle") == 1 ? false : true);
+
+        print("NeverSeenTutorialToggle:" + PlayerPrefs.GetInt("Pspace3DViewer_NeverSeenTutorialToggle"));
     }
 
     // Update is called once per frame
@@ -115,6 +120,12 @@ public class OverallSetting : MonoBehaviour
 
     }
 
-  
+
+    public void TutorialOff()
+    {
+        //neverSeenTutorialToggle.isOn
+        PlayerPrefs.SetInt("Pspace3DViewer_NeverSeenTutorialToggle",neverSeenTutorialToggle.isOn ? 1:0);
+        PlayerPrefs.Save();
+    }
 
 }

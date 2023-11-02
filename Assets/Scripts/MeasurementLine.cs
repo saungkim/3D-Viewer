@@ -18,20 +18,34 @@ public class MeasurementLine : MeasurementObject
     [SerializeField] private DottedLine dottedLine;
     [SerializeField] private LineRenderer lineRenderer;
 
+    [SerializeField] private Material lineMaterial;
+
     [SerializeField] private Vector3 startPos;
     [SerializeField] private Vector3 endPos;
 
     private int connectedStartIndex;
     private int connectedEndIndex;
 
+    [SerializeField] private Color yellowColor;
+    private Color redColor;
     // Start is called before the first frame update
     void Start()
     {
+        lineMaterial = lineRenderer.material;
+       
+        ColorUtility.TryParseHtmlString("FF0800", out redColor);
 
     }
-    
+
+    private void OnEnable()
+    {
+        lineMaterial = lineRenderer.material;
+    }
+
     void Update()
     {
+        //ColorUtility.TryParseHtmlString("FFBB00", out yellowColor);
+
         if (lineRenderer == null)
             return;
 
@@ -95,6 +109,7 @@ public class MeasurementLine : MeasurementObject
 
     public override void SetCollider()
     {
+        boxCollider.gameObject.SetActive(true);
         boxCollider.size = new Vector3(0.03f, 0.03f, 0.9f * Vector3.Distance(lineRenderer.GetPosition(0), lineRenderer.GetPosition(1)));
         boxCollider.transform.position = (lineRenderer.GetPosition(0) + lineRenderer.GetPosition(1)) / 2;
         boxCollider.transform.LookAt(lineRenderer.GetPosition(1));
@@ -104,11 +119,14 @@ public class MeasurementLine : MeasurementObject
     {
         if (onOff)
         {
-            lineRenderer.material.color = Color.yellow;
+            print("MeasurementLine OnOff");
+            lineMaterial.SetColor("_OutlineColor", Color.red);
+            lineMaterial.SetColor("_MaskColor", Color.white);
         }
         else
         {
-            lineRenderer.material.color = Color.white;
+            lineMaterial.SetColor("_OutlineColor", yellowColor);
+            lineMaterial.SetColor("_MaskColor", yellowColor);
         }
     }
 
